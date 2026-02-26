@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FOLIO | Silence Visuel</title>
+    <link rel="stylesheet" href="/public/assets/css/style.css">
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="logo">FOLIO</div>
+        <nav class="nav">
+            <a href="#projets">Projets</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
+
+    <main class="container" id="projets">
+        <section class="project-grid">
+            <article class="project-card">
+                <div class="project-info">
+                    <h3>Identité Visuelle - Client A</h3>
+                    <p>Processus & Design</p>
+                </div>
+            </article>
+
+        </section>
+        <section class="contact-section" id="contact">
+            <div class="contact-header">
+                <h2>Travaillons ensemble</h2>
+                <p>Décrivez votre projet ou votre opportunité de recrutement.</p>
+            </div>
+
+            <form class="contact-form" action="#" method="post">
+                <div class="form-group">
+                    <label for="name">Nom & Prénom</label>
+                    <input type="text" id="name" name="name" placeholder="Ex: Jean Dupont" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="nom@entreprise.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="intent">Objet de la prise de contact</label>
+                    <select id="intent" name="intent" required>
+                        <option value="" disabled selected>Choisissez une option...</option>
+                        <option value="recrutement">Opportunité de recrutement (CDI/CDD)</option>
+                        <option value="devis">Demande de devis (Freelance)</option>
+                        <option value="autre">Autre demande</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" rows="5" placeholder="Parlez-moi de votre projet..."
+                        required></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit">Envoyer le message</button>
+            </form>
+
+        </section>
+
+    </main>
+
+    <a href="#contact" class="btn-engage-me">Engage Me</a>
+
+    <footer class="footer">
+        <p>© 2026 LONEDY - FOLIO</p>
+    </footer>
+
+</body>
+
+</html>
