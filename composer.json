@@ -1,0 +1,18 @@
+{
+    "name": "dylan/folio",
+    "description": "mon projet permettant le partage des portfolios des graphistes de façon professionnelle et intuitif.",
+    "type": "project",
+    "license": "GPL-3.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Dylan aka Lonedy"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
