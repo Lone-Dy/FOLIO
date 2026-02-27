@@ -1,0 +1,58 @@
+<?php
+
+// ROUTEUR dynamique
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use App\Controller\{HomeController, E404Controller};
+use App\Service\{DatabaseFactory};
+
+$request = trim($_SERVER['REQUEST_URI'], '/'); // folio.local/..../....
+$params = explode('/', $request); // ['folio', 'detail', '4']
+$controller = array_shift($params); // 'folio' - ['detail', '4']
+if ($controller == '') {
+    $controller = 'Home';
+}
+
+$method = array_shift($params);
+if ($method == '') {
+    $method = 'index';
+}
+
+$controllerClass = 'App\\Controller\\' . $controller . 'Controller'; // App\Controller\HomeController
+if (!class_exists($controllerClass)) {
+    $controllerClass = E404Controller::class; // App\Controller\E404Controller
+}
+
+try {
+    $envPath = __DIR__ . '/../.env';
+    // si pas de fichier .env on leve une exception
+    if (!file_exists($envPath)) {
+        throw new Exception("Configuration file (.env) is missing at project root.");
+    }
+    // on lit le .env
+    $config = parse_ini_file($envPath);
+    // La factory DatabaseFactory crée le $pdo à partir du contenu de .env
+    $pdo = DatabaseFactory::create($config);
+} catch (Exception $e) {
+    error_log("Connection failed: " . $e->getMessage());
+    die("Une erreur technique est survenue. Veuillez réessayer plus tard.");
+}
+
+$container = [
+    HomeController::class => function ($pdo) {
+        return new HomeController();
+    },
+    E404Controller::class => function ($pdo) {
+        return new E404Controller();
+    }
+];
+
+$controllerInstance = $container[$controllerClass]($pdo);
+// Et on appelle la methode (parametre d'URL numero 2 ou par defaut index)
+if (!method_exists($controllerInstance, $method)) {
+    $method = 'index'; // si erreur de méthode on redirige vers index
+}
+$controllerInstance->$method($params);
+
+?>
