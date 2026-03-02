@@ -46,9 +46,9 @@ class UserRepository
     public function findAll(): array
     {
         $stmt = $this->pdo->query("SELECT * from user");
-        $user = [];
+        $users = [];
         while ($row = $stmt->fetch()) {
-            $user[] = new User();
+            $user = new User();
             $user->setNom($row['nom'])
                 ->setPrenom($row['prenom'])
                 ->setEmail($row['email'])
@@ -57,7 +57,7 @@ class UserRepository
 
             $users[] = $user;
         }
-        return $user;
+        return $users;
     }
 
     // CRUD - UPDATE

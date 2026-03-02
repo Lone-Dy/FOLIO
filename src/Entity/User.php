@@ -46,7 +46,7 @@ class User
 
     public function setEmail(string $email): self
     {
-        $this->getEmail = $email;
+        $this->email = $email;
         return $this;
     }
 
