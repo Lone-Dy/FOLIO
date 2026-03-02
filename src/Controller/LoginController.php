@@ -1,13 +1,51 @@
 <?php
 namespace App\Controller;
 
-class HomeController {
+use App\Entity\User;
+use App\Repository\UserRepository;
 
-    public function __construct() {}
+class LoginController {
+
+    private $userRepository;
+
+    // On passe le Repository au constructeur (Injection de dépendances)
+    public function __construct(UserRepository $userRepository) {
+        $this->userRepository = $userRepository;
+    }
 
     public function index(?array $params) {
+        // Affiche la page de connexion/inscription
         include __DIR__.'/../../template/login_page.php';
     }
-}
 
+    public function handleRegister() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // 1. Vérification de la case RGPD
+            if (!isset($_POST['accept_conditions'])) {
+                die("Vous devez accepter les conditions d'utilisation.");
+            }
+
+            // 2. Création de l'entité User
+            $user = new User();
+            $user->setNom($_POST['nom'])
+                 ->setPrenom($_POST['prenom'])
+                 ->setEmail($_POST['email'])
+                 // On hache le mot de passe pour la sécurité
+                 ->setPassword(password_hash($_POST['password'], PASSWORD_BCRYPT))
+                 ->setRole('user')
+                 ->setStatutCompte('actif');
+
+            // 3. Appel au Repository pour l'insertion
+            $success = $this->userRepository->create($user);
+
+            if ($success) {
+                // Redirection vers la page d'accueil ou de succès
+                header('Location: /home');
+                exit;
+            } else {
+                echo "Une erreur est survenue lors de l'inscription.";
+            }
+        }
+    }
+}
 ?>

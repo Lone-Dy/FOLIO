@@ -4,7 +4,7 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use App\Controller\{HomeController, E404Controller};
+use App\Controller\{HomeController, E404Controller, LoginController};
 use App\Service\{DatabaseFactory};
 
 $request = trim($_SERVER['REQUEST_URI'], '/'); // folio.local/..../....
