@@ -14,6 +14,8 @@ class FolioRepository
         $this->pdo = $pdo;
     }
 
+    // CRUD - READ
+
     public function create(Folio $folio): bool
     {
         $sql = "INSERT INTO folio (titre, description, categorie_folio) 
@@ -26,6 +28,8 @@ class FolioRepository
             'categorie'   => $folio->getCategorieFolio()
         ]);
     }
+
+    // CRUD - READ
 
     public function findById(int $id): ?Folio
     {
@@ -41,6 +45,8 @@ class FolioRepository
                      ->setDescription($row['description'])
                      ->setCategorieFolio($row['categorie_folio']);
     }
+
+// CRUD - UPDATE
 
     public function findAll(): array
     {
@@ -70,9 +76,13 @@ class FolioRepository
         ]);
     }
 
+// CRUD - DELETE
+
     public function delete(int $id): bool
     {
         $stmt = $this->pdo->prepare("DELETE FROM folio WHERE id_folio = ?");
         return $stmt->execute([$id]);
     }
 }
+
+?>
