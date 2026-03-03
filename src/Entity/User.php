@@ -8,6 +8,7 @@ class User
     private string $nom;
     private string $prenom;
     private string $email;
+    private int $age;
     private string $password;
     private string $statut_compte;
     private string $role;
@@ -47,6 +48,17 @@ class User
     public function setEmail(string $email): self
     {
         $this->email = $email;
+        return $this;
+    }
+
+    public function getAge(): int
+    {
+        return $this->age;
+    }
+
+    public function setAge(int $age): self
+    {
+        $this->age = $age;
         return $this;
     }
 

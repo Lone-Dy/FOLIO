@@ -18,13 +18,14 @@ class UserRepository
 
     public function create(User $user): bool
     {
-        $sql = "INSERT INTO user (nom, prenom, email, password, statut_compte, role) 
-    VALUES (:nom, :prenom, :email, :password, :statut_compte, :role)";
+        $sql = "INSERT INTO user (nom, prenom, email, age, password, statut_compte, role) 
+    VALUES (:nom, :prenom, :email, :age, :password, :statut_compte, :role)";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(":nom", $user->getNom());
         $stmt->bindValue(":prenom", $user->getPrenom());
         $stmt->bindValue(":email", $user->getEmail());
+        $stmt->bindValue(":age", $user->getAge());
         $stmt->bindValue(":password", $user->getPassword());
         $stmt->bindValue(":statut_compte", $user->getStatutCompte() ?? 'actif');
         $stmt->bindValue(":role", $user->getRole() ?? 'user');

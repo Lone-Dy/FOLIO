@@ -6,10 +6,9 @@
     <link rel="stylesheet" href="/assets/css/style.css">
 </head>
     <header class="header">
-        <div class="logo">FOLIO</div>
+        <div class="logo" href="/home">FOLIO</div>
         <nav class="nav">
-            <a href="#portfolios">PORTFOLIOS</a>
-            <a href="/login">CONNEXION</a>
+            <a href="/folio">PORTFOLIOS</a>
         </nav>
     </header>
 <body>

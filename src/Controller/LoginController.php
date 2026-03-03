@@ -8,7 +8,7 @@ class LoginController {
 
     private $userRepository;
 
-    // On passe le Repository au constructeur (Injection de dépendances)
+    // On passe le Repository au constructeur
     public function __construct(UserRepository $userRepository) {
         $this->userRepository = $userRepository;
     }
@@ -20,22 +20,23 @@ class LoginController {
 
     public function handleRegister() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // 1. Vérification de la case RGPD
+            // Vérification de la case RGPD
             if (!isset($_POST['accept_conditions'])) {
                 die("Vous devez accepter les conditions d'utilisation.");
             }
 
-            // 2. Création de l'entité User
+            // Création de l'entité User
             $user = new User();
             $user->setNom($_POST['nom'])
                  ->setPrenom($_POST['prenom'])
                  ->setEmail($_POST['email'])
+                 ->setAge((int)$_POST['age'])
                  // On hache le mot de passe pour la sécurité
                  ->setPassword(password_hash($_POST['password'], PASSWORD_BCRYPT))
                  ->setRole('user')
                  ->setStatutCompte('actif');
 
-            // 3. Appel au Repository pour l'insertion
+            // Appel au Repository pour l'insertion
             $success = $this->userRepository->create($user);
 
             if ($success) {
