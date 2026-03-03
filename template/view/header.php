@@ -8,7 +8,7 @@
     <header class="header">
         <div class="logo">FOLIO</div>
         <nav class="nav">
-            <a href="#portfolios">PORTFOLIOS</a>
+            <a href="/folio">PORTFOLIOS</a>
             <a href="/login">CONNEXION</a>
         </nav>
     </header>
