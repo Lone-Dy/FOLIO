@@ -1,13 +1,13 @@
 <?php
-    include_once(__DIR__ . '/view/header-login.php');
+include_once(__DIR__ . '/view/header-login.php');
 ?>
 
 <main class="auth-container">
-    
+
     <section class="auth-box login-section">
         <form action="/login/handleLogin" method="POST">
             <h2>Se connecter</h2>
-            
+
             <div class="field">
                 <label for="login_email">Adresse E-mail <span class="required">*</span></label>
                 <input type="email" id="login_email" name="email" required placeholder="Ex: nomprenom@xxx.com" />
@@ -38,7 +38,7 @@
                 <input type="password" id="register_password" name="password" required />
             </div>
 
-            <div class="row">
+            <div class="form-grid">
                 <div class="field">
                     <label for="prenom">Prénom <span class="required">*</span></label>
                     <input type="text" id="prenom" name="prenom" required />
@@ -73,5 +73,5 @@
 </main>
 
 <?php
-    include_once(__DIR__ . '/view/footer.php');
+include_once(__DIR__ . '/view/footer.php');
 ?>

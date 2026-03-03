@@ -20,7 +20,7 @@ class UserRepository
     {
         $sql = "INSERT INTO user (nom, prenom, email, age, password, statut_compte, role) 
     VALUES (:nom, :prenom, :email, :age, :password, :statut_compte, :role)";
-
+    
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(":nom", $user->getNom());
         $stmt->bindValue(":prenom", $user->getPrenom());
@@ -44,6 +44,30 @@ class UserRepository
         return $user ?: null;
     }
 
+    public function findByEmail(string $email): ?User
+{
+    $stmt = $this->pdo->prepare("SELECT * FROM user WHERE email = :email");
+    $stmt->execute(['email' => $email]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$row) {
+        return null;
+    }
+
+    $user = new User();
+    // On hydrate l'objet avec TOUTES les données de la BDD
+    $user->setNom($row['nom'])
+         ->setPrenom($row['prenom'])
+         ->setEmail($row['email'])
+         ->setAge((int)$row['age'])
+         ->setPassword($row['password']) // Très important pour password_verify
+         ->setRole($row['role'])
+         ->setStatutCompte($row['statut_compte']);
+    
+    // Si tu as besoin de l'ID plus tard, assure-toi d'avoir setId dans ton entité User
+    return $user;
+}
+
     public function findAll(): array
     {
         $stmt = $this->pdo->query("SELECT * from user");
@@ -53,6 +77,7 @@ class UserRepository
             $user->setNom($row['nom'])
                 ->setPrenom($row['prenom'])
                 ->setEmail($row['email'])
+                ->setAge((int)$row['age'])
                 ->setRole($row['role'])
                 ->setStatutCompte($row['statut_compte']);
 

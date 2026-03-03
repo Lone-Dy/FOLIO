@@ -6,7 +6,9 @@
     <link rel="stylesheet" href="/assets/css/style.css">
 </head>
     <header class="header">
-        <div class="logo" href="/home">FOLIO</div>
+        <a href="/home">
+        <img src="assets/img/SVG/logo_folio_noir.svg" alt="Logo Folio" width="150">
+        </a>
         <nav class="nav">
             <a href="/folio">FOLIOS</a>
         </nav>

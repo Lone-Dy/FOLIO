@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
+
 /* Reset et Base */
 * {
     margin: 0;
@@ -6,26 +8,97 @@
 }
 
 body {
-    font-family: 'Helvetica', sans-serif;
+    font-family: 'Lexend', sans-serif;
     /* Rigueur et géométrie */
     background-color: #ffffff;
     color: #1a1a1a;
     line-height: 1.6;
 }
 
-/* Header */
+/* --- Header Principal --- */
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 2rem 5%;
-    background: #fff;
+    padding: 1.5rem 5%;
+    background-color: #ffffff;
+    border-bottom: 1px solid #f0f0f0;
+    position: sticky;
+    /* Reste en haut au scroll */
+    top: 0;
+    z-index: 1000;
 }
 
-.logo {
-    font-weight: 800;
-    font-size: 1.5rem;
-    letter-spacing: 2px;
+/* --- Logo --- */
+.header .logo img {
+    display: block;
+    height: auto;
+    max-height: 40px;
+    /* Taille optimale pour ton logo SVG */
+    transition: opacity 0.3s ease;
+}
+
+.header .logo:hover img {
+    opacity: 0.7;
+}
+
+/* --- Navigation --- */
+.nav {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.nav a {
+    text-decoration: none;
+    color: #1a1a1a;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+/* Petit effet de barre sous les liens au survol */
+.nav a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1.5px;
+    bottom: -5px;
+    left: 0;
+    background-color: #1a1a1a;
+    transition: width 0.3s ease;
+}
+
+.nav a:hover {
+    color: #000;
+}
+
+.nav a:hover::after {
+    width: 100%;
+}
+
+/* Style spécial pour le bouton Connexion/Profil s'il y en a un */
+.nav a[href="/login"],
+.nav a[href="/profile"] {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    padding: 8px 18px;
+    border-radius: 4px;
+}
+
+.nav a[href="/login"]:hover,
+.nav a[href="/profile"]:hover {
+    background-color: #333;
+    color: #fff;
+}
+
+.nav a[href="/login"]::after,
+.nav a[href="/profile"]::after {
+    display: none;
+    /* On retire la barre sous le bouton plein */
 }
 
 /* Grille de Projets Responsive */
@@ -142,6 +215,7 @@ body {
     border: none;
     font-weight: bold;
     cursor: pointer;
+    font-family: 'Lexend', sans-serif;
     text-transform: uppercase;
     transition: opacity 0.3s ease;
 }
@@ -192,8 +266,10 @@ body {
 /* Séparateur vertical entre les deux */
 .vertical-separator {
     width: 1px;
-    background-color: #ccc;
+    background-color: #eee;
+    margin: 0 20px;
     align-self: stretch;
+    /* La ligne prendra toute la hauteur des formulaires */
 }
 
 /* Champs et labels */
@@ -228,6 +304,128 @@ select {
 
 .btn-submit:hover {
     background-color: #555;
+}
+
+/* Footer */
+.footer {
+    background-color: #1a1a1a;
+    /* Fond sombre pour trancher avec le reste */
+    color: #ffffff;
+    padding: 60px 5% 20px;
+    margin-top: 100px;
+    /* Donne de l'air après le contenu */
+}
+
+.description-folio {
+    margin-top: 20px;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-brand .logo-footer {
+    font-weight: 800;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.footer-brand p {
+    color: #999;
+    font-size: 0.9rem;
+    max-width: 250px;
+}
+
+.footer-links h4,
+.footer-legal h4 {
+    font-size: 1rem;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.footer-links ul,
+.footer-legal ul {
+    list-style: none;
+}
+
+.footer-links ul li,
+.footer-legal ul li {
+    margin-bottom: 10px;
+}
+
+.footer-links a,
+.footer-legal a {
+    color: #999;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover,
+.footer-legal a:hover {
+    color: #ffffff;
+}
+
+.footer-bottom {
+    border-top: 1px solid #333;
+    margin-top: 50px;
+    padding-top: 20px;
+    text-align: center;
+    color: #666;
+    font-size: 0.8rem;
+}
+
+/* Style spécifique pour la page 404 */
+.error-container {
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 20px;
+}
+
+.error-container h1 {
+    font-size: 10rem;
+    font-weight: 900;
+    line-height: 1;
+    margin: 0;
+    background: linear-gradient(45deg, #1a1a1a, #666);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -5px;
+}
+
+.error-container p {
+    font-size: 1.2rem;
+    color: #666;
+    margin: 20px 0 40px;
+    max-width: 500px;
+}
+
+.btn-back-home {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: #1a1a1a;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 500;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.btn-back-home:hover {
+    background-color: #333;
+    transform: translateY(-2px);
 }
 
 /* Responsive : On empile sur mobile */
