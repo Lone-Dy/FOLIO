@@ -8,7 +8,9 @@ gsap.to('.header', {
     end: 'top -100',
     scrub: true,
   },
-  height: '60px',
+  height: '65px',
+  paddingLeft: '20px', // On écarte les éléments des bords au scroll
+  paddingRight: '20px',
   backgroundColor: 'rgba(255, 255, 255, 0.1)', 
   backdropFilter: 'blur(25px)', 
 });

@@ -4,7 +4,7 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use App\Controller\{HomeController, E404Controller, LoginController};
+use App\Controller\{HomeController, E404Controller, LoginController, ConditionController};
 use App\Service\{DatabaseFactory};
 
 $request = trim($_SERVER['REQUEST_URI'], '/'); // folio.local/..../....
@@ -48,6 +48,9 @@ $container = [
     LoginController::class => function ($pdo) {
         $repo = new \App\Repository\UserRepository($pdo);
         return new LoginController($repo);
+    },
+    ConditionController::class => function ($pdo) {
+        return new ConditionController();
     }
 ];
 

@@ -62,7 +62,7 @@ include_once(__DIR__ . '/view/header-login.php');
             <div class="checkbox-group">
                 <input type="checkbox" id="accept_conditions" name="accept_conditions" required>
                 <label for="accept_conditions">
-                    J'accepte les <a href="#">Conditions d’utilisation<span class="required">*</span></a>.
+                    J'accepte les <a href="/condition">Conditions générales d’utilisation<span class="required">*</span></a>.
                 </label>
             </div>
 
