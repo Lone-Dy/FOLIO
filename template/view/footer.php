@@ -1,9 +1,9 @@
 <footer class="footer">
     <div class="footer-content">
         <div class="footer-brand">
-        <a href="/home">
-        <img src="assets/img/SVG/logo_folio_blanc.svg" alt="Logo Folio" width="150">
-        </a>
+            <a href="/home">
+                <img src="assets/img/SVG/logo_folio_blanc.svg" alt="Logo Folio" width="150">
+            </a>
             <p class="description-folio">Plateforme de partage de portfolios créatifs.</p>
         </div>
 
@@ -30,5 +30,10 @@
     </div>
 </footer>
 </body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+<script src="assets/js/script.js" defer></script>
 
 </html>
