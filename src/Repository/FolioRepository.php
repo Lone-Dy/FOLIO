@@ -46,6 +46,21 @@ class FolioRepository
                      ->setCategorieFolio($row['categorie_folio']);
     }
 
+    public function searchFolios(string $query): array {
+    // On cherche dans le nom de l'utilisateur ou le titre du portfolio
+    $sql = "SELECT * FROM portfolio 
+            JOIN user ON portfolio.user_id = user.id 
+            WHERE user.firstname LIKE :q 
+            OR user.lastname LIKE :q 
+            OR portfolio.title LIKE :q";
+            
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->bindValue(':q', '%' . $query . '%');
+    $stmt->execute();
+    
+    return $stmt->fetchAll();
+}
+
 // CRUD - UPDATE
 
     public function findAll(): array

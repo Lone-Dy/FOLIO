@@ -40,6 +40,50 @@
 
 }
 
+/* Barre de recherche des folios */
+.search-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+    margin-top: 20px; /* Espace sous le header fixe */
+}
+
+.search-form {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+}
+
+.search-form input {
+    width: 100%;
+    padding: 15px 50px 15px 25px;
+    border-radius: 30px;
+    border: 1px solid #e0e0e0;
+    background: rgba(245, 245, 247, 0.8);
+    font-size: 1.1rem;
+    font-family: 'Lexend', sans-serif;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.search-form input:focus {
+    background: #ffffff;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border-color: #0071e3; /* Bleu style Apple */
+}
+
+.search-form button {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #86868b;
+}
+
 /* Grille de Projets Responsive */
 .project-grid {
     display: grid;
