@@ -15,7 +15,7 @@ include_once(__DIR__ . '/view/header-login.php');
 
             <div class="field">
                 <label for="login_password">Mot de passe <span class="required">*</span></label>
-                <input type="password" id="login_password" name="password" required />
+                <input type="password" id="login_password" name="mot_de_passe" required />
             </div>
 
             <button type="submit" class="btn-submit">Continuer</button>
@@ -35,7 +35,7 @@ include_once(__DIR__ . '/view/header-login.php');
 
             <div class="field">
                 <label for="register_password">Mot de passe <span class="required">*</span></label>
-                <input type="password" id="register_password" name="password" required />
+                <input type="password" id="register_password" name="mot_de_passe" required />
             </div>
 
             <div class="form-grid">

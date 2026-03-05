@@ -10,7 +10,7 @@ class LoginController
 
     private $userRepository;
 
-    // On passe le Repository au constructeur
+    // le Repository au constructeur
     public function __construct(UserRepository $userRepository)
     {
         $this->userRepository = $userRepository;
@@ -28,29 +28,26 @@ class LoginController
             $email = $_POST['email'];
             $password = $_POST['password'];
 
-            // 1. On cherche l'utilisateur par son email
+            // 1. je cherche l'utilisateur par son email
             $user = $this->userRepository->findByEmail($email);
 
-            // 2. On vérifie si l'utilisateur existe et si le mot de passe correspond au hash en BDD
+            // 2. je vérifie si l'utilisateur existe et si le mot de passe correspond au hash en BDD
             if ($user && password_verify($password, $user->getPassword())) {
 
-                // 3. Authentification réussie : On ouvre la session
+                // 3. Authentification réussie : j'ouvre la session
                 if (session_status() === PHP_SESSION_NONE) {
                     session_start();
                 }
+$_SESSION['user'] = [
+    'id' => $user->getIdUtilisateur(), // On récupère l'id_user de la BDD
+    'email' => $user->getEmail()
+];
 
-                $_SESSION['user'] = [
-                    'id' => $user->getIdUser(),
-                    'nom' => $user->getNom(),
-                    'prenom' => $user->getPrenom(),
-                    'role' => $user->getRole()
-                ];
-
-                // Redirection vers l'accueil
-                header('Location: /home');
+                // Redirection vers le profile
+                header('Location: /profile');
                 exit;
             } else {
-                // 4. Erreur : On peut rediriger avec un message d'erreur
+                // 4. Erreur : je redirige avec un message d'erreur
                 header('Location: /login?error=1');
                 exit;
             }
@@ -80,8 +77,8 @@ class LoginController
             $success = $this->userRepository->create($user);
 
             if ($success) {
-                // Redirection vers la page d'accueil ou de succès
-                header('Location: /home');
+                // Redirection vers la page profile
+                header('Location: /profile');
                 exit;
             } else {
                 echo "Une erreur est survenue lors de l'inscription.";

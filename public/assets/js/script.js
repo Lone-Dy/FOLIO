@@ -11,8 +11,8 @@ gsap.to('.header', {
   height: '65px',
   paddingLeft: '20px', // On écarte les éléments des bords au scroll
   paddingRight: '20px',
-  backgroundColor: 'rgba(255, 255, 255, 0.1)', 
-  backdropFilter: 'blur(25px)', 
+  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+  backdropFilter: 'blur(25px)',
 });
 
 // 2. Animation des textes (Mouvement + Apparition)
@@ -20,7 +20,7 @@ const textElements = ['.text0', '.text1', '.text2', '.text3'];
 
 textElements.forEach((selector, index) => {
   const isRight = index % 2 === 0;
-  
+
   gsap.to(selector, {
     x: isRight ? '10%' : '-10%',
     rotate: isRight ? 5 : -5,
@@ -44,11 +44,20 @@ document.querySelector('#back').addEventListener('click', () => {
 const searchInput = document.querySelector('.header-search input');
 
 if (searchInput) {
-    searchInput.addEventListener('focus', () => {
-        gsap.to('.header-search', { maxWidth: '450px', duration: 0.4, ease: 'power2.out' });
-    });
+  searchInput.addEventListener('focus', () => {
+    gsap.to('.header-search', { maxWidth: '450px', duration: 0.4, ease: 'power2.out' });
+  });
 
-    searchInput.addEventListener('blur', () => {
-        gsap.to('.header-search', { maxWidth: '350px', duration: 0.4, ease: 'power2.in' });
-    });
+  searchInput.addEventListener('blur', () => {
+    gsap.to('.header-search', { maxWidth: '350px', duration: 0.4, ease: 'power2.in' });
+  });
 }
+
+const dialog = document.getElementById('mdpDialog');
+const openBtn = document.getElementById('ouvreDialog');
+// je cible le bouton annuler par son ID
+const closeBtn = document.getElementById('fermeDialog');
+
+openBtn.addEventListener('click', () => dialog.showModal());
+closeBtn.addEventListener('click', () => dialog.close());
+

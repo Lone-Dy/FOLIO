@@ -4,7 +4,7 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use App\Controller\{HomeController, E404Controller, LoginController, ConditionController};
+use App\Controller\{HomeController, E404Controller, LoginController, ConditionController, ProfileController};
 use App\Service\{DatabaseFactory};
 
 $request = trim($_SERVER['REQUEST_URI'], '/'); // folio.local/..../....
@@ -51,6 +51,10 @@ $container = [
     },
     ConditionController::class => function ($pdo) {
         return new ConditionController();
+    },
+    ProfileController::class => function ($pdo) {
+        $repo = new \App\Repository\UserRepository($pdo); // je crée le repo d'abord
+        return new ProfileController($repo); // je l'injecte dans le contrôleur
     }
 ];
 
