@@ -23,7 +23,7 @@ include_once(__DIR__ . '/view/header-login.php');
         </ol>
         <h2>4. Hébergement des données (Images & BLOB)</h2>
         <p>FOLIO s'efforce de garantir une disponibilité maximale du service. Toutefois, nous vous conseillons de toujours conserver une copie de sauvegarde de vos travaux. FOLIO ne pourra être tenu responsable en cas de perte de données exceptionnelle liée à un incident serveur.</p>
-        <h2>5. Comptes "Curator" et "Visionary</h2>
+        <h2>5. Comptes "Curator" et "Visionary"</h2>
         <ol>
         <li>L'offre Curator est gratuite et limitée en nombre de projets.</li>
         <li>L'offre Visionary est un abonnement payant. Vous pouvez résilier à tout moment, le service restera actif jusqu'à la fin de la période entamée.</li>

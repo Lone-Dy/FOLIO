@@ -4,15 +4,15 @@ namespace App\Entity;
 
 class Project
 {
-    private ?int $id_project = null;
+    private ?int $id_projet = null;
     private string $type;
     private string $contenu;
     private string $ordre_affichage;
 
 
-    public function getIdProject(): ?int
+    public function getIdProjet(): ?int
     {
-        return $this->id_project;
+        return $this->id_projet;
     }
 
     public function getType(): string

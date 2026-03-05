@@ -4,20 +4,28 @@ namespace App\Entity;
 
 class User
 {
-    private ?int $id_user = null;
+    private ?int $id_utilisateur = null;
     private string $nom;
     private string $prenom;
     private string $email;
     private int $age;
-    private string $password;
+    private string $mot_de_passe;
     private string $statut_compte;
     private string $role;
 
-    public function getIdUser(): ?int
+    // --- ID ---
+    public function getIdUtilisateur(): ?int
     {
-        return $this->id_user;
+        return $this->id_utilisateur;
     }
 
+    public function setIdUtilisateur(?int $id): self
+    {
+        $this->id_utilisateur = $id;
+        return $this;
+    }
+
+    // --- NOM ---
     public function getNom(): string
     {
         return $this->nom;
@@ -29,6 +37,7 @@ class User
         return $this;
     }
 
+    // --- PRENOM ---
     public function getPrenom(): string
     {
         return $this->prenom;
@@ -40,6 +49,7 @@ class User
         return $this;
     }
 
+    // --- EMAIL ---
     public function getEmail(): string
     {
         return $this->email;
@@ -51,6 +61,7 @@ class User
         return $this;
     }
 
+    // --- AGE ---
     public function getAge(): int
     {
         return $this->age;
@@ -62,28 +73,31 @@ class User
         return $this;
     }
 
-    public function getPassword(): string
+    // --- MOT DE PASSE ---
+    public function getMotDePasse(): string
     {
-        return $this->password;
+        return $this->mot_de_passe;
     }
 
-    public function setPassword(string $password): self
+    public function setMotDePasse(string $mdp): self
     {
-        $this->password = $password;
+        $this->mot_de_passe = $mdp;
         return $this;
     }
 
+    // --- STATUT ---
     public function getStatutCompte(): string
     {
         return $this->statut_compte;
     }
 
-    public function setStatutCompte(string $statut_compte): self
+    public function setStatutCompte(string $statut): self
     {
-        $this->statut_compte = $statut_compte;
+        $this->statut_compte = $statut;
         return $this;
     }
 
+    // --- ROLE ---
     public function getRole(): string
     {
         return $this->role;
@@ -95,4 +109,3 @@ class User
         return $this;
     }
 }
-?>
