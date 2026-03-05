@@ -1,27 +1,4 @@
 <?php
-// Initialisation
-session_start();
-require_once(__DIR__ . '/../src/Entity/User.php');
-require_once(__DIR__ . '/../src/Repository/UserRepository.php');
-
-$repository = new \App\Repository\UserRepository($pdo);
-
-// On suppose que l'ID est stocké en session après la connexion
-$id_session = $_SESSION['user'] ?? null;
-
-if (!$id_session) {
-    header('Location: /login.php');
-    exit;
-}
-
-$repository = new \App\Repository\UserRepository($pdo);
-$user = $repository->findById($id_session);
-
-if (!$user) {
-    echo "Utilisateur non trouvé.";
-    exit;
-}
-
 include_once(__DIR__ . '/view/header-login.php');
 ?>
 

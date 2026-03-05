@@ -15,11 +15,10 @@ class ProfileController
 
     public function index() 
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
+        if (session_status() === PHP_SESSION_NONE) { 
+            session_start(); 
         }
 
-        // On récupère l'ID stocké dans la session lors du login
         $userId = $_SESSION['user']['id'] ?? null;
 
         if (!$userId) {
@@ -30,14 +29,12 @@ class ProfileController
         $user = $this->userRepository->findById($userId);
 
         if (!$user) {
-            // Si l'utilisateur n'est pas trouvé, on nettoie la session
             session_destroy();
             header('Location: /login');
             exit;
-        }
+        } // <--- CETTE ACCOLADE ÉTAIT MANQUANTE
 
-        // Le contrôleur charge la vue (le fichier HTML)
+        // Le chemin vers ton fichier template
         include __DIR__ . '/../../template/profile.php';
     }
 }
-?>
