@@ -15,7 +15,7 @@ class ProjectRepository
         $this->pdo = $pdo;
     }
 
-    // CRUD - READ
+    // CRUD - CREATE
 
     public function create(Project $project): bool
     {
@@ -58,7 +58,7 @@ class ProjectRepository
             'type'    => $project->getType(),
             'contenu' => $project->getContenu(),
             'ordre'   => $project->getOrdreAffichage(),
-            'id'      => $project->getIdProject()
+            'id'      => $project->getIdProjet()
         ]);
     }
 

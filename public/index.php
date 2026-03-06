@@ -1,7 +1,7 @@
 <?php
 
 // ROUTEUR dynamique
-
+session_start();
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Controller\{HomeController, E404Controller, LoginController, ConditionController, ProfileController};
@@ -9,19 +9,26 @@ use App\Service\{DatabaseFactory};
 
 $request = trim($_SERVER['REQUEST_URI'], '/'); // folio.local/..../....
 $params = explode('/', $request); // ['folio', 'detail', '4']
-$controller = array_shift($params); // 'folio' - ['detail', '4']
-if ($controller == '') {
-    $controller = 'Home';
+$controllerName = array_shift($params) ?: 'Home';
+
+
+$controller = array_shift($params);
+
+// Mapping pour les pages statiques/liens spéciaux
+$map = [
+    'condition'        => 'Condition',
+    'mentions-legales' => 'Condition',
+    'politique'        => 'Condition'
+];
+if (isset($map[$controllerName])) {
+    $controllerName = $map[$controllerName];
 }
 
-$method = array_shift($params);
-if ($method == '') {
-    $method = 'index';
-}
+$method = array_shift($params) ?: 'index';
 
-$controllerClass = 'App\\Controller\\' . ucfirst($controller) . 'Controller'; // App\Controller\HomeController
+$controllerClass = 'App\\Controller\\' . ucfirst($controllerName) . 'Controller';
 if (!class_exists($controllerClass)) {
-    $controllerClass = E404Controller::class; // App\Controller\E404Controller
+    $controllerClass = E404Controller::class;
 }
 
 try {
@@ -52,9 +59,11 @@ $container = [
     ConditionController::class => function ($pdo) {
         return new ConditionController();
     },
+
     ProfileController::class => function ($pdo) {
-        $repo = new \App\Repository\UserRepository($pdo); // je crée le repo d'abord
-        return new ProfileController($repo); // je l'injecte dans le contrôleur
+        $repo = new \App\Repository\UserRepository($pdo);
+        $service = new \App\Service\UserService($repo); // On crée le service
+        return new ProfileController($service, $repo); // On injecte le SERVICE et non le repo
     }
 ];
 
@@ -63,5 +72,3 @@ if (!method_exists($controllerInstance, $method)) {
     $method = 'index';
 }
 $controllerInstance->$method($params);
-
-?>

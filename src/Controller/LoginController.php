@@ -33,15 +33,16 @@ class LoginController
 
             // 2. je vérifie si l'utilisateur existe et si le mot de passe correspond au hash en BDD
             if ($user && password_verify($password, $user->getPassword())) {
-
-                // 3. Authentification réussie : j'ouvre la session
-                if (session_status() === PHP_SESSION_NONE) {
-                    session_start();
-                }
-$_SESSION['user'] = [
-    'id' => $user->getIdUtilisateur(), // On récupère l'id_user de la BDD
-    'email' => $user->getEmail()
-];
+                session_start();
+                session_regenerate_id(true); // <--- Sécurité cruciale
+                $_SESSION['user'] = [
+                    'id' => $user->getIdUtilisateur(),
+                    'email' => $user->getEmail()
+                ];
+                $_SESSION['user'] = [
+                    'id' => $user->getIdUtilisateur(), // On récupère l'id_user de la BDD
+                    'email' => $user->getEmail()
+                ];
 
                 // Redirection vers le profile
                 header('Location: /profile');
@@ -85,5 +86,12 @@ $_SESSION['user'] = [
             }
         }
     }
+
+    public function logout()
+    {
+        session_destroy();
+        unset($_SESSION);
+        header('Location: /home'); // ou /login
+        exit;
+    }
 }
-?>

@@ -36,28 +36,38 @@ textElements.forEach((selector, index) => {
 });
 
 // 3. Retour en haut
-document.querySelector('#back').addEventListener('click', () => {
-  gsap.to(window, { duration: 1, scrollTo: 0 });
-});
+const backBtn = document.querySelector('#back');
+
+if (backBtn) {
+    backBtn.addEventListener('click', () => {
+        gsap.to(window, { duration: 1, scrollTo: 0 });
+    });
+}
 
 // 4. Etirement de la barre de recherche
 const searchInput = document.querySelector('.header-search input');
 
 if (searchInput) {
-  searchInput.addEventListener('focus', () => {
-    gsap.to('.header-search', { maxWidth: '450px', duration: 0.4, ease: 'power2.out' });
-  });
+    searchInput.addEventListener('focus', () => {
+        gsap.to('.header-search', { maxWidth: '450px', duration: 0.4, ease: 'power2.out' });
+    });
 
   searchInput.addEventListener('blur', () => {
     gsap.to('.header-search', { maxWidth: '350px', duration: 0.4, ease: 'power2.in' });
   });
 }
 
-const dialog = document.getElementById('mdpDialog');
-const openBtn = document.getElementById('ouvreDialog');
-// je cible le bouton annuler par son ID
-const closeBtn = document.getElementById('fermeDialog');
+// Gestion de la fenêtre modale de mot de passe
+const mdpDialog = document.querySelector('#mdpDialog');
+const ouvreBtn = document.querySelector('#ouvreDialog');
+const fermeBtn = document.querySelector('#fermeDialog');
 
-openBtn.addEventListener('click', () => dialog.showModal());
-closeBtn.addEventListener('click', () => dialog.close());
+if (mdpDialog && ouvreBtn && fermeBtn) {
+    ouvreBtn.addEventListener('click', () => {
+        mdpDialog.showModal();
+    });
 
+    fermeBtn.addEventListener('click', () => {
+        mdpDialog.close();
+    });
+}

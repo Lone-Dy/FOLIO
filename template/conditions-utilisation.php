@@ -1,5 +1,5 @@
 <?php
-include_once(__DIR__ . '/view/header-login.php');
+include_once(__DIR__ . '/view/header.php');
 ?>
 <main class="legal-content">
     <h1>Conditions Générales d'Utilisation</h1>
