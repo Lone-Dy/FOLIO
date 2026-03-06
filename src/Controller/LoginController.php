@@ -54,8 +54,10 @@ class LoginController
             }
         }
     }
+    
+// traitement du formulaire
 
-    public function handleRegister()
+    public function handleRegister() 
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Vérification de la case RGPD

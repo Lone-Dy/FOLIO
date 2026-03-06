@@ -41,7 +41,7 @@ class UserRepository
             'prenom'   => $user->getPrenom(),
             'email'    => $user->getEmail(),
             'age'      => $user->getAge(),
-            'password' => $user->getPassword(), // <--- On utilise 'password'
+            'password' => $user->getPassword(),
             'statut'   => $user->getStatutCompte() ?? 'actif',
             'role'     => $user->getRole() ?? 'user'
         ]);

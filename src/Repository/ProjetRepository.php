@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Entity\Project;
 use \PDO;
 
-class ProjectRepository
+class ProjetRepository
 {
 
     private PDO $pdo;
