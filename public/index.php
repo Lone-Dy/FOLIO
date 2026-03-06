@@ -37,7 +37,7 @@ try {
 // 2. Configuration des dépendances
 
 $container = [
-    HomeController:: class => function ($pdo) {
+    HomeController::class => function ($pdo) {
         return new HomeController();
     },
     LoginController::class => function ($pdo) {
@@ -67,4 +67,4 @@ if (!method_exists($controllerInstance, $method)) {
 }
 
 // Je lance l'action avec les paramètres restants
-$controllerInstance->$method($params);
+$controllerInstance->$method(...$params);
