@@ -2,21 +2,23 @@
 
 namespace App\Controller;
 
-use App\Repository\ProjetRepository;
+use App\Service\ProjetService;
 
 class ProjetController 
 {
-    private ProjetRepository $projetRepository;
-    public function __construct(ProjetRepository $projetRepository)
+    private ProjetService $projetService;
+
+
+    public function __construct(ProjetService $projetService)
     {
-        $this->projetRepository = $projetRepository;
+        $this->projetService = $projetService;
     }
 
     public function index(?array $params = null)
     {
+   
         $projets = $this->projetService->getUserPortfolio();
 
         include __DIR__ . '/../../template/portfolio.php';
     }
-
 }

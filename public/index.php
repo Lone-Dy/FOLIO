@@ -61,7 +61,7 @@ $container = [
         $projetRepo = new ProjetRepository($pdo);
         $projetService = new ProjetService($projetRepo);
 
-        return new ProfileController($service, $repo, $projetRepo);
+        return new ProfileController($service, $repo, $projetService);
     },
 
     ProjetController::class=> function ($pdo) {

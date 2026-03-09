@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Service\UserService;
 use App\Repository\UserRepository;
 use App\Service\ProjetService;
-use Exception;
 
 class ProfileController
 {
@@ -13,7 +12,7 @@ class ProfileController
     private UserRepository $userRepository;
     private ProjetService $projetService;
 
-    public function __construct(UserService $userService, UserRepository $userRepository, ProjetService $projetService) // On injecte le SERVICE
+    public function __construct(UserService $userService, UserRepository $userRepository, ProjetService $projetService)
     {
         $this->userService = $userService;
         $this->userRepository = $userRepository;
@@ -37,7 +36,9 @@ class ProfileController
             header('Location: /login');
             exit;
         }
-        $projet = $this->projetService->getPortfolio();
+
+        // Utilisation du nom de méthode correct défini dans ProjetService
+        $projets = $this->projetService->getUserPortfolio();
 
         include __DIR__ . '/../../template/profile.php';
     }
