@@ -17,15 +17,15 @@ $method = array_shift($params) ?: 'index';
 $controllerName = ucfirst($controllerSlug) . 'Controller'; //reconstruction du nom de la classe. 
 $controllerClass = "App\\Controller\\" . $controllerName;
 
-// 1. on se connecte à PDO
+// 1. Connexion à PDO
 
 try {
     $envPath = __DIR__ . '/../.env';
-    // si pas de fichier .env on leve une exception
+    // si pas de fichier .env, je leve une exception
     if (!file_exists($envPath)) {
         throw new Exception("Le fichier .env est manquant.");
     }
-    // on lit le .env
+    // lecture du .env
     $config = parse_ini_file($envPath); 
     // La factory DatabaseFactory crée le $pdo à partir du contenu de .env
     $pdo = DatabaseFactory::create($config);
@@ -37,6 +37,7 @@ try {
 // 2. Configuration des dépendances
 
 $container = [
+
     HomeController::class => function ($pdo) {
         return new HomeController();
     },
@@ -55,16 +56,19 @@ $container = [
 ];
 
 // Est-ce que le contrôleur existe dans mon container ?
+
 if (!isset($container[$controllerClass])) {
     $controllerClass = E404Controller::class;
     $method = 'index';
 }
 
 // Est-ce que la méthode (l'action) existe dans cet objet ?
+
 $controllerInstance = $container[$controllerClass]($pdo);
 if (!method_exists($controllerInstance, $method)) {
     $method = 'index'; // Méthode par défaut
 }
 
 // Je lance l'action avec les paramètres restants
+
 $controllerInstance->$method(...$params);
