@@ -3,6 +3,17 @@ include_once(__DIR__ . '/view/header.php');
 ?>
 
 <main>
+    <header class="profile-header">
+        <div class="profile-avatar">
+            <img src="/assets/img/default-avatar.png" alt="Avatar">
+        </div>
+        <h1 class="profile-name"><?= htmlspecialchars($user->getNom() . ' ' . $user->getPrenom()) ?></h1>
+        <p class="profile-bio">Directeur Artistique & Designer</p>
+        
+        <div class="profile-actions">
+            <button class="btn-apple" onclick="mdpDialog.showModal()">Paramètres</button>
+        </div>
+    </header>
 
     <?php if (isset($_GET['success'])): ?>
         <p style="color: green; background: #eaffea; padding: 10px; border: 1px solid green;">
@@ -41,6 +52,25 @@ include_once(__DIR__ . '/view/header.php');
             </div>
         </form>
     </dialog>
+    <section class="pinterest-grid">
+        <?php foreach ($projects as $project): ?>
+            <article class="project-card">
+                <div class="project-media">
+                    <img src="<?= htmlspecialchars($project->getContenu()) ?>" alt="Projet">
+                </div>
+                <div class="project-info">
+                    <span><?= htmlspecialchars($project->getType()) ?></span>
+                </div>
+            </article>
+        <?php endforeach; ?>
+        
+        <a href="/project/add" class="project-card add-card">
+            <div class="add-content">
+                <span class="plus-icon">+</span>
+                <p>Ajouter un projet</p>
+            </div>
+        </a>
+    </section>
 </main>
 
 <?php

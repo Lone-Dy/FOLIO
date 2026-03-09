@@ -5,7 +5,7 @@ class E404Controller {
 
     public function __construct() {}
 
-    public function index(?array $params) {
+    public function index(?array $params = null) {
         include __DIR__.'/../../template/error_404.php';
     }
 }

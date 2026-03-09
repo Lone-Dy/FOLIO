@@ -4,17 +4,20 @@ namespace App\Controller;
 
 use App\Service\UserService;
 use App\Repository\UserRepository;
+use App\Service\ProjetService;
 use Exception;
 
 class ProfileController
 {
     private UserService $userService;
     private UserRepository $userRepository;
+    private ProjetService $projetService;
 
-    public function __construct(UserService $userService, UserRepository $userRepository) // On injecte le SERVICE
+    public function __construct(UserService $userService, UserRepository $userRepository, ProjetService $projetService) // On injecte le SERVICE
     {
         $this->userService = $userService;
         $this->userRepository = $userRepository;
+        $this->projetService = $projetService;
     }
 
     public function index()
@@ -34,6 +37,7 @@ class ProfileController
             header('Location: /login');
             exit;
         }
+        $projet = $this->projetService->getPortfolio();
 
         include __DIR__ . '/../../template/profile.php';
     }
@@ -53,4 +57,5 @@ class ProfileController
             exit;
         }
     }
+
 }

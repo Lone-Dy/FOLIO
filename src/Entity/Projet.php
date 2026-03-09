@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-class Project
+class Projet
 {
     private ?int $id_projet = null;
     private string $type;

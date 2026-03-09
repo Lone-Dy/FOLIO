@@ -4,9 +4,9 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use App\Controller\{HomeController, E404Controller, LoginController, ConditionController, ProfileController};
+use App\Controller\{HomeController, E404Controller, LoginController, ConditionController, ProfileController, ProjetController};
 use App\Repository\{UserRepository, ProjetRepository, FolioRepository};
-use App\Service\{DatabaseFactory, UserService};
+use App\Service\{DatabaseFactory, ProjetService, UserService};
 
 session_start();
 
@@ -16,6 +16,7 @@ $controllerSlug = array_shift($params) ?: 'Home';
 $method = array_shift($params) ?: 'index';
 $controllerName = ucfirst($controllerSlug) . 'Controller'; //reconstruction du nom de la classe. 
 $controllerClass = "App\\Controller\\" . $controllerName;
+
 
 // 1. Connexion à PDO
 
@@ -41,18 +42,34 @@ $container = [
     HomeController::class => function ($pdo) {
         return new HomeController();
     },
+
+    E404Controller::class => function ($pdo) {
+        return new E404Controller();
+    },
+
+    ConditionController::class => function ($pdo) {
+        return new ConditionController();
+    },
+
     LoginController::class => function ($pdo) {
         return new LoginController(new UserRepository($pdo));
     },
+
     ProfileController::class => function ($pdo) {
         $repo = new UserRepository($pdo);
         $service = new UserService($repo);
-        return new ProfileController($service, $repo);
+        $projetRepo = new ProjetRepository($pdo);
+        $projetService = new ProjetService($projetRepo);
+
+        return new ProfileController($service, $repo, $projetRepo);
     },
 
-    E404Controller::class => function () {
-        return new E404Controller();
+    ProjetController::class=> function ($pdo) {
+        $repo = new ProjetRepository($pdo);
+        $service = new ProjetService($repo);
+        return new ProjetController($service);
     }
+
 ];
 
 // Est-ce que le contrôleur existe dans mon container ?

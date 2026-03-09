@@ -16,13 +16,17 @@ class LoginController
         $this->userRepository = $userRepository;
     }
 
-    public function index(?array $params)
+    public function index(?array $params = null)
     {
-        // Affiche la page de connexion/inscription
+
+        if (isset($_SESSION['user'])) {
+            header('Location: /');
+            exit();
+        }
         include __DIR__ . '/../../template/login_page.php';
     }
 
-    public function handleLogin()
+    public function handleLogin(?array $params = null)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'];
@@ -33,19 +37,16 @@ class LoginController
 
             // 2. je vérifie si l'utilisateur existe et si le mot de passe correspond au hash en BDD
             if ($user && password_verify($password, $user->getPassword())) {
-                session_start();
+
                 session_regenerate_id(true); // <--- Sécurité cruciale
+
                 $_SESSION['user'] = [
                     'id' => $user->getIdUtilisateur(),
                     'email' => $user->getEmail()
                 ];
-                $_SESSION['user'] = [
-                    'id' => $user->getIdUtilisateur(), // On récupère l'id_user de la BDD
-                    'email' => $user->getEmail()
-                ];
 
                 // Redirection vers le profile
-                header('Location: /profile');
+                header('Location: /Profile');
                 exit;
             } else {
                 // 4. Erreur : je redirige avec un message d'erreur
