@@ -46,7 +46,7 @@ class LoginController
                 ];
 
                 // Redirection vers le profile
-                header('Location: /Profile');
+                header('Location: /profile');
                 exit;
             } else {
                 // 4. Erreur : je redirige avec un message d'erreur
@@ -62,9 +62,10 @@ class LoginController
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Vérification de la case RGPD
-            if (!isset($_POST['accept_conditions'])) {
-                die("Vous devez accepter les conditions d'utilisation.");
-            }
+        if (!isset($_POST['accept_conditions'])) {
+            header('Location: /login?error=rgpd#register-section');
+            exit;
+        }
 
             // Création de l'entité User
             $user = new User();
@@ -82,10 +83,16 @@ class LoginController
 
             if ($success) {
                 // Redirection vers la page profile
-                header('Location: /profile');
+                header('Location: /profile?success=welcome');
                 exit;
             } else {
-                echo "Une erreur est survenue lors de l'inscription.";
+                header('Location: /login?error=reg_fail"register-section'); // Le #register-section à la fin de l'URL permet de faire descendre la page directement sur le formulaire d'inscription après le rechargement.
+                exit;
+            }
+
+            if (!isset($_POST['accept_conditions'])) {
+                header('Location: /login?error=rgdp#register-section');
+                exit;
             }
         }
     }

@@ -38,7 +38,7 @@ class ProfileController
         }
 
         // Utilisation du nom de méthode correct défini dans ProjetService
-        $projets = $this->projetService->getUserPortfolio();
+        $projets = [];
 
         include __DIR__ . '/../../template/profile.php';
     }
@@ -58,5 +58,4 @@ class ProfileController
             exit;
         }
     }
-
 }

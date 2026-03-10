@@ -3,8 +3,12 @@ include_once(__DIR__ . '/view/header-login.php');
 ?>
 
 <main class="auth-container">
-
     <section class="auth-box login-section">
+        <?php if (isset($_GET['error']) && $_GET['error'] == 1): ?>
+            <div style="color: white; background: #ff4d4d; padding: 10px; margin-bottom: 15px; border-radius: 5px; text-align: center;">
+                Identifiants incorrects. Veuillez vérifier votre email et votre mot de passe.
+            </div>
+        <?php endif; ?>
         <form action="/login/handleLogin" method="POST">
             <h2>Se connecter</h2>
 
@@ -25,9 +29,13 @@ include_once(__DIR__ . '/view/header-login.php');
     <div class="vertical-separator"></div>
 
     <section class="auth-box register-section" id="register-section">
+        <?php if (isset($_GET['error']) && $_GET['error'] === 'reg_fail'): ?>
+            <div style="color: #d93025; background-color: #fce8e6; padding: 10px; border-radius: 4px; border: 1px solid #d93025; margin-bottom: 15px; font-size: 0.9em; text-align: center;">
+                <strong>Erreur :</strong> L'inscription a échoué. L'email est peut-être déjà utilisé.
+            </div>
+        <?php endif; ?>
         <form action="/login/handleRegister" method="POST">
             <h2>Créez votre compte</h2>
-
             <div class="field">
                 <label for="register_email">Adresse E-mail <span class="required">*</span></label>
                 <input type="email" id="register_email" name="email" required />
@@ -35,7 +43,7 @@ include_once(__DIR__ . '/view/header-login.php');
 
             <div class="field">
                 <label for="register_password">Mot de passe <span class="required">*</span></label>
-                <input type="password" id="register_password" name="mot_de_passe" required />
+                <input type="password" id="register_password" name="password" required />
             </div>
 
             <div class="form-grid">

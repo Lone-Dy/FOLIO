@@ -10,13 +10,15 @@ use App\Service\{DatabaseFactory, ProjetService, UserService};
 
 session_start();
 
-$request = trim($_SERVER['REQUEST_URI'], '/'); //$request devient profile/edit/5
-$params = explode('/', $request); //$params devient un tableau ['profile', 'edit', '5']
+$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$request = trim($uri, '/');
+$params = explode('/', $request);
+
 $controllerSlug = array_shift($params) ?: 'Home';
 $method = array_shift($params) ?: 'index';
-$controllerName = ucfirst($controllerSlug) . 'Controller'; //reconstruction du nom de la classe. 
-$controllerClass = "App\\Controller\\" . $controllerName;
 
+$controllerName = ucfirst($controllerSlug) . 'Controller';
+$controllerClass = "App\\Controller\\" . $controllerName;
 
 // 1. Connexion à PDO
 
@@ -71,6 +73,7 @@ $container = [
     }
 
 ];
+
 
 // Est-ce que le contrôleur existe dans mon container ?
 

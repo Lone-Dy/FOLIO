@@ -17,16 +17,16 @@ class ProjetRepository
 
     // CRUD - CREATE
 
-    public function create(Project $project): bool
+    public function create(Projet $projet): bool
     {
-        $sql = "INSERT INTO project (type, contenu, ordre_affichage)
+        $sql = "INSERT INTO projet (type, contenu, ordre_affichage)
     VALUES (:type, :contenu, :ordre)";
 
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
-            'type' => $project->getType(),
-            'contenu' => $project->getContenu(),
-            'ordre' => $project->getOrdreAffichage()
+            'type' => $projet->getType(),
+            'contenu' => $projet->getContenu(),
+            'ordre' => $projet->getOrdreAffichage()
         ]);
     }
 
@@ -34,31 +34,31 @@ class ProjetRepository
 
     public function findAll(): array
     {
-        $stmt = $this->pdo->query("SELECT * FROM project ORDER BY ordre_affichage ASC");
+        $stmt = $this->pdo->query("SELECT * FROM projet ORDER BY ordre_affichage ASC");
         $projects = [];
         while ($row = $stmt->fetch()) {
-            $project = new Project();
-            $project->setType($row['type'])
+            $projet = new Projet();
+            $projet->setType($row['type'])
                 ->setContenu($row['contenu'])
                 ->setOrdreAffichage($row['ordre_affichage']);
-            $projects[] = $project;
+            $projets[] = $projet;
         }
-        return $projects;
+        return $projets;
     }
 
     // CRUD - UPDATE
 
-    public function update(Project $project): bool
+    public function update(Projet $projet): bool
     {
-        $sql = "UPDATE project SET type = :type, contenu = :contenu, 
-                ordre_affichage = :ordre WHERE id_project = :id";
+        $sql = "UPDATE projet SET type = :type, contenu = :contenu, 
+                ordre_affichage = :ordre WHERE id_projet = :id";
 
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
-            'type'    => $project->getType(),
-            'contenu' => $project->getContenu(),
-            'ordre'   => $project->getOrdreAffichage(),
-            'id'      => $project->getIdProjet()
+            'type'    => $projet->getType(),
+            'contenu' => $projet->getContenu(),
+            'ordre'   => $projet->getOrdreAffichage(),
+            'id'      => $projet->getIdProjet()
         ]);
     }
 
@@ -66,7 +66,7 @@ class ProjetRepository
 
     public function delete(int $id): bool
     {
-        $stmt = $this->pdo->prepare("DELETE FROM project WHERE id_project = ?");
+        $stmt = $this->pdo->prepare("DELETE FROM projet WHERE id_projet = ?");
         return $stmt->execute([$id]);
     }
 }
