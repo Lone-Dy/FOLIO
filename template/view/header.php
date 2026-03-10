@@ -6,6 +6,7 @@
     <title>FOLIO</title>
     <link rel="stylesheet" href="/assets/css/style-constant.css">
     <link rel="stylesheet" href="/assets/css/style-special.css">
+    <link rel="stylesheet" href="/assets/css/style-folio.css">
 </head>
 <body>
 <header class="header">

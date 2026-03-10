@@ -6,32 +6,34 @@ include_once(__DIR__ . '/view/header.php');
     <aside class="profile-sidebar">
         <div class="profile-card">
             <div class="profile-avatar">
-                <img src="/assets/img/default-avatar.png" alt="Avatar">
+                <img src="/assets/img/default-avatar.png" alt="Avatar de <?= htmlspecialchars($user->getPrenom()) ?>">
             </div>
             <h1 class="profile-name"><?= htmlspecialchars($user->getPrenom() . ' ' . $user->getNom()) ?></h1>
-            <p class="profile-role">Directeur Artistique & Designer</p>
             
             <div class="profile-details">
                 <div class="detail-item">
-                    <span>Email</span>
-                    <strong><?= htmlspecialchars($user->getEmail()) ?></strong>
+                    <span class="label">Email</span>
+                    <span class="value"><?= htmlspecialchars($user->getEmail()) ?></span>
                 </div>
             </div>
 
             <div class="profile-actions">
-                <button class="btn-secondary" id="ouvreDialog">Modifier le mot de passe</button>
+                <button class="btn-secondary" id="ouvreDialog">Sécurité & Compte</button>
             </div>
         </div>
     </aside>
 
     <section class="portfolio-section">
-        <div class="section-header">
-            <h2>Mon Portfolio</h2>
-            <a href="/project/add" class="btn-primary">+ Ajouter un projet</a>
-        </div>
+        <header class="section-header">
+            <div class="header-text">
+                <h2>Mes Travaux</h2>
+                <p>Gérez vos projets exposés.</p>
+            </div>
+            <a href="/project/add" class="btn-primary">+ Ajouter</a>
+        </header>
 
         <?php if (isset($_GET['success'])): ?>
-            <div class="alert alert-success">Mot de passe modifié avec succès.</div>
+            <div class="alert alert-success">Mise à jour effectuée.</div>
         <?php endif; ?>
 
         <div class="pinterest-grid">
@@ -41,7 +43,9 @@ include_once(__DIR__ . '/view/header.php');
                         <div class="project-media">
                             <img src="<?= htmlspecialchars($project->getContenu()) ?>" alt="Projet">
                             <div class="project-overlay">
-                                <button class="btn-view">Voir</button>
+                                <div class="overlay-actions">
+                                    <button class="btn-action">Éditer</button>
+                                </div>
                             </div>
                         </div>
                         <div class="project-info">
@@ -49,28 +53,32 @@ include_once(__DIR__ . '/view/header.php');
                         </div>
                     </article>
                 <?php endforeach; ?>
+            <?php else: ?>
+                <div class="empty-state">
+                    <p>Votre portfolio est vide.</p>
+                </div>
             <?php endif; ?>
         </div>
     </section>
-
-    <dialog id="mdpDialog" class="modern-dialog">
-        <form method="POST" action="/profile/updatePassword">
-            <h2>Sécurité du compte</h2>
-            <div class="field">
-                <label for="ancien_mdp">Ancien mot de passe</label>
-                <input type="password" name="ancien_mdp" id="ancien_mdp" required>
-            </div>
-            <div class="field">
-                <label for="nouveau_mdp">Nouveau mot de passe</label>
-                <input type="password" name="nouveau_mdp" id="nouveau_mdp" required>
-            </div>
-            <div class="dialog-actions">
-                <button type="submit" class="btn-primary">Enregistrer</button>
-                <button type="button" id="fermeDialog" class="btn-text">Annuler</button>
-            </div>
-        </form>
-    </dialog>
 </main>
+
+<dialog id="mdpDialog" class="modern-dialog">
+    <form method="POST" action="/profile/updatePassword">
+        <h2>Paramètres de sécurité</h2>
+        <div class="field">
+            <label for="ancien_mdp">Ancien mot de passe</label>
+            <input type="password" name="ancien_mdp" id="ancien_mdp" required>
+        </div>
+        <div class="field">
+            <label for="nouveau_mdp">Nouveau mot de passe</label>
+            <input type="password" name="nouveau_mdp" id="nouveau_mdp" required>
+        </div>
+        <div class="dialog-actions">
+            <button type="submit" class="btn-submit">Valider</button>
+            <button type="button" id="fermeDialog" class="btn-text">Fermer</button>
+        </div>
+    </form>
+</dialog>
 
 <?php
 include_once(__DIR__ . '/view/footer.php');

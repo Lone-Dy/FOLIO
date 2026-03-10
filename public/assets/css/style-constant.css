@@ -17,7 +17,6 @@
 
 body {
     font-family: 'Lexend', sans-serif;
-    /* Rigueur et géométrie */
     background-color: #ffffff;
     color: #1a1a1a;
     line-height: 1.6;
@@ -28,12 +27,11 @@ body {
 
 .header {
     position: fixed !important;
-    /* On force le maintien en haut */
+    /* force le maintien en haut */
     top: 0;
     left: 0;
     width: 100%;
     height: 80px;
-    /* On fixe une hauteur précise pour contrôler l'espace */
     z-index: 1000;
     display: flex;
     justify-content: space-between;
@@ -82,7 +80,27 @@ body {
     cursor: pointer;
     opacity: 0.5;
 }
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.header-text h2 {
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.header-text p {
+    color: #86868b;
+}
+
 /* --- Logo --- */
+
 .header .logo img {
     display: block;
     height: auto;
@@ -115,7 +133,6 @@ body {
     position: relative;
     transition: color 0.3s ease;
 }
-/* Petit effet de barre sous les liens au survol */
 
 .nav a::after {
     content: '';
@@ -136,8 +153,6 @@ body {
     width: 100%;
 }
 
-/* Style spécial pour le bouton Connexion/Profil s'il y en a un */
-
 .nav a[href="/login"],
 .nav a[href="/profile"] {
     background-color: #1a1a1a;
@@ -156,8 +171,6 @@ body {
 .nav a[href="/login"]::after,
 .nav a[href="/profile"]::after {
     display: none;
-
-    /* On retire la barre sous le bouton plein */
 
 }
 
@@ -179,11 +192,9 @@ select {
 
 .footer {
     background-color: #1a1a1a;
-    /* Fond sombre pour trancher avec le reste */
     color: #ffffff;
     padding: 60px 5% 20px;
     margin-top: 100px;
-    /* Donne de l'air après le contenu */
 }
 
 .description-folio {
@@ -320,6 +331,17 @@ select {
     opacity: 0.8;
 }
 
+.btn-action {
+    background: white;
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
 /* --- Dialog (Modal) --- */
 
 dialog {
@@ -424,5 +446,19 @@ dialog input {
 
     .vertical-separator {
         display: none;
+    }
+}
+
+/* Responsive profile */
+
+@media (max-width: 1024px) {
+    .profile-container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    
+    .profile-sidebar {
+        position: relative;
+        top: 0;
     }
 }
