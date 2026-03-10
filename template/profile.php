@@ -2,77 +2,74 @@
 include_once(__DIR__ . '/view/header.php');
 ?>
 
-<main>
-    <header class="profile-header">
-        <div class="profile-avatar">
-            <img src="/assets/img/default-avatar.png" alt="Avatar">
+<main class="profile-container">
+    <aside class="profile-sidebar">
+        <div class="profile-card">
+            <div class="profile-avatar">
+                <img src="/assets/img/default-avatar.png" alt="Avatar">
+            </div>
+            <h1 class="profile-name"><?= htmlspecialchars($user->getPrenom() . ' ' . $user->getNom()) ?></h1>
+            <p class="profile-role">Directeur Artistique & Designer</p>
+            
+            <div class="profile-details">
+                <div class="detail-item">
+                    <span>Email</span>
+                    <strong><?= htmlspecialchars($user->getEmail()) ?></strong>
+                </div>
+            </div>
+
+            <div class="profile-actions">
+                <button class="btn-secondary" id="ouvreDialog">Modifier le mot de passe</button>
+            </div>
         </div>
-        <h1 class="profile-name"><?= htmlspecialchars($user->getNom() . ' ' . $user->getPrenom()) ?></h1>
-        <p class="profile-bio">Directeur Artistique & Designer</p>
+    </aside>
 
-        <div class="profile-actions">
-            <button class="btn-apple" onclick="mdpDialog.showModal()">Paramètres</button>
+    <section class="portfolio-section">
+        <div class="section-header">
+            <h2>Mon Portfolio</h2>
+            <a href="/project/add" class="btn-primary">+ Ajouter un projet</a>
         </div>
-    </header>
 
-    <?php if (isset($_GET['success'])): ?>
-        <p style="color: green; background: #eaffea; padding: 10px; border: 1px solid green;">
-            Votre mot de passe a été modifié avec succès.
-        </p>
-    <?php endif; ?>
+        <?php if (isset($_GET['success'])): ?>
+            <div class="alert alert-success">Mot de passe modifié avec succès.</div>
+        <?php endif; ?>
 
-    <?php if (isset($_GET['error'])): ?>
-        <p style="color: red; background: #ffeaea; padding: 10px; border: 1px solid red;">
-            Erreur : <?= htmlspecialchars($_GET['error']) ?>
-        </p>
-    <?php endif; ?>
+        <div class="pinterest-grid">
+            <?php if (!empty($projets)): ?>
+                <?php foreach ($projets as $project): ?>
+                    <article class="project-card">
+                        <div class="project-media">
+                            <img src="<?= htmlspecialchars($project->getContenu()) ?>" alt="Projet">
+                            <div class="project-overlay">
+                                <button class="btn-view">Voir</button>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <h3><?= htmlspecialchars($project->getType()) ?></h3>
+                        </div>
+                    </article>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+    </section>
 
-    <h1>Détail de mon compte</h1>
-
-    <div class="utilisateur-info">
-        <p><strong>Nom :</strong> <?= $user->getNom() . ' ' . $user->getPrenom() ?></p>
-        <p><strong>Email :</strong> <?= $user->getEmail() ?></p>
-    </div>
-
-    <button type="button" id="ouvreDialog">Modifier mon mot de passe</button>
-
-    <dialog id="mdpDialog">
+    <dialog id="mdpDialog" class="modern-dialog">
         <form method="POST" action="/profile/updatePassword">
-            <h2>Changer le mot de passe</h2>
-
-            <label for="ancien_mdp">Ancien mot de passe</label>
-            <input type="password" name="ancien_mdp" id="ancien_mdp" required>
-
-            <label for="nouveau_mdp">Nouveau mot de passe</label>
-            <input type="password" name="nouveau_mdp" id="nouveau_mdp" required>
-
+            <h2>Sécurité du compte</h2>
+            <div class="field">
+                <label for="ancien_mdp">Ancien mot de passe</label>
+                <input type="password" name="ancien_mdp" id="ancien_mdp" required>
+            </div>
+            <div class="field">
+                <label for="nouveau_mdp">Nouveau mot de passe</label>
+                <input type="password" name="nouveau_mdp" id="nouveau_mdp" required>
+            </div>
             <div class="dialog-actions">
-                <button type="submit">Valider</button>
-                <button type="button" id="fermeDialog">Annuler</button>
+                <button type="submit" class="btn-primary">Enregistrer</button>
+                <button type="button" id="fermeDialog" class="btn-text">Annuler</button>
             </div>
         </form>
     </dialog>
-    <section class="pinterest-grid">
-        <?php if (!empty($projets)): ?>
-            <?php foreach ($projets as $project): ?>
-                <article class="project-card">
-                    <div class="project-media">
-                        <img src="<?= htmlspecialchars($project->getContenu()) ?>" alt="Projet">
-                    </div>
-                    <div class="project-info">
-                        <span><?= htmlspecialchars($project->getType()) ?></span>
-                    </div>
-                </article>
-            <?php endforeach; ?>
-        <?php endif; ?>
-
-        <a href="/project/add" class="project-card add-card">
-            <div class="add-content">
-                <span class="plus-icon">+</span>
-                <p>Ajouter un projet</p>
-            </div>
-        </a>
-    </section>
 </main>
 
 <?php

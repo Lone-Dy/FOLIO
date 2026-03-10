@@ -1,6 +1,14 @@
+/* --- 1. VARIABLES & RESET --- */
+
+:root {
+    --primary-color: #1a1a1a;
+    --accent-color: #0071e3;
+    --bg-color: #ffffff;
+    --card-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
 
-/* Reset et Base */
 * {
     margin: 0;
     padding: 0;
@@ -16,7 +24,8 @@ body {
     padding-top: 100px;
 }
 
-/* --- Header Principal --- */
+/* --- LES HEADERS & NAV --- */
+
 .header {
     position: fixed !important;
     /* On force le maintien en haut */
@@ -26,12 +35,10 @@ body {
     height: 80px;
     /* On fixe une hauteur précise pour contrôler l'espace */
     z-index: 1000;
-
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 80px;
-
     background-color: rgba(255, 255, 255, 0);
     backdrop-filter: blur(0px);
     transition: all 0.3s ease;
@@ -75,7 +82,6 @@ body {
     cursor: pointer;
     opacity: 0.5;
 }
-
 /* --- Logo --- */
 .header .logo img {
     display: block;
@@ -84,12 +90,15 @@ body {
     /* Taille optimale pour ton logo SVG */
     transition: opacity 0.3s ease;
 }
-
 .header .logo:hover img {
     opacity: 0.7;
 }
 
-/* --- Navigation --- */
+.profile-header {
+    text-align: center;
+    margin-bottom: 80px;
+}
+
 .nav {
     display: flex;
     gap: 30px;
@@ -106,8 +115,8 @@ body {
     position: relative;
     transition: color 0.3s ease;
 }
-
 /* Petit effet de barre sous les liens au survol */
+
 .nav a::after {
     content: '';
     position: absolute;
@@ -128,6 +137,7 @@ body {
 }
 
 /* Style spécial pour le bouton Connexion/Profil s'il y en a un */
+
 .nav a[href="/login"],
 .nav a[href="/profile"] {
     background-color: #1a1a1a;
@@ -151,7 +161,22 @@ body {
 
 }
 
-/* Footer */
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* --- LES FOOTERS --- */
+
 .footer {
     background-color: #1a1a1a;
     /* Fond sombre pour trancher avec le reste */
@@ -227,34 +252,25 @@ body {
     color: #666;
     font-size: 0.8rem;
 }
+/* --- 4. COMPOSANTS UI GÉNÉRIQUES (Dialogs, Boutons, Alerts) --- */
 
-/* Style spécifique pour la page 404 */
-.error-container {
-    height: 70vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 0 20px;
+/* --- Boutons --- */
+
+#ouvreDialog {
+    padding: 12px 25px;
+    background-color: #1a1a1a;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Lexend', sans-serif;
+    font-weight: 500;
+    transition: all 0.3s ease;
 }
 
-.error-container h1 {
-    font-size: 10rem;
-    font-weight: 900;
-    line-height: 1;
-    margin: 0;
-    background: linear-gradient(45deg, #1a1a1a, #666);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    letter-spacing: -5px;
-}
-
-.error-container p {
-    font-size: 1.2rem;
-    color: #666;
-    margin: 20px 0 40px;
-    max-width: 500px;
+#ouvreDialog:hover {
+    background-color: #333;
+    transform: translateY(-2px);
 }
 
 .btn-back-home {
@@ -273,122 +289,39 @@ body {
     transform: translateY(-2px);
 }
 
-/* Responsive : On empile sur mobile */
-@media (max-width: 768px) {
-    .auth-container {
-        flex-direction: column;
-    }
-
-    .vertical-separator {
-        display: none;
-    }
-}
-
-/* Un petit style rapide pour la lisibilité */
-.legal-content {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 60px 20px 120px;
-    /* Pour passer sous le header fixe */
-    line-height: 1.8;
-}
-
-.legal-content h1 {
-    font-size: 2.5rem;
-    font-weight: 800;
-    margin-bottom: 10px;
-    letter-spacing: -1px;
-}
-
-.legal-content>p {
-    color: #666;
-    margin-bottom: 40px;
-}
-
-.legal-section {
-    background: #fbfbfd;
-    /* Gris très léger Apple */
-    padding: 40px;
-    border-radius: 20px;
-    border: 1px solid #f2f2f2;
-}
-
-.legal-section h2 {
-    font-size: 1.4rem;
-    margin: 30px 0 15px;
-    color: #1d1d1f;
-}
-
-.legal-section p,
-.legal-section li {
-    font-size: 1.05rem;
-    color: #424245;
-    margin-bottom: 15px;
-}
-
-.legal-section ol {
-    padding-left: 20px;
-}
-
-/* --- Page Profil --- */
-main {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 40px;
-    background: #f9f9f9;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-}
-
-main h1 {
-    font-weight: 800;
-    font-size: 2.5rem;
-    margin-bottom: 30px;
-    letter-spacing: -1px;
-    border-bottom: 2px solid #1a1a1a;
-    display: inline-block;
-}
-
-.utilisateur-info {
-    background: #ffffff;
-    padding: 25px;
-    border-radius: 8px;
-    border-left: 5px solid #1a1a1a;
-    margin-bottom: 30px;
-}
-
-.utilisateur-info p {
-    font-size: 1.1rem;
-    margin: 10px 0;
-    color: #444;
-}
-
-.utilisateur-info strong {
-    color: #1a1a1a;
-    text-transform: uppercase;
-    font-size: 0.9rem;
-    letter-spacing: 1px;
-}
-
-/* --- Boutons --- */
-#ouvreDialog {
-    padding: 12px 25px;
-    background-color: #1a1a1a;
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    background-color: #333;
     color: white;
     border: none;
-    border-radius: 6px;
     cursor: pointer;
-    font-family: 'Lexend', sans-serif;
-    font-weight: 500;
-    transition: all 0.3s ease;
+    font-weight: bold;
 }
 
-#ouvreDialog:hover {
-    background-color: #333;
-    transform: translateY(-2px);
+.btn-submit:hover {
+    background-color: #555;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 15px;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: 'Lexend', sans-serif;
+    text-transform: uppercase;
+    transition: opacity 0.3s ease;
+}
+
+.btn-submit:hover {
+    opacity: 0.8;
 }
 
 /* --- Dialog (Modal) --- */
+
 dialog {
     border: none;
     border-radius: 15px;
@@ -468,4 +401,28 @@ dialog input {
     background-color: #f8d7da;
     color: #721c24;
     border: 1px solid #f5c6cb;
+}
+.modern-dialog {
+    border: none;
+    border-radius: 15px;
+    padding: 30px;
+    width: 400px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+.modern-dialog::backdrop {
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+}
+
+/* Responsive*/
+
+@media (max-width: 768px) {
+    .auth-container {
+        flex-direction: column;
+    }
+
+    .vertical-separator {
+        display: none;
+    }
 }
