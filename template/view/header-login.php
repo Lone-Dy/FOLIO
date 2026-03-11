@@ -14,7 +14,4 @@
         <a href="/home" class="logo">
             <img src="/assets/img/SVG/logo_folio_noir.svg" alt="Logo Folio" width="150">
         </a>
-        <nav class="nav">
-            <a href="/folio">FOLIOS</a>
-        </nav>
     </header>

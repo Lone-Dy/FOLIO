@@ -25,7 +25,7 @@ class ProfileController
             session_start();
         }
 
-        $userId = $_SESSION['user']['id'] ?? null;
+        $userId = $_SESSION['user']['id'];
         if (!$userId) {
             header('Location: /login');
             exit;
@@ -37,8 +37,7 @@ class ProfileController
             exit;
         }
 
-        // Utilisation du nom de méthode correct défini dans ProjetService
-        $projets = [];
+        $projets = $this->projetService->getUserPortfolio($userId);
 
         include __DIR__ . '/../../template/profile.php';
     }
@@ -51,22 +50,6 @@ class ProfileController
             try {
                 $this->userService->changeUserPassword($userId, $_POST['ancien_mdp'], $_POST['nouveau_mdp']);
                 header('Location: /profile?success=1');
-            } catch (\Exception $e) {
-                header('Location: /profile?error=' . urlencode($e->getMessage()));
-            }
-            exit;
-        }
-    }
-
-    public function updateEmail()
-    {
-        $userId = $_SESSION['user']['id'] ?? null;
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && $userId) {
-            try {
-                $this->userService->updateUserEmail($userId, $_POST['password_confirm'], $_POST['nouveau_email']);
-                $_SESSION['user']['email'] = $_POST['nouveau_email'];
-                header('Location: /profile?success=email');
             } catch (\Exception $e) {
                 header('Location: /profile?error=' . urlencode($e->getMessage()));
             }

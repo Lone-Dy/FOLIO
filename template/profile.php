@@ -18,18 +18,16 @@ include_once(__DIR__ . '/view/header-profil.php');
             </div>
 
             <div class="profile-actions">
-                <button class="btn-secondary" id="ouvreDialog">Sécurité & Compte</button>
+                <button class="btn-submit" onclick="document.getElementById('mdpDialog').showModal()">Modifier le mot de passe</button>
             </div>
         </div>
     </aside>
-
     <section class="portfolio-section">
         <header class="section-header">
             <div class="header-text">
-                <h2>Mes Travaux</h2>
-                <p>Gérez vos projets exposés.</p>
+                <h2>Mon Portfolio</h2>
+                <button class ="btn-submit" href="/projet">Gérez vos projets exposés</button>
             </div>
-            <a href="/project/add" class="btn-primary">+ Ajouter</a>
         </header>
 
         <?php if (isset($_GET['success'])): ?>
@@ -64,7 +62,7 @@ include_once(__DIR__ . '/view/header-profil.php');
 
 <dialog id="mdpDialog" class="modern-dialog">
     <form method="POST" action="/profile/updatePassword">
-        <h2>Paramètres de sécurité</h2>
+        <h2>Modifier le mot de passe</h2>
         <div class="field">
             <label for="ancien_mdp">Ancien mot de passe</label>
             <input type="password" name="ancien_mdp" id="ancien_mdp" required>
@@ -74,24 +72,11 @@ include_once(__DIR__ . '/view/header-profil.php');
             <input type="password" name="nouveau_mdp" id="nouveau_mdp" required>
         </div>
         <div class="dialog-actions">
-            <button type="submit" class="btn-submit">Valider</button>
-            <button type="button" id="fermeDialog" class="btn-text">Fermer</button>
+            <button type="submit" class="btn-submit">Mettre à jour</button>
+            <button type="button" id="fermeDialog" class="btn-text" onclick="this.closest('dialog').close()">Fermer</button>
         </div>
-    </form>
-    <form method="POST" action="/profile/updateEmail">
-        <h3>Changer l'adresse mail</h3>
-        <div class="field">
-            <label>Nouvel email</label>
-            <input type="email" name="nouveau_email" required>
-        </div>
-        <div class="field">
-            <label>Confirmez avec votre mot de passe</label>
-            <input type="password" name="password_confirm" required>
-        </div>
-        <button type="submit" class="btn-submit">Mettre à jour l'email</button>
     </form>
 </dialog>
-
 <?php
 include_once(__DIR__ . '/view/footer.php');
 ?>

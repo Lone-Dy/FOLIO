@@ -19,8 +19,7 @@ include_once(__DIR__ . '/view/header-profil.php');
             </div>
             <?php endfor; ?>
         </div>
-
-        <button type="submit" class="btn-save">Enregistrer mon Portfolio</button>
+        <button type="submit" class="btn-submit">Enregistrer mon Portfolio</button>
     </form>
 </main>
 <?php

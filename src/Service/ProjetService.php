@@ -35,9 +35,12 @@ class ProjetService
         return $this->projetRepository->create($projet);
     }
 
+    // Limite des projets
+
     public function canAddProjet(int $userId): bool
     {
         $projets = $this->projetRepository->findAll();
+        $count = $this->projetRepository->countByUserId($userId);
         return count($projets) < 3;
     }
 
@@ -50,16 +53,26 @@ class ProjetService
 
     public function createFullPortfolio(int $userId, array $projetsData): bool
     {
-        $limitedProjets = array_slice($projetsData, 0, 3);
+        // Vérification du nombre de projet actuel
+        $currentCount = $this->projetRepository->countByUserId($userId);
+
+        // Calcule si le rajout est possible
+        $remainingSlots = 3 - $currentCount;
+
+        if ($remainingSlots <= 0) {
+            return false; // Si déjà 3 projets en plus
+        }
+        // Compte rendu de la vérification
+        $limitedProjets = array_slice($projetsData, 0, $remainingSlots);
 
         foreach ($limitedProjets as $index => $data) {
             if (!empty($data['contenu'])) {
                 $projet = new Projet();
                 $projet->setType($data['type'] ?? 'image')
                 ->setContenu($data['contenu'])
-                ->setOrdreAffichage((string)$index);
+                ->setOrdreAffichage((string)$currentCount + $index);
 
-                $this->projetRepository->create($projet);
+                $this->projetRepository->create($projet, $userId);
             }
         }
         return true;

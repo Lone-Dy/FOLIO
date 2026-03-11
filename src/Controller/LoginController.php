@@ -32,19 +32,6 @@ class LoginController
             $email = $_POST['email'];
             $password = $_POST['password'];
 
-            if(
-                strlen($password) < 12 ||                   // 12 caractères minimum
-                !preg_match('@[A-Z]@', $password) ||        // Au moins une majuscule
-                !preg_match('@[a-z]@', $password) ||        // Au moins une minuscule
-                !preg_match('@[0-9]@', $password) ||        // Au moins un chiffre
-                !preg_match('@[^\w]@', $password)           // Au moins un caractère spécial
-            ) {
-                header('Location: /login?error=week_password#register-section');
-                exit;
-            }
-
-            $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-
             // 1. je cherche l'utilisateur par son email
             $user = $this->userRepository->findByEmail($email);
 
@@ -82,7 +69,7 @@ class LoginController
             !preg_match('@[0-9]@', $password) ||        // Au moins un chiffre
             !preg_match('@[^\w]@', $password)           // Au moins un caractère spécial
         ) {
-            header('Location: /login?error=week_password#register-section');
+            header('Location: /login?error=weak_password#register-section');
             exit;
         }
 

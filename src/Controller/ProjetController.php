@@ -32,7 +32,7 @@ class ProjetController
             $success = $this->projetService->createFullPortfolio($userId, $projetsData);
 
             if($success) {
-                header('Location: /profile?sucess=portfolio_created');
+                header('Location: /profile?success=portfolio_created');
             } else {
                 header('Location: /portfolio?error=fail');
             }

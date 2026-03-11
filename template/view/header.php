@@ -22,8 +22,8 @@
         </form>
     </div>
     <nav class="nav">
-        <a href="/folio">FOLIOS</a>
         <?php if (isset($_SESSION['user'])): ?>
+            <a href="/projet">MON FOLIO</a>
             <a href="/profile">MON PROFIL</a>
             <a href="/login/logout">DÉCONNEXION</a>
         <?php else: ?>

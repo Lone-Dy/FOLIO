@@ -11,7 +11,7 @@
             <h4>Navigation</h4>
             <ul>
                 <li><a href="/home">Accueil</a></li>
-                <li><a href="/folio">Portfolios</a></li>
+                <li><a href="/folio">Galerie</a></li>
                 <li><a href="/login">Connexion</a></li>
             </ul>
         </div>

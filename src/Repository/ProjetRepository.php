@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Project;
+use App\Entity\Projet;
 use \PDO;
 
 class ProjetRepository
@@ -35,15 +35,26 @@ class ProjetRepository
     public function findAll(): array
     {
         $stmt = $this->pdo->query("SELECT * FROM projet ORDER BY ordre_affichage ASC");
-        $projects = [];
+        $projets = [];
         while ($row = $stmt->fetch()) {
             $projet = new Projet();
             $projet->setType($row['type'])
                 ->setContenu($row['contenu'])
                 ->setOrdreAffichage($row['ordre_affichage']);
-            $projets[] = $projet;
+            $projets [] = $projet;
         }
         return $projets;
+    }
+
+    // Compter les projets d'un utilisateur spécifique
+
+    public function countByUserId(int $userId): int
+    {
+        $sql = "SELECT COUNT(*) FROM projet WHERE id_user = :userId";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':userId' => $userId]);
+
+        return (int) $stmt->fetchColumn();
     }
 
     // CRUD - UPDATE
