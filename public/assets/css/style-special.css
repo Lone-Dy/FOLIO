@@ -126,7 +126,7 @@
 /* --- Page Profil --- */
 
 main {
-    max-height: 900px;
+    max-width: 900px;
     margin: 40px auto;
     padding: 40px;
     background: #f9f9f9;

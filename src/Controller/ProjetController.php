@@ -21,4 +21,22 @@ class ProjetController
 
         include __DIR__ . '/../../template/portfolio.php';
     }
+
+    public function handleCreatePortfolio()
+    {
+        $userId = $_SESSION['user']['id'] ?? null;
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && $userId) {
+            $projetsData = $_POST['projets'] ?? [];
+
+            $success = $this->projetService->createFullPortfolio($userId, $projetsData);
+
+            if($success) {
+                header('Location: /profile?sucess=portfolio_created');
+            } else {
+                header('Location: /portfolio?error=fail');
+            }
+            exit;
+        }
+    }
 }

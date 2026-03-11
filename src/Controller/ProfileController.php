@@ -45,13 +45,28 @@ class ProfileController
 
     public function updatePassword()
     {
-        session_start();
         $userId = $_SESSION['user']['id'] ?? null;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && $userId) {
             try {
                 $this->userService->changeUserPassword($userId, $_POST['ancien_mdp'], $_POST['nouveau_mdp']);
                 header('Location: /profile?success=1');
+            } catch (\Exception $e) {
+                header('Location: /profile?error=' . urlencode($e->getMessage()));
+            }
+            exit;
+        }
+    }
+
+    public function updateEmail()
+    {
+        $userId = $_SESSION['user']['id'] ?? null;
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && $userId) {
+            try {
+                $this->userService->updateUserEmail($userId, $_POST['password_confirm'], $_POST['nouveau_email']);
+                $_SESSION['user']['email'] = $_POST['nouveau_email'];
+                header('Location: /profile?success=email');
             } catch (\Exception $e) {
                 header('Location: /profile?error=' . urlencode($e->getMessage()));
             }

@@ -25,18 +25,6 @@ class ProjetService
 
     // Ajouter un nouveau projet
 
-    public function CreateProjet(array $data): bool
-    {
-        $projet = new Projet();
-        $projet->setType($data['type'])
-            ->setContenu($data['contenu'])
-            ->setOrdreAffichage($data['ordre']);
-
-        return $this->projetRepository->create($projet);
-    }
-
-    // Prepare et enregistre un nouveau projet
-
     public function addProjet(array $data): bool
     {
         $projet = new Projet();
@@ -47,8 +35,33 @@ class ProjetService
         return $this->projetRepository->create($projet);
     }
 
+    public function canAddProjet(int $userId): bool
+    {
+        $projets = $this->projetRepository->findAll();
+        return count($projets) < 3;
+    }
+
     public function getPortfolio(): array
     {
         return $this->projetRepository->findAll();
+    }
+
+    // Création du portfolio
+
+    public function createFullPortfolio(int $userId, array $projetsData): bool
+    {
+        $limitedProjets = array_slice($projetsData, 0, 3);
+
+        foreach ($limitedProjets as $index => $data) {
+            if (!empty($data['contenu'])) {
+                $projet = new Projet();
+                $projet->setType($data['type'] ?? 'image')
+                ->setContenu($data['contenu'])
+                ->setOrdreAffichage((string)$index);
+
+                $this->projetRepository->create($projet);
+            }
+        }
+        return true;
     }
 }

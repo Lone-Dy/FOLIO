@@ -1,5 +1,5 @@
 <?php
-include_once(__DIR__ . '/view/header.php');
+include_once(__DIR__ . '/view/header-profil.php');
 ?>
 
 <main class="profile-container">
@@ -9,7 +9,7 @@ include_once(__DIR__ . '/view/header.php');
                 <img src="/assets/img/default-avatar.png" alt="Avatar de <?= htmlspecialchars($user->getPrenom()) ?>">
             </div>
             <h1 class="profile-name"><?= htmlspecialchars($user->getPrenom() . ' ' . $user->getNom()) ?></h1>
-            
+
             <div class="profile-details">
                 <div class="detail-item">
                     <span class="label">Email</span>
@@ -77,6 +77,18 @@ include_once(__DIR__ . '/view/header.php');
             <button type="submit" class="btn-submit">Valider</button>
             <button type="button" id="fermeDialog" class="btn-text">Fermer</button>
         </div>
+    </form>
+    <form method="POST" action="/profile/updateEmail">
+        <h3>Changer l'adresse mail</h3>
+        <div class="field">
+            <label>Nouvel email</label>
+            <input type="email" name="nouveau_email" required>
+        </div>
+        <div class="field">
+            <label>Confirmez avec votre mot de passe</label>
+            <input type="password" name="password_confirm" required>
+        </div>
+        <button type="submit" class="btn-submit">Mettre à jour l'email</button>
     </form>
 </dialog>
 

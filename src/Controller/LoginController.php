@@ -26,11 +26,24 @@ class LoginController
         include __DIR__ . '/../../template/login_page.php';
     }
 
-    public function handleLogin(?array $params = null)
+    public function handleLogin(?array $params = null) // La vérification (Connexion)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'];
             $password = $_POST['password'];
+
+            if(
+                strlen($password) < 12 ||                   // 12 caractères minimum
+                !preg_match('@[A-Z]@', $password) ||        // Au moins une majuscule
+                !preg_match('@[a-z]@', $password) ||        // Au moins une minuscule
+                !preg_match('@[0-9]@', $password) ||        // Au moins un chiffre
+                !preg_match('@[^\w]@', $password)           // Au moins un caractère spécial
+            ) {
+                header('Location: /login?error=week_password#register-section');
+                exit;
+            }
+
+            $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
             // 1. je cherche l'utilisateur par son email
             $user = $this->userRepository->findByEmail($email);
@@ -45,8 +58,8 @@ class LoginController
                     'email' => $user->getEmail()
                 ];
 
-                // Redirection vers le profile
-                header('Location: /profile');
+                // Redirection vers le home
+                header('Location: /');
                 exit;
             } else {
                 // 4. Erreur : je redirige avec un message d'erreur
@@ -58,9 +71,21 @@ class LoginController
     
 // traitement du formulaire
 
-    public function handleRegister() 
+    public function handleRegister()  // La création (Inscription)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $password = $_POST['password'];
+
+        if(strlen($password) < 12 ||                   // 12 caractères minimum
+            !preg_match('@[A-Z]@', $password) ||        // Au moins une majuscule
+            !preg_match('@[a-z]@', $password) ||        // Au moins une minuscule
+            !preg_match('@[0-9]@', $password) ||        // Au moins un chiffre
+            !preg_match('@[^\w]@', $password)           // Au moins un caractère spécial
+        ) {
+            header('Location: /login?error=week_password#register-section');
+            exit;
+        }
+
             // Vérification de la case RGPD
         if (!isset($_POST['accept_conditions'])) {
             header('Location: /login?error=rgpd#register-section');
@@ -86,12 +111,7 @@ class LoginController
                 header('Location: /profile?success=welcome');
                 exit;
             } else {
-                header('Location: /login?error=reg_fail"register-section'); // Le #register-section à la fin de l'URL permet de faire descendre la page directement sur le formulaire d'inscription après le rechargement.
-                exit;
-            }
-
-            if (!isset($_POST['accept_conditions'])) {
-                header('Location: /login?error=rgdp#register-section');
+                header('Location: /login?error=reg_fail#register-section'); // Le #register-section à la fin de l'URL permet de faire descendre la page directement sur le formulaire d'inscription après le rechargement.
                 exit;
             }
         }
