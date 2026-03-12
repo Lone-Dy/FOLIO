@@ -168,22 +168,24 @@ function updateThumbnail(zone, file) {
     }
 }
 
+
+// Gestion des fichiers dans la partie Projet
+
 document.querySelectorAll('.drop-zone').forEach((zone) => {
+    // Sélection des éléments internes à la zone actuelle
     const input = zone.querySelector('.drop-zone-input');
     const mediaList = zone.querySelector('.media-list');
     
-    // Tableau local pour stocker les fichiers de cette zone précise
-    let filesCollection = [];
+    let filesCollection = []; // Stocke les fichiers dans le projet précis
 
-    // 1. Déclenchement au clic
     zone.addEventListener('click', (e) => {
-        // On vérifie qu'on ne clique pas sur un bouton "supprimer" d'une miniature
+        // Sécurité : on n'ouvre pas l'explorateur si l'utilisateur clique sur le bouton "supprimer"
         if (!e.target.classList.contains('btn-remove')) {
             input.click();
         }
     });
 
-    // 2. Gestion de l'ajout (via clic ou drag & drop)
+    // Gestion de l'ajout (via clic ou drag & drop)
     const handleFiles = (files) => {
         const newFiles = Array.from(files);
         
@@ -199,49 +201,64 @@ document.querySelectorAll('.drop-zone').forEach((zone) => {
             }
         });
 
+        // Mise à jour de l'affichage et de l'état du bouton de publication
         renderMedias();
         updatePublishButton(); // Active le bouton si les 3 projets sont prêts
     };
 
+    // L'utilisateur choisi ses fichiers via la fenêtre Window/Mac
     input.addEventListener('change', () => handleFiles(input.files));
 
+    // L'utilisateur survole la zone avec un fichier
     zone.addEventListener('dragover', (e) => {
         e.preventDefault();
         zone.classList.add('drop-zone--over');
     });
 
+    // L'utilisateur quitte la zone sans le déposer
     zone.addEventListener('dragleave', () => zone.classList.remove('drop-zone--over'));
 
+    // L'utilisateur lâche les fichiers dans la zone
     zone.addEventListener('drop', (e) => {
         e.preventDefault();
         zone.classList.remove('drop-zone--over');
+        // Récupère les fichiers
         handleFiles(e.dataTransfer.files);
     });
 
-    // 3. Affichage des miniatures et bouton retirer
+    // Affichage des miniatures et bouton retirer
     function renderMedias() {
         mediaList.innerHTML = '';
+
+        // Gestion du texte d'invite ("Glissez vos fichiers...")
         const prompt = zone.querySelector('.drop-zone-prompt');
         prompt.style.display = filesCollection.length > 0 ? 'none' : 'block';
 
+        // Panier pour créer les éléments HTML
         filesCollection.forEach((file, index) => {
             const item = document.createElement('div');
             item.classList.add('media-item-mini');
 
+            // Si c'est une image, ça génère un aperçu visuel
             if (file.type.startsWith('image/')) {
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
                 reader.onload = () => item.style.backgroundImage = `url('${reader.result}')`;
             } else {
+                // Sinon, ça génère une icone
                 item.innerHTML = '<span class="video-icon">🎥</span>';
             }
 
+            // Création du bouton de suppression
             const removeBtn = document.createElement('button');
             removeBtn.innerHTML = '×';
             removeBtn.classList.add('btn-remove');
             removeBtn.onclick = (e) => {
                 e.stopPropagation();
+                // Supprime l'élément du tableau via l'index
                 filesCollection.splice(index, 1);
+
+                // Relance le rendu pour mettre à jour la vue
                 renderMedias();
                 updatePublishButton();
             };
