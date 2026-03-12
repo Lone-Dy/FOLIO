@@ -26,7 +26,7 @@ include_once(__DIR__ . '/view/header-profil.php');
         <header class="section-header">
             <div class="header-text">
                 <h2>Mon Portfolio</h2>
-                <button class="btn-submit" href="/projet">Gérez vos projets exposés</button>
+                <button class="btn-folio" onclick="window.location.href='/projet'">Gérez vos projets exposés</button>
             </div>
         </header>
 

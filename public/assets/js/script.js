@@ -83,3 +83,171 @@ const welcomeModal = document.getElementById('welcomeDialog');
     function closeWelcome() {
         welcomeModal.close();
     }
+
+// Gestion du Drag and Drop et Validation du Portfolio
+
+const portfolioForm = document.getElementById('portfolioForm');
+const publishBtn = document.getElementById('publishBtn');
+
+if (portfolioForm) {
+    const dropZones = document.querySelectorAll('.drop-zone');
+    const inputs = document.querySelectorAll('.drop-zone-input');
+
+    // Vérifie si les conditions sont remplies pour autoriser la publication
+    const updatePublishButton = () => {
+        const allFilled = Array.from(inputs).every(input => input.files.length > 0);
+        // Array.from(inputs) : Transforme la liste d'emplacements de fichiers en un tableau
+        // .every(...) : Vérifie si chaque emplacement contient un fichier
+        publishBtn.disabled = !allFilled;
+        // Si allFilled est vrai (3 fichiers), on active le bouton. Sinon, il reste bloqué.
+    };
+
+    // La boucle de configuration : Eviter de répèter 3X le même code
+    dropZones.forEach((zone, index) => {
+        const input = zone.querySelector('.drop-zone-input');
+
+        zone.addEventListener('click', () => input.click());
+
+        input.addEventListener('change', () => {
+            if (input.files.length) {
+                updateThumbnail(zone, input.files[0]);
+                updatePublishButton();
+            }
+        });
+
+        zone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            zone.classList.add('drop-zone--over');
+        });
+
+        ['dragleave', 'dragend'].forEach(type => {
+            zone.addEventListener(type, () => {
+                zone.classList.remove('drop-zone--over');
+            });
+        });
+
+        zone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            if (e.dataTransfer.files.length) {
+                input.files = e.dataTransfer.files;
+                updateThumbnail(zone, e.dataTransfer.files[0]);
+                updatePublishButton();
+            }
+            zone.classList.remove('drop-zone--over');
+        });
+    });
+}
+
+// Interface UI : Elle prend deux informations (arguments) : la zone concernée et le fichier sélectionné.
+
+function updateThumbnail(zone, file) {
+    let thumbnailElement = zone.querySelector('.drop-zone-thumb'); // Si c'est le premier fichier, elle crée une nouvelle couche visuelle (drop-zone-thumb)
+    const prompt = zone.querySelector('.drop-zone-prompt');
+
+    if (prompt) prompt.style.display = 'none';
+    // Nettoyage : Elle cache le texte "Glissez un fichier"
+
+    if (!thumbnailElement) {
+        thumbnailElement = document.createElement('div');
+        thumbnailElement.classList.add('drop-zone-thumb');
+        zone.appendChild(thumbnailElement);
+    }
+
+    thumbnailElement.dataset.label = file.name;
+
+    if (file.type.startsWith('image/')) {
+        const reader = new FileReader(); // FileReader = Objet qui lit le contenu du fichier sur l'ordinateur de l'utilisateur pour en faire une image de fond
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+            thumbnailElement.style.backgroundImage = `url('${reader.result}')`;
+            thumbnailElement.innerHTML = '';
+        };
+    } else if (file.type.startsWith('video/')) {
+        thumbnailElement.style.backgroundImage = 'none';
+        thumbnailElement.innerHTML = '<div class="video-indicator">Fichier Vidéo</div>';
+    }
+}
+
+document.querySelectorAll('.drop-zone').forEach((zone) => {
+    const input = zone.querySelector('.drop-zone-input');
+    const mediaList = zone.querySelector('.media-list');
+    
+    // Tableau local pour stocker les fichiers de cette zone précise
+    let filesCollection = [];
+
+    // 1. Déclenchement au clic
+    zone.addEventListener('click', (e) => {
+        // On vérifie qu'on ne clique pas sur un bouton "supprimer" d'une miniature
+        if (!e.target.classList.contains('btn-remove')) {
+            input.click();
+        }
+    });
+
+    // 2. Gestion de l'ajout (via clic ou drag & drop)
+    const handleFiles = (files) => {
+        const newFiles = Array.from(files);
+        
+        newFiles.forEach(file => {
+            // Vérification du poids (5 Mo)
+            if (file.size > 5 * 1024 * 1024) {
+                alert(`Le fichier ${file.name} est trop lourd (> 5Mo)`);
+                return;
+            }
+            // Vérification de la limite (5 fichiers)
+            if (filesCollection.length < 5) {
+                filesCollection.push(file);
+            }
+        });
+
+        renderMedias();
+        updatePublishButton(); // Active le bouton si les 3 projets sont prêts
+    };
+
+    input.addEventListener('change', () => handleFiles(input.files));
+
+    zone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        zone.classList.add('drop-zone--over');
+    });
+
+    zone.addEventListener('dragleave', () => zone.classList.remove('drop-zone--over'));
+
+    zone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zone.classList.remove('drop-zone--over');
+        handleFiles(e.dataTransfer.files);
+    });
+
+    // 3. Affichage des miniatures et bouton retirer
+    function renderMedias() {
+        mediaList.innerHTML = '';
+        const prompt = zone.querySelector('.drop-zone-prompt');
+        prompt.style.display = filesCollection.length > 0 ? 'none' : 'block';
+
+        filesCollection.forEach((file, index) => {
+            const item = document.createElement('div');
+            item.classList.add('media-item-mini');
+
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => item.style.backgroundImage = `url('${reader.result}')`;
+            } else {
+                item.innerHTML = '<span class="video-icon">🎥</span>';
+            }
+
+            const removeBtn = document.createElement('button');
+            removeBtn.innerHTML = '×';
+            removeBtn.classList.add('btn-remove');
+            removeBtn.onclick = (e) => {
+                e.stopPropagation();
+                filesCollection.splice(index, 1);
+                renderMedias();
+                updatePublishButton();
+            };
+
+            item.appendChild(removeBtn);
+            mediaList.appendChild(item);
+        });
+    }
+});

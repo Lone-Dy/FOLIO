@@ -332,6 +332,14 @@ select {
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
+.btn-folio {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    padding: 8px 18px;
+    border-radius: 4px;
+    height: 35px;
+}
+
 /* --- Dialog (Modal) --- */
 
 dialog {
