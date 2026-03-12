@@ -26,7 +26,7 @@ include_once(__DIR__ . '/view/header-profil.php');
         <header class="section-header">
             <div class="header-text">
                 <h2>Mon Portfolio</h2>
-                <button class ="btn-submit" href="/projet">Gérez vos projets exposés</button>
+                <button class="btn-submit" href="/projet">Gérez vos projets exposés</button>
             </div>
         </header>
 
@@ -60,6 +60,18 @@ include_once(__DIR__ . '/view/header-profil.php');
     </section>
 </main>
 
+<?php if (isset($_GET['new']) && $_GET['new'] == '1'): ?>
+    <dialog id="welcomeDialog" class="welcome-modal">
+        <div class="modal-content">
+            <h2>Bienvenue, <?= htmlspecialchars($user->getPrenom()) ?> !</h2>
+            <p>Votre compte a été créé avec succès.<br>Votre aventure sur FOLIO commence maintenant.</p>
+            <div class="next-steps">
+                <button class="btn-submit" onclick="closeWelcome()">C'est parti !</button>
+            </div>
+        </div>
+    </dialog>
+<?php endif; ?>
+
 <dialog id="mdpDialog" class="modern-dialog">
     <form method="POST" action="/profile/updatePassword">
         <h2>Modifier le mot de passe</h2>
@@ -77,6 +89,7 @@ include_once(__DIR__ . '/view/header-profil.php');
         </div>
     </form>
 </dialog>
+
 <?php
 include_once(__DIR__ . '/view/footer.php');
 ?>

@@ -4,9 +4,20 @@ include_once(__DIR__ . '/view/header-login.php');
 
 <main class="auth-container">
     <section class="auth-box login-section">
-        <?php if (isset($_GET['error']) && $_GET['error'] == 1): ?>
-            <div style="color: white; background: #ff4d4d; padding: 10px; margin-bottom: 15px; border-radius: 5px; text-align: center;">
-                Identifiants incorrects. Veuillez vérifier votre email et votre mot de passe.
+        <?php if (isset($_GET['error'])): ?>
+            <div class="error-shake">
+                <?php
+                switch ($_GET['error']) {
+                    case 'user_not_found':
+                        echo "Aucun compte n'est associé à cet email.";
+                        break;
+                    case 'invalid_password':
+                        echo "Le mot de passe saisi est incorrect.";
+                        break;
+                    default:
+                        echo "Identifiants incorrects. Veuillez réessayer.";
+                }
+                ?>
             </div>
         <?php endif; ?>
         <form action="/login/handleLogin" method="POST">

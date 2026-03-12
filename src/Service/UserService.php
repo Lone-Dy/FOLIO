@@ -14,6 +14,25 @@ class UserService
         $this->userRepository = $userRepository;
     }
 
+    // Identification du problème de connexion
+    
+    public function authenticate(string $email, string $password)
+    {
+        $user = $this->userRepository->findByEmail($email);
+
+        // L'utilisateur n'a pas de compte.
+        if(!$user) {
+            return 'USER_NOT_FOUND';
+        }
+
+        // L'utilisateur a un compte mais le mot de passe est mauvais
+        if (!password_verify($password, $user->getPassword())) {
+            return 'INVALID_PASSWORD';
+        }
+
+        return $user;
+    }
+
     public function changeUserPassword(int $userId, string $oldPassword, string $newPassword): bool
     {
         $user = $this->userRepository->findById($userId);

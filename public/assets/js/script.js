@@ -71,3 +71,15 @@ if (mdpDialog && ouvreBtn && fermeBtn) {
         mdpDialog.close();
     });
 }
+
+// Message de bienvenue
+const welcomeModal = document.getElementById('welcomeDialog');
+    
+    // Ouvre la modale au chargement de la page
+    window.onload = () => {
+        welcomeModal.showModal();
+    }
+
+    function closeWelcome() {
+        welcomeModal.close();
+    }

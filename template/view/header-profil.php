@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>FOLIO</title>
+    <link rel="icon" type="image/png" href="/assets/ico/favicon-folio.png">
     <link rel="stylesheet" href="/assets/css/style-constant.css">
     <link rel="stylesheet" href="/assets/css/style-special.css">
     <link rel="stylesheet" href="/assets/css/style-folio.css">

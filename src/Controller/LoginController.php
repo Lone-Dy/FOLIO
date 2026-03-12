@@ -4,16 +4,19 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Service\UserService;
 
 class LoginController
 {
 
     private $userRepository;
+    private $userService;
 
     // le Repository au constructeur
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository, UserService $userService)
     {
         $this->userRepository = $userRepository;
+        $this->userService = $userService;
     }
 
     public function index(?array $params = null)
@@ -32,25 +35,24 @@ class LoginController
             $email = $_POST['email'];
             $password = $_POST['password'];
 
-            // 1. je cherche l'utilisateur par son email
-            $user = $this->userRepository->findByEmail($email);
+            $authResult = $this->userService->authenticate($email, $password);
 
-            // 2. je vérifie si l'utilisateur existe et si le mot de passe correspond au hash en BDD
-            if ($user && password_verify($password, $user->getPassword())) {
+            if ($authResult instanceof \App\Entity\User) {
 
                 session_regenerate_id(true); // <--- Sécurité cruciale
 
                 $_SESSION['user'] = [
-                    'id' => $user->getIdUtilisateur(),
-                    'email' => $user->getEmail()
+                    'id' => $authResult->getIdUtilisateur(),
+                    'email' => $authResult->getEmail()
                 ];
 
                 // Redirection vers le home
                 header('Location: /');
                 exit;
             } else {
-                // 4. Erreur : je redirige avec un message d'erreur
-                header('Location: /login?error=1');
+
+                $errorCode = strtolower($authResult);
+                header("Location: /login?error=$errorCode");
                 exit;
             }
         }
@@ -79,6 +81,13 @@ class LoginController
             exit;
         }
 
+            // Stopper l'inscription des deux personnes utilisant la même adresse mail
+            $existingUser = $this->userRepository->findByEmail($_POST['email']);
+            if ($existingUser) {
+                header('Location: /login?error=email_exists#register-section');
+                exit;
+            }
+
             // Création de l'entité User
             $user = new User();
             $user->setNom($_POST['nom'])
@@ -94,8 +103,16 @@ class LoginController
             $success = $this->userRepository->create($user);
 
             if ($success) {
+
+                $newUser = $this->userRepository->findByEmail($user->getEmail());
+
+                $_SESSION['user'] = [
+                    'id' => $newUser->getIdUtilisateur(),
+                    'email' => $newUser->getEmail()
+                ];
+
                 // Redirection vers la page profile
-                header('Location: /profile?success=welcome');
+                header('Location: /profile?success=welcome&new=1');
                 exit;
             } else {
                 header('Location: /login?error=reg_fail#register-section'); // Le #register-section à la fin de l'URL permet de faire descendre la page directement sur le formulaire d'inscription après le rechargement.

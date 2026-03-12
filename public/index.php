@@ -54,7 +54,10 @@ $container = [
     },
 
     LoginController::class => function ($pdo) {
-        return new LoginController(new UserRepository($pdo));
+
+        $userRepo = new UserRepository($pdo);
+        $userService = new UserService($userRepo);
+        return new LoginController($userRepo, $userService);
     },
 
     ProfileController::class => function ($pdo) {
