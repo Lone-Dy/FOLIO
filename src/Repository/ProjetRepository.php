@@ -20,13 +20,25 @@ class ProjetRepository
     public function create(Projet $projet): bool
     {
         $sql = "INSERT INTO projet (type, contenu, ordre_affichage)
-    VALUES (:type, :contenu, :ordre)";
+                VALUES (:type, :contenu, :ordre)";
 
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             'type' => $projet->getType(),
             'contenu' => $projet->getContenu(),
             'ordre' => $projet->getOrdreAffichage()
+        ]);
+    }
+
+    public function createWithFolio(Projet $projet, int $idFolio): bool
+    {
+        $sql = "INSERT INTO projet (type, contenu, ordre_affichage, id_folio)
+                VALUES (:type, :contenu, :ordre, :id_folio)";
+        return $this->pdo->prepare($sql)->execute([
+            'type' => $projet->getType(),
+            'contenu' => $projet->getContenu(),
+            'ordre' => $projet->getOrdreAffichage(),
+            'id_folio' => $idFolio
         ]);
     }
 

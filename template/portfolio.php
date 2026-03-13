@@ -12,6 +12,8 @@ include_once(__DIR__ . '/view/header-profil.php');
                 <div class="project-card-edit" data-project-index="<?= $i ?>">
                     <header class="project-header">
                         <span>Projet #<?= $i ?></span>
+                        <input type="text" name="projects[<?= $i ?>][title]" class="project-title-input" placeholder="Titre du projet..." required>
+
                         <select name="projects[<?= $i ?>][type]" class="project-type-select">
                             <option value="web">Développement Web</option>
                             <option value="design">Design Graphique</option>
@@ -23,7 +25,6 @@ include_once(__DIR__ . '/view/header-profil.php');
                     <div class="drop-zone" id="drop-zone-<?= $i ?>">
                         <span class="drop-zone-prompt">Glissez vos fichiers ou cliquez ici (Max 5)</span>
                         <input type="file" name="project_<?= $i ?>_files[]" class="drop-zone-input" accept="image/*,video/*" multiple>
-
                         <div class="media-list" id="mediaList<?= $i ?>"></div>
                     </div>
                 </div>

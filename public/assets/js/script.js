@@ -90,51 +90,96 @@ const portfolioForm = document.getElementById('portfolioForm');
 const publishBtn = document.getElementById('publishBtn');
 
 if (portfolioForm) {
-    const dropZones = document.querySelectorAll('.drop-zone');
-    const inputs = document.querySelectorAll('.drop-zone-input');
+    const zones = document.querySelectorAll('.drop-zone');
+    const titleInputs = document.querySelectorAll('.project-title-input');
 
-    // Vérifie si les conditions sont remplies pour autoriser la publication
+    // --- FONCTION DE VALIDATION GLOBALE ---
     const updatePublishButton = () => {
-        const allFilled = Array.from(inputs).every(input => input.files.length > 0);
-        // Array.from(inputs) : Transforme la liste d'emplacements de fichiers en un tableau
-        // .every(...) : Vérifie si chaque emplacement contient un fichier
-        publishBtn.disabled = !allFilled;
-        // Si allFilled est vrai (3 fichiers), on active le bouton. Sinon, il reste bloqué.
+        // 1. Vérifie si chaque zone a au moins un fichier (en regardant le contenu de media-list)
+        const allProjectsHaveFiles = Array.from(zones).every(zone => {
+            return zone.querySelector('.media-list').children.length > 0;
+        });
+
+        // 2. Vérifie si tous les titres sont remplis
+        const allTitlesFilled = Array.from(titleInputs).every(input => input.value.trim() !== "");
+
+        // Activation du bouton
+        publishBtn.disabled = !(allProjectsHaveFiles && allTitlesFilled);
     };
 
-    // La boucle de configuration : Eviter de répèter 3X le même code
-    dropZones.forEach((zone, index) => {
+    // --- GESTION DES ZONES DE PROJET ---
+    zones.forEach((zone) => {
         const input = zone.querySelector('.drop-zone-input');
+        const mediaList = zone.querySelector('.media-list');
+        const prompt = zone.querySelector('.drop-zone-prompt');
+        let filesCollection = [];
 
-        zone.addEventListener('click', () => input.click());
-
-        input.addEventListener('change', () => {
-            if (input.files.length) {
-                updateThumbnail(zone, input.files[0]);
-                updatePublishButton();
-            }
+        // Déclencheur de clic (évite le bouton supprimer)
+        zone.addEventListener('click', (e) => {
+            if (!e.target.classList.contains('btn-remove')) input.click();
         });
 
-        zone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            zone.classList.add('drop-zone--over');
-        });
-
-        ['dragleave', 'dragend'].forEach(type => {
-            zone.addEventListener(type, () => {
-                zone.classList.remove('drop-zone--over');
+        // Traitement des fichiers
+        const handleFiles = (files) => {
+            Array.from(files).forEach(file => {
+                if (file.size > 5 * 1024 * 1024) {
+                    alert(`Le fichier ${file.name} est trop lourd (> 5Mo)`);
+                    return;
+                }
+                if (filesCollection.length < 5) filesCollection.push(file);
             });
-        });
+            renderMedias();
+            updatePublishButton();
+        };
 
+        input.addEventListener('change', () => handleFiles(input.files));
+
+        // Drag & Drop visual states
+        zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('drop-zone--over'); });
+        ['dragleave', 'dragend'].forEach(type => {
+            zone.addEventListener(type, () => zone.classList.remove('drop-zone--over'));
+        });
         zone.addEventListener('drop', (e) => {
             e.preventDefault();
-            if (e.dataTransfer.files.length) {
-                input.files = e.dataTransfer.files;
-                updateThumbnail(zone, e.dataTransfer.files[0]);
-                updatePublishButton();
-            }
             zone.classList.remove('drop-zone--over');
+            handleFiles(e.dataTransfer.files);
         });
+
+        // Rendu des miniatures
+        function renderMedias() {
+            mediaList.innerHTML = '';
+            prompt.style.display = filesCollection.length > 0 ? 'none' : 'block';
+
+            filesCollection.forEach((file, index) => {
+                const item = document.createElement('div');
+                item.classList.add('media-item-mini');
+
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = () => item.style.backgroundImage = `url('${reader.result}')`;
+                } else {
+                    item.innerHTML = '<span class="video-icon">🎥</span>';
+                }
+
+                const removeBtn = document.createElement('button');
+                removeBtn.innerHTML = '×';
+                removeBtn.classList.add('btn-remove');
+                removeBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    filesCollection.splice(index, 1);
+                    renderMedias();
+                    updatePublishButton();
+                };
+                item.appendChild(removeBtn);
+                mediaList.appendChild(item);
+            });
+        }
+    });
+
+    // Écouter la saisie des titres pour valider en temps réel
+    titleInputs.forEach(input => {
+        input.addEventListener('input', updatePublishButton);
     });
 }
 
@@ -268,3 +313,11 @@ document.querySelectorAll('.drop-zone').forEach((zone) => {
         });
     }
 });
+
+const updatePublishButton = () => {
+    const allFilesFilled = Array.from(inputs).every(input => input.files.length > 0);
+    const allTitlesFilled = Array.from(document.querySelectorAll('.project-title-input'))
+                                 .every(input => input.value.trim() !== "");
+    
+    publishBtn.disabled = !(allFilesFilled && allTitlesFilled);
+};

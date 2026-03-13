@@ -80,6 +80,13 @@
     /* La ligne prendra toute la hauteur des formulaires */
 }
 
+.form-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
 .form-group {
     margin-bottom: 1.5rem;
 }

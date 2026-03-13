@@ -305,16 +305,37 @@ select {
 }
 
 .btn-submit {
-    width: 100%;
-    padding: 15px;
-    background-color: #000;
-    color: #fff;
+    width: 100%; /* Pleine largeur */
+    background: #808080; /* Gris comme sur l'image */
+    color: white;
+    padding: 18px;
     border: none;
-    font-weight: bold;
-    cursor: pointer;
-    font-family: 'Lexend', sans-serif;
+    border-radius: 8px;
+    font-weight: 700;
     text-transform: uppercase;
-    transition: opacity 0.3s ease;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-submit:hover:not(:disabled) {
+    background: #666666;
+}
+
+.btn-submit:disabled {
+    background: #a0a0a0;
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Petit bouton secondaire pour le brouillon */
+.btn-secondary {
+    background: none;
+    border: 1px solid #2d3436;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    align-self: flex-start; /* Aligné à gauche comme ton bouton "Enregistrer" */
 }
 
 .btn-submit:hover {

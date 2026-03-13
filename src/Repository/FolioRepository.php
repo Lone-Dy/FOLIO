@@ -14,7 +14,7 @@ class FolioRepository
         $this->pdo = $pdo;
     }
 
-    // CRUD - READ
+    // CRUD - CREATE
 
     public function create(Folio $folio): bool
     {
@@ -27,6 +27,17 @@ class FolioRepository
             'description' => $folio->getDescription(),
             'categorie'   => $folio->getCategorieFolio()
         ]);
+    }
+
+    public function createWithUser(Folio $folio, int $userId): bool {
+        $sql = "INSERT INTO folio (titre, description, categorie_folio, id_utilisateur)
+                VALUES (:titre, :desc, :cat, :user)";
+        return $this->pdo->prepare($sql)->execute([
+            'titre'       => $folio->getTitre(),
+            'description' => $folio->getDescription(),
+            'categorie'   => $folio->getCategorieFolio(),
+            'user'        => $userId
+        ]);        
     }
 
     // CRUD - READ

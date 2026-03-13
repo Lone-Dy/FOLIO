@@ -7,9 +7,15 @@ include_once(__DIR__ . '/view/header.php');
     <div class="text text1">Déposez.</div>
     <div class="text text2">Publiez.</div>
     <div class="text text3">Rayonnez.</div>
+
+    <?php
+    $destination = isset($_SESSION['user_id']) ? '/projet' : '/login#register-section';
+    $label = isset($_SESSION['user_id']) ? 'Accéder à mon portfolio' : 'Créer mon portfolio gratuitement';
+    ?>
+
     <div class="cta-home">
         <p class="cta-text">Prêt à partager votre savoir ?</p>
-        <a href="/login#register-section" class="btn-main">Créer mon portfolio gratuitement</a>
+        <a href="<?= $destination ?>" class="btn-main"><?= $label ?></a>
     </div>
 
     <div id="dummy">
