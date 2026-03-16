@@ -6,18 +6,18 @@ use App\Service\PortfolioService;
 
 class ProjetController
 {
-    private PortfolioService $PortfolioService;
+    private PortfolioService $portfolioService;
 
 
-    public function __construct(PortfolioService $PortfolioService)
+    public function __construct(PortfolioService $portfolioService)
     {
-        $this->PortfolioService = $PortfolioService;
+        $this->portfolioService = $portfolioService;
     }
 
     public function index(?array $params = null)
     {
 
-        $projets = $this->PortfolioService->getUserPortfolio();
+        $projets = $this->portfolioService->getUserPortfolio();
 
         include __DIR__ . '/../../template/portfolio.php';
     }
@@ -31,7 +31,7 @@ class ProjetController
             try {
                 // Utilisation du PortfolioService avec les 3 arguments requis
                 // Attention : on passe $_POST['projets'] pour correspondre au formulaire HTML
-                $this->PortfolioService->createFullPortfolio(
+                $this->portfolioService->createFullPortfolio(
                     $userId,
                     $_POST,   // Contient 'projects' et 'status'
                     $_FILES   // Contient les images

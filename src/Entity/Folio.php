@@ -15,6 +15,12 @@ class Folio
         return $this->id_folio;
     }
 
+    public function setIdFolio(string $id_folio): self
+    {
+        $this->id_folio = $id_folio;
+        return $this;
+    }
+
     public function getTitre(): string
     {
         return $this->titre;

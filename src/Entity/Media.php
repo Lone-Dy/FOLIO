@@ -10,6 +10,29 @@ class Media {
     private int $ordreAffichage;
     private int $poidsFichier;
 
+
+    public function getIdMedia(): ?int
+    {
+        return $this->id_media;
+    }
+
+    public function setIdMedia(string $id_media): self
+    {
+        $this->id_media = $id_media;
+        return $this;
+    }
+
+    public function getIdProjet(): ?int
+    {
+        return $this->id_projet;
+    }
+
+    public function setIdProjet(string $id_projet): self
+    {
+        $this->id_projet = $id_projet;
+        return $this;
+    }
+
     public function getCheminFichier(): string 
     { 
         return $this->cheminFichier; 
@@ -41,6 +64,11 @@ class Media {
     { 
         $this->ordreAffichage = $ordre; 
         return $this; 
+    }
+
+    public function getPoidsFichier(): int 
+    { 
+        return $this->poidsFichier; 
     }
 
     public function setPoidsFichier(int $poids): self 

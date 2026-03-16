@@ -4,19 +4,19 @@ namespace App\Controller;
 
 use App\Service\UserService;
 use App\Repository\UserRepository;
-use App\Service\ProjetService;
+use App\Service\PortfolioService;
 
 class ProfileController
 {
     private UserService $userService;
     private UserRepository $userRepository;
-    private ProjetService $projetService;
+    private PortfolioService $portfolioService;
 
-    public function __construct(UserService $userService, UserRepository $userRepository, ProjetService $projetService)
+    public function __construct(UserService $userService, UserRepository $userRepository, PortfolioService $portfolioService)
     {
         $this->userService = $userService;
         $this->userRepository = $userRepository;
-        $this->projetService = $projetService;
+        $this->portfolioService = $portfolioService;
     }
 
     public function index()
@@ -37,7 +37,7 @@ class ProfileController
             exit;
         }
 
-        $projets = $this->projetService->getUserPortfolio($userId);
+        $projets = $this->portfolioService->getUserPortfolio($userId);
 
         include __DIR__ . '/../../template/profile.php';
     }

@@ -15,6 +15,13 @@ class Projet
         return $this->id_projet;
     }
 
+    public function setIdProjet(string $id_projet): self
+    {
+        $this->id_projet = $id_projet;
+        return $this;
+    }
+
+
     public function getType(): string
     {
         return $this->type;
