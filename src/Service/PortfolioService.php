@@ -128,5 +128,13 @@ class PortfolioService
         $folio->setIsPublished(true);
         return $this->folioRepo->update($folio);
     }
+
+    public function deleteProject(int $idProjet, int $userId): bool
+    {   
+
+        // Suppression en BDD
+        return $this->projetRepo->delete($idProjet);
+    }
+
 }
 ?>

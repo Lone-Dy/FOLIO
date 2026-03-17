@@ -47,5 +47,20 @@ class ProjetController
             exit;
         }
     }
+
+    public function delete(array $params)
+    {
+        $idFolio = isset($params[0]) ? (int)$params[0] : null;
+        $userId = $_SESSION['user']['id'] ?? null;
+
+        if ($idFolio && $userId) {
+
+            $this->portfolioService->deleteProject($idFolio, $userId); 
+            header('Location: /profile?success=deleted');
+        } else {
+            header('Location: /projet');
+        }
+        exit;
+    }
 }
 ?>

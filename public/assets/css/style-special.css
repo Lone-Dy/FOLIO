@@ -496,6 +496,13 @@ main h1 {
     padding: 60px 20px;
 }
 
+.alert alert-info {
+    background: #e1f5fe; 
+    padding: 15px; 
+    border-radius: 5px; 
+    margin: 20px 0;
+}
+
 /* Responsive*/
 
 @media only screen and (max-width: 600px) {

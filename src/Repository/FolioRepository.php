@@ -136,10 +136,32 @@ class FolioRepository
     // CRUD - DELETE
 
     // Modifie les informations d'un projet déjà enregistré
-    public function delete(int $id): bool
+    public function delete(int $idFolio): bool
     {
-        $stmt = $this->pdo->prepare("DELETE FROM folio WHERE id_folio = ?");
-        return $stmt->execute([$id]);
+        try {
+            $this->pdo->beginTransaction();
+
+            // 1. Supprimer les médias associés aux projets de ce folio
+            $sqlMedia = "DELETE m FROM media m 
+                        INNER JOIN projet p ON m.id_projet = p.id_projet 
+                        WHERE p.id_folio = :id";
+            $this->pdo->prepare($sqlMedia)->execute(['id' => $idFolio]);
+
+            // 2. Supprimer les projets liés au folio
+            $sqlProjets = "DELETE FROM projet WHERE id_folio = :id";
+            $this->pdo->prepare($sqlProjets)->execute(['id' => $idFolio]);
+
+            // 3. Supprimer le folio lui-même
+            $sqlFolio = "DELETE FROM folio WHERE id_folio = :id";
+            $stmt = $this->pdo->prepare($sqlFolio);
+            $result = $stmt->execute(['id' => $idFolio]);
+
+            $this->pdo->commit();
+            return $result;
+        } catch (\Exception $e) {
+            $this->pdo->rollBack();
+            return false;
+        }
     }
 }
 ?>
