@@ -86,6 +86,19 @@ class FolioRepository
                      ->setCategorieFolio($row['categorie_folio']);
     }
 
+    // Publication du portfolio dans la galerie
+    public function findPublishedForGallery(): array
+    {
+        $sql = "SELECT f.*, u.nom, u.prenom, NULL as cover_image
+            FROM folio f 
+            JOIN user u ON f.id_user = u.id_user 
+            WHERE f.is_published = 1 
+            ORDER BY f.id_folio DESC"; // les plus récents en premier
+
+        $stmt = $this->pdo->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     // Recherche le nom de l'utilisateur ou le titre du portfolio
     public function searchFolios(string $query): array 
     {
@@ -96,7 +109,7 @@ class FolioRepository
             OR folio.titre LIKE :q";
             
     $stmt = $this->pdo->prepare($sql);
-    $stmt->bindValue(':q', '%' . $query . '%');
+    $stmt->bindValue(':q', '%' . $query . '%'); // '%' cible les portfolios demandés
     $stmt->execute();
     
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -104,17 +117,18 @@ class FolioRepository
 
     // CRUD - UPDATE
 
-    // Met à jour les colonnes titre, description et catégorie d'un folio existant
+    // Met à jour les colonnes titre, description, la publication et catégorie d'un folio existant
     public function update(Folio $folio): bool
     {
         $sql = "UPDATE folio SET titre = :titre, description = :description, 
-                categorie_folio = :categorie WHERE id_folio = :id";
+                categorie_folio = :categorie, is_published = :published WHERE id_folio = :id";
         
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             'titre'       => $folio->getTitre(),
             'description' => $folio->getDescription(),
             'categorie'   => $folio->getCategorieFolio(),
+            'published'   => $folio->getIsPublished() ? 1 : 0,
             'id'          => $folio->getIdFolio()
         ]);
     }

@@ -54,5 +54,18 @@ class Folio
         $this->categorie_folio = $categorie_folio;
         return $this;
     }
+
+    private bool $is_published = false;
+    
+    public function getIsPublished(): bool
+    {
+        return $this->is_published;
+    }
+
+    public function setIsPublished(bool $is_published): self
+    {
+        $this->is_published = $is_published;
+        return $this;
+    }
 }
 ?>

@@ -109,5 +109,24 @@ class PortfolioService
             }
         }
     }
+
+    public function getGalleryFeed(): array
+    {
+        return $this->folioRepo->findPublishedForGallery();
+    }
+
+    // Bouton "Publier mon portfolio"
+    public function publishPortfolio(int $idFolio, int $userId): bool
+    {
+        $folio = $this->folioRepo->findById($idFolio);
+
+        if (!$folio) {
+            throw new Exception("Portfolio introuvable.");
+        }
+
+        // Vérification du portfolio s'il appartient bien à l'utilisateur
+        $folio->setIsPublished(true);
+        return $this->folioRepo->update($folio);
+    }
 }
 ?>

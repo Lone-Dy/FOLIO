@@ -42,7 +42,12 @@ try {
 $container = [
 
     HomeController::class => function ($pdo) {
-        return new HomeController();
+
+        $folioRepo = new FolioRepository($pdo);
+        $projetRepo = new ProjetRepository($pdo);
+        $mediaRepo = new MediaRepository($pdo);
+        $portfolioService = new PortfolioService($pdo, $folioRepo, $projetRepo, $mediaRepo);
+        return new HomeController($portfolioService);
     },
 
     E404Controller::class => function ($pdo) {
@@ -81,7 +86,6 @@ $container = [
     }
 
 ];
-
 
 // Est-ce que le contrôleur existe dans mon container ?
 
