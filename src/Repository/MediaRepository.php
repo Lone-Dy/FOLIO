@@ -30,6 +30,19 @@ class MediaRepository
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // UPDATE
+
+    public function update(int $idMedia, string $chemin, int $ordre): bool {
+        $sql = "UPDATE media SET cheminFichier = ?, ordreAffichage = ? WHERE id_media = ?";
+        return $this->pdo->prepare($sql)->execute([$chemin, $ordre, $idMedia]);
+    }
+
+    public function findById(int $id) {
+        $stmt = $this->pdo->prepare("SELECT * FROM media WHERE id_media = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     // DELETE
     public function delete(int $id): bool {
         return $this->pdo->prepare("DELETE FROM media WHERE id_media = ?")->execute([$id]);

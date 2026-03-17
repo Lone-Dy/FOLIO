@@ -20,12 +20,12 @@ class PortfolioService
     private ProjetRepository $projetRepo;
     private MediaRepository $mediaRepo;
 
-    // 1. INJECTION DE DÉPENDANCES
-    
+    // INJECTION DE DÉPENDANCES
+
     public function __construct(
-        PDO $pdo, 
-        FolioRepository $folioRepo, 
-        ProjetRepository $projetRepo, 
+        PDO $pdo,
+        FolioRepository $folioRepo,
+        ProjetRepository $projetRepo,
         MediaRepository $mediaRepo
     ) {
         $this->pdo = $pdo;
@@ -55,16 +55,16 @@ class PortfolioService
                 $projet->setType($projData['type'])
                     ->setContenu($projData['title'])
                     ->setOrdreAffichage((string)$index);
-            
-            // Adaptation du repo pour l'idFolio
-            $this->projetRepo->createWithFolio($projet, $idFolio);
-            $idProjet = (int)$this->pdo->lastInsertId();
 
-            // Gestion des médias du projet
-            $fileKey = "projet_" . $index . "_files";
-            if (isset($files[$fileKey])){
-                $this->uploadProjectMedia($idProjet, $files[$fileKey]);
-            }
+                // Adaptation du repo pour l'idFolio
+                $this->projetRepo->createWithFolio($projet, $idFolio);
+                $idProjet = (int)$this->pdo->lastInsertId();
+
+                // Gestion des médias du projet
+                $fileKey = "projet_" . $index . "_files";
+                if (isset($files[$fileKey])) {
+                    $this->uploadProjectMedia($idProjet, $files[$fileKey]);
+                }
             }
 
             $this->pdo->commit();
@@ -74,6 +74,15 @@ class PortfolioService
             throw $e;
         }
     }
+
+    public function getUserPortfolio(?int $userId = null)
+    {
+        if (!$userId) {
+            return [];
+        }
+        return $this->folioRepo->findById($userId);
+    }
+
     private function uploadProjectMedia(int $idProjet, array $fileArray): void
     {
         $uploadDir = __DIR__ . '/../../public/uploads/projets';
@@ -83,14 +92,14 @@ class PortfolioService
             if ($fileArray['error'][$k] === UPLOAD_ERR_OK) {
                 $ext = pathinfo($name, PATHINFO_EXTENSION);
                 $newName = uniqid('media_') . '.' . $ext;
-                
+
                 if (move_uploaded_file($fileArray['tmp_name'][$k], $uploadDir . $newName)) {
-                    
-                $this->mediaRepo->create(
-                        $idProjet, 
-                        'uploads/projets/' . $newName, 
-                        $fileArray['type'][$k], 
-                        $k, 
+
+                    $this->mediaRepo->create(
+                        $idProjet,
+                        'uploads/projets/' . $newName,
+                        $fileArray['type'][$k],
+                        $k,
                         $fileArray['size'][$k]
                     );
                 }
@@ -98,4 +107,3 @@ class PortfolioService
         }
     }
 }
-

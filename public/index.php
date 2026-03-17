@@ -5,8 +5,8 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Controller\{HomeController, E404Controller, LoginController, ConditionController, ProfileController, ProjetController};
-use App\Repository\{UserRepository, ProjetRepository, FolioRepository};
-use App\Service\{DatabaseFactory, ProjetService, UserService};
+use App\Repository\{UserRepository, ProjetRepository, FolioRepository, MediaRepository};
+use App\Service\{DatabaseFactory, PortfolioService, UserService};
 
 session_start();
 
@@ -61,18 +61,23 @@ $container = [
     },
 
     ProfileController::class => function ($pdo) {
-        $repo = new UserRepository($pdo);
-        $service = new UserService($repo);
-        $projetRepo = new ProjetRepository($pdo);
-        $projetService = new ProjetService($projetRepo);
 
-        return new ProfileController($service, $repo, $projetService);
+        $userRepo = new UserRepository($pdo);
+        $folioRepo = new FolioRepository($pdo);
+        $projetRepo = new ProjetRepository($pdo);
+        $mediaRepo = new MediaRepository($pdo);
+        $userService = new UserService($userRepo);
+        $portfolioService = new PortfolioService($pdo, $folioRepo, $projetRepo, $mediaRepo);
+        return new ProfileController($userService, $userRepo, $portfolioService);
     },
 
     ProjetController::class=> function ($pdo) {
-        $repo = new ProjetRepository($pdo);
-        $service = new ProjetService($repo);
-        return new ProjetController($service);
+        
+        $folioRepo = new FolioRepository($pdo);
+        $projetRepo = new ProjetRepository($pdo);
+        $mediaRepo = new MediaRepository($pdo);
+        $portfolioService = new PortfolioService($pdo, $folioRepo, $projetRepo, $mediaRepo);
+        return new ProjetController($portfolioService);
     }
 
 ];

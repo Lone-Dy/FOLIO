@@ -32,7 +32,8 @@ class FolioRepository
 
     public function createWithUser(Folio $folio, int $userId): bool {
         $sql = "INSERT INTO folio (titre, description, categorie_folio, id_user)
-                VALUES (:titre, :desc, :cat, :user)";
+                VALUES (:titre, :description, :categorie, :user)";
+
         return $this->pdo->prepare($sql)->execute([
             'titre'       => $folio->getTitre(),
             'description' => $folio->getDescription(),
@@ -42,6 +43,29 @@ class FolioRepository
     }
 
     // CRUD - READ
+
+    public function findAll(): array 
+    {
+            $stmt = $this->pdo->query("SELECT * FROM folio");
+            $folios = [];
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $folio = (new Folio())->setIdFolio($row['id_folio'])
+                                      ->setTitre($row['titre'])
+                                      ->setDescription($row['description'])
+                                      ->setCategorieFolio($row['categorie']);
+                $folios[] = $folio;
+            }
+            return $folios;
+        
+    }
+
+    // Méthode pour récuperer le portfolio d'un utilisateur
+    public function findByUser(int $userId): array 
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM folio WHERE id_user = ?");
+        $stmt->execute([$userId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     public function findById(int $id): ?Folio
     {
@@ -56,13 +80,13 @@ class FolioRepository
         return $folio->setIdFolio($row['id_folio'])
                      ->setTitre($row['titre'])
                      ->setDescription($row['description'])
-                     ->setCategorieFolio($row['categorie_folio']);
+                     ->setCategorieFolio($row['categorie']);
     }
 
+    // recherche du nom de l'utilisateur ou le titre du portfolio
     public function searchFolios(string $query): array {
-    // On cherche dans le nom de l'utilisateur ou le titre du portfolio
-    $sql = "SELECT * FROM portfolio 
-            JOIN user ON folio_id = user.id 
+    $sql = "SELECT * FROM folio 
+            JOIN user ON id_folio = id_user 
             WHERE user.nom LIKE :q 
             OR user.prenom LIKE :q 
             OR titre LIKE :q";
@@ -71,23 +95,10 @@ class FolioRepository
     $stmt->bindValue(':q', '%' . $query . '%');
     $stmt->execute();
     
-    return $stmt->fetchAll();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
     // CRUD - UPDATE
-
-    public function findAll(): array {
-            $stmt = $this->pdo->query("SELECT * FROM folio");
-            $folios = [];
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $folio = (new Folio())->setIdFolio($row['id_folio'])
-                                      ->setTitre($row['titre'])
-                                      ->setDescription($row['description'])
-                                      ->setCategorieFolio($row['categorie_folio']);
-                $folios[] = $folio;
-            }
-            return $folios;
-        }
 
     public function update(Folio $folio): bool
     {

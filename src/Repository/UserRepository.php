@@ -49,6 +49,16 @@ class UserRepository
 
     // CRUD - READ
 
+    public function findAll(): array 
+    {
+        $stmt = $this->pdo->query("SELECT * FROM user");
+        $users = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $users[] = $this->hydrater($row);
+        }
+        return $users;
+    }
+
     public function findById(int $id): ?User
     {
         // Correction : id_user (selon ton SQL)
@@ -91,5 +101,13 @@ class UserRepository
             'role'     => $user->getRole(),
             'id'       => $user->getIdUtilisateur()
         ]);
+    }
+
+    // DELETE 
+
+    public function delete(int $id): bool 
+    {
+        $stmt = $this->pdo->prepare("DELETE FROM user WHERE id_user = ?");
+        return $stmt->execute([$id]);
     }
 }

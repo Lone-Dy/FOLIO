@@ -17,7 +17,7 @@ class ProjetRepository
 
     // CRUD - CREATE
 
-    public function create(Projet $projet): bool
+    public function create(Projet $projet, int $idFolio): bool
     {
         $sql = "INSERT INTO projet (type, contenu, ordre_affichage, id_folio)
                 VALUES (:type, :contenu, :ordre, :id_folio)";
@@ -57,6 +57,21 @@ class ProjetRepository
             $projets [] = $projet;
         }
         return $projets;
+    }
+
+    public function findById(int $id): ?Projet 
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM projet WHERE id_projet = ?");
+        $stmt->execute([$id]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$row) return null;
+
+        return (new Projet())
+            ->setIdProjet($row['id_projet'])
+            ->setType($row['type'])
+            ->setContenu($row['contenu'])
+            ->setOrdreAffichage($row['ordre_affichage']);
     }
 
     // Compter les projets d'un utilisateur spécifique

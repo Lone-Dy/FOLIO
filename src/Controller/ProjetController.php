@@ -16,8 +16,9 @@ class ProjetController
 
     public function index(?array $params = null)
     {
+        $userId = $_SESSION['user']['id'] ?? null;
 
-        $projets = $this->portfolioService->getUserPortfolio();
+        $projets = $this->portfolioService->getUserPortfolio($userId);
 
         include __DIR__ . '/../../template/portfolio.php';
     }
