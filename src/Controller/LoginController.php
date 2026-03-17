@@ -130,3 +130,4 @@ class LoginController
         exit;
     }
 }
+?>

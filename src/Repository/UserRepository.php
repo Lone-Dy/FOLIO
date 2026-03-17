@@ -115,3 +115,4 @@ class UserRepository
         return $stmt->execute([$id]);
     }
 }
+?>

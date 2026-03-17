@@ -39,9 +39,9 @@ class DatabaseFactory
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             ]);
         } catch (PDOException $e) {
-            // Log the real error for the developer
+
             error_log("PDO Connection Error: " . $e->getMessage());
-            // Throw a clean message for the application
+
             throw new Exception("Unable to connect to the database. ".$e->getMessage(),$e->getCode());
         }
     }
