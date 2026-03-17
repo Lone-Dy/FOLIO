@@ -16,6 +16,7 @@ class FolioRepository
 
     // CRUD - CREATE
 
+    // Insère une nouvelle ligne dans la table folio
     public function create(Folio $folio, int $userId): bool
     {
         $sql = "INSERT INTO folio (titre, description, categorie_folio, id_user) 
@@ -30,7 +31,8 @@ class FolioRepository
         ]);
     }
 
-    public function createWithUser(Folio $folio, int $userId): bool {
+    public function createWithUser(Folio $folio, int $userId): bool 
+    {
         $sql = "INSERT INTO folio (titre, description, categorie_folio, id_user)
                 VALUES (:titre, :description, :categorie, :user)";
 
@@ -52,7 +54,7 @@ class FolioRepository
                 $folio = (new Folio())->setIdFolio($row['id_folio'])
                                       ->setTitre($row['titre'])
                                       ->setDescription($row['description'])
-                                      ->setCategorieFolio($row['categorie']);
+                                      ->setCategorieFolio($row['categorie_folio']);
                 $folios[] = $folio;
             }
             return $folios;
@@ -67,6 +69,7 @@ class FolioRepository
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // Récupère un folio spécifique en fonction de son identifiant
     public function findById(int $id): ?Folio
     {
         $stmt = $this->pdo->prepare("SELECT * FROM folio WHERE id_folio = :id");
@@ -80,26 +83,28 @@ class FolioRepository
         return $folio->setIdFolio($row['id_folio'])
                      ->setTitre($row['titre'])
                      ->setDescription($row['description'])
-                     ->setCategorieFolio($row['categorie']);
+                     ->setCategorieFolio($row['categorie_folio']);
     }
 
-    // recherche du nom de l'utilisateur ou le titre du portfolio
-    public function searchFolios(string $query): array {
+    // Recherche le nom de l'utilisateur ou le titre du portfolio
+    public function searchFolios(string $query): array 
+    {
     $sql = "SELECT * FROM folio 
-            JOIN user ON id_folio = id_user 
+            JOIN user ON folio.id_user = user.id_user 
             WHERE user.nom LIKE :q 
             OR user.prenom LIKE :q 
-            OR titre LIKE :q";
+            OR folio.titre LIKE :q";
             
     $stmt = $this->pdo->prepare($sql);
     $stmt->bindValue(':q', '%' . $query . '%');
     $stmt->execute();
     
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+    }
 
     // CRUD - UPDATE
 
+    // Met à jour les colonnes titre, description et catégorie d'un folio existant
     public function update(Folio $folio): bool
     {
         $sql = "UPDATE folio SET titre = :titre, description = :description, 
@@ -116,6 +121,7 @@ class FolioRepository
 
     // CRUD - DELETE
 
+    // Modifie les informations d'un projet déjà enregistré
     public function delete(int $id): bool
     {
         $stmt = $this->pdo->prepare("DELETE FROM folio WHERE id_folio = ?");

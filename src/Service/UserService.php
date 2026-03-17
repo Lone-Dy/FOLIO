@@ -14,13 +14,12 @@ class UserService
         $this->userRepository = $userRepository;
     }
 
-    // Identification du problème de connexion
-    
+    // Vérifie les informations de connexion
     public function authenticate(string $email, string $password)
     {
         $user = $this->userRepository->findByEmail($email);
 
-        // L'utilisateur n'a pas de compte.
+        // L'utilisateur n'a pas de compte
         if(!$user) {
             return 'USER_NOT_FOUND';
         }
@@ -33,6 +32,7 @@ class UserService
         return $user;
     }
 
+    // Permet la mise à jour sécurisée du mot de passe en vérifiant d'abord l'ancien avant de hacher et d'enregistrer le nouveau
     public function changeUserPassword(int $userId, string $oldPassword, string $newPassword): bool
     {
         $user = $this->userRepository->findById($userId);
@@ -46,6 +46,7 @@ class UserService
         return $this->userRepository->update($user); // Utilise ta méthode CRUD update
     }
 
+    // Met à jour l'adresse email de l'utilisateur après une vérification de sécurité par mot de passe
     public function updateUserEmail(int $userId, string $password, string $newEmail) : bool
     {
         $user = $this->userRepository->findById($userId);

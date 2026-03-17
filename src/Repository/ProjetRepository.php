@@ -51,7 +51,8 @@ class ProjetRepository
         $projets = [];
         while ($row = $stmt->fetch()) {
             $projet = new Projet();
-            $projet->setType($row['type'])
+            $projet->setIdProjet($row['id_projet'])
+                ->setType($row['type'])
                 ->setContenu($row['contenu'])
                 ->setOrdreAffichage($row['ordre_affichage']);
             $projets [] = $projet;
@@ -78,7 +79,9 @@ class ProjetRepository
 
     public function countByUserId(int $userId): int
     {
-        $sql = "SELECT COUNT(*) FROM projet WHERE id_user = :userId";
+        $sql = "SELECT COUNT(p.id_projet) FROM projet p 
+                JOIN folio f ON p.id_folio = f.id_folio 
+                WHERE f.id_user = :userId";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':userId' => $userId]);
 

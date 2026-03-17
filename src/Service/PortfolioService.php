@@ -34,6 +34,7 @@ class PortfolioService
         $this->mediaRepo = $mediaRepo;
     }
 
+    // Gère la création complète d'un portfolio
     public function createFullPortfolio(int $userId, array $data, array $files): bool
     {
         try {
@@ -75,14 +76,16 @@ class PortfolioService
         }
     }
 
+    // Récupère l'ensemble des données du portfolio (folio et projets) associé à un identifiant d'utilisateur
     public function getUserPortfolio(?int $userId = null)
     {
         if (!$userId) {
             return [];
         }
-        return $this->folioRepo->findById($userId);
+        return $this->folioRepo->findByUser($userId);
     }
 
+    // S'occupe du traitement des fichiers
     private function uploadProjectMedia(int $idProjet, array $fileArray): void
     {
         $uploadDir = __DIR__ . '/../../public/uploads/projets';
@@ -93,7 +96,7 @@ class PortfolioService
                 $ext = pathinfo($name, PATHINFO_EXTENSION);
                 $newName = uniqid('media_') . '.' . $ext;
 
-                if (move_uploaded_file($fileArray['tmp_name'][$k], $uploadDir . $newName)) {
+                if (move_uploaded_file($fileArray['tmp_name'][$k], $uploadDir . '/' . $newName)) {
 
                     $this->mediaRepo->create(
                         $idProjet,

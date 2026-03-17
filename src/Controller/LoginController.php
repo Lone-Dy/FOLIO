@@ -19,9 +19,9 @@ class LoginController
         $this->userService = $userService;
     }
 
+    // Affiche la page de connexion/inscription
     public function index(?array $params = null)
     {
-
         if (isset($_SESSION['user'])) {
             header('Location: /');
             exit();
@@ -29,6 +29,7 @@ class LoginController
         include __DIR__ . '/../../template/login_page.php';
     }
 
+    // Traite le formulaire de connexion
     public function handleLogin(?array $params = null) // La vérification (Connexion)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -39,7 +40,7 @@ class LoginController
 
             if ($authResult instanceof \App\Entity\User) {
 
-                session_regenerate_id(true); // <--- Sécurité cruciale
+                session_regenerate_id(true);
 
                 $_SESSION['user'] = [
                     'id' => $authResult->getIdUtilisateur(),
@@ -58,8 +59,7 @@ class LoginController
         }
     }
     
-// traitement du formulaire
-
+    // Traite l'inscription d'un nouvel utilisateur
     public function handleRegister()  // La création (Inscription)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -121,6 +121,7 @@ class LoginController
         }
     }
 
+    // Détruit la session et redirige vers l'accueil
     public function logout()
     {
         session_destroy();

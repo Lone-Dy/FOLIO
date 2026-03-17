@@ -14,6 +14,7 @@ class UserRepository
         $this->pdo = $pdo;
     }
 
+    // Méthode interne qui transforme un tableau de résultats SQL en un objet de l'entité User
     private function hydrater(array $donnees): User
     {
         $user = new User();
@@ -30,6 +31,7 @@ class UserRepository
 
     // CRUD - CREATE
 
+    // Insère un nouvel utilisateur (inscription) dans la table user
     public function create(User $user): bool
     {
         $sql = "INSERT INTO user (nom, prenom, email, age, password, statut_compte, role) 
@@ -49,6 +51,7 @@ class UserRepository
 
     // CRUD - READ
 
+    // Recherche un utilisateur par son identifiant unique ou son adresse email
     public function findAll(): array 
     {
         $stmt = $this->pdo->query("SELECT * FROM user");
@@ -78,6 +81,7 @@ class UserRepository
 
     // CRUD - UPDATE
 
+    // Met à jour l'ensemble des informations de profil d'un utilisateur
     public function update(User $user): bool
     {
         $sql = "UPDATE user SET 

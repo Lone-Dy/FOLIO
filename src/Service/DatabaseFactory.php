@@ -14,9 +14,11 @@ class DatabaseFactory
      * @return PDO
      * @throws Exception If a required configuration key is missing or connection fails
      */
+
+    // Initialise la connexion PDO avec les options de sécurité
     public static function create(array $config): PDO 
     {
-        // Defensive check: Ensure all required keys exist
+
         $requiredKeys = ['DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASS'];
         foreach ($requiredKeys as $key) {
             if (!isset($config[$key]) || empty($config[$key])) {
