@@ -53,8 +53,9 @@ class PortfolioService
             // Création des projets
             foreach ($data['projets'] as $index => $projData) {
                 $projet = new Projet();
-                $projet->setType($projData['type'])
-                    ->setContenu($projData['title'])
+                $type = $projData['type'] ?? ''; // Sécurise le bon nom de variable
+                $projet->setType($projData['type']) // Utilise la variable $type sécurisée
+                    ->setContenu($projData['title'] ?? '')
                     ->setOrdreAffichage((string)$index);
 
                 // Adaptation du repo pour l'idFolio

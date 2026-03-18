@@ -12,6 +12,8 @@ class User
     private string $mot_de_passe;
     private string $statut_compte;
     private string $role;
+    private ?string $biographie = null;
+    private ?string $photo_profil = null;
 
     // --- ID ---
     public function getIdUtilisateur(): ?int
@@ -106,6 +108,30 @@ class User
     public function setRole(string $role): self
     {
         $this->role = $role;
+        return $this;
+    }
+
+    // --- BIO ---
+    public function getBiographie(): ?string 
+    {
+        return $this->biographie;
+    }
+
+    public function setBiographie(?string $bio): self
+    {
+        $this->biographie = $bio; 
+        return $this;
+    } 
+
+    // --- PHOTO DE PROFIL ---
+    public function getPhotoProfil(): ?string 
+    { 
+        return $this->photo_profil; 
+    }
+
+    public function setPhotoProfil(?string $photo): self 
+    { 
+        $this->photo_profil = $photo; 
         return $this;
     }
 }

@@ -25,7 +25,9 @@ class UserRepository
             ->setAge((int)($donnees['age'] ?? 0))
             ->setPassword($donnees['password'] ?? '')
             ->setStatutCompte($donnees['statut_compte'] ?? 'actif')
-            ->setRole($donnees['role'] ?? 'user');
+            ->setRole($donnees['role'] ?? 'user')
+            ->setBiographie($donnees['biographie'] ?? null)
+            ->setPhotoProfil($donnees['photo_profil'] ?? 'default-avatar.png');
         return $user;
     }
 
@@ -91,7 +93,9 @@ class UserRepository
             age = :age, 
             password = :password, 
             statut_compte = :statut, 
-            role = :role 
+            role = :role,
+            biographie = :bio,
+            photo_profil = :photo, 
             WHERE id_user = :id";
 
         $stmt = $this->pdo->prepare($sql);
@@ -103,6 +107,8 @@ class UserRepository
             'password' => $user->getPassword(),
             'statut'   => $user->getStatutCompte(),
             'role'     => $user->getRole(),
+            'bio'      => $user->getBiographie(),
+            'photo'    => $user->getPhotoProfil(),
             'id'       => $user->getIdUtilisateur()
         ]);
     }

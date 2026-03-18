@@ -20,7 +20,7 @@ class UserService
         $user = $this->userRepository->findByEmail($email);
 
         // L'utilisateur n'a pas de compte
-        if(!$user) {
+        if (!$user) {
             return 'USER_NOT_FOUND';
         }
 
@@ -47,7 +47,7 @@ class UserService
     }
 
     // Met à jour l'adresse email de l'utilisateur après une vérification de sécurité par mot de passe
-    public function updateUserEmail(int $userId, string $password, string $newEmail) : bool
+    public function updateUserEmail(int $userId, string $password, string $newEmail): bool
     {
         $user = $this->userRepository->findById($userId);
 
@@ -58,5 +58,20 @@ class UserService
         $user->setEmail($newEmail);
         return $this->userRepository->update($user);
     }
+
+    public function updateProfile(User $user, array $data, ?array $avatarFile): bool
+    {
+        $user->setNom($data['nom'] ?? $user->getNom())
+            ->setPrenom($data['prenom'] ?? $user->getPrenom())
+            ->setBiographie($data['biographie'] ?? null);
+
+        // Gestion de l'avatar
+        if ($avatarFile && $avatarFile['error'] === UPLOAD_ERR_OK) {
+            $newName = uniqid('avatar_') . '.' . pathinfo($avatarFile['name'], PATHINFO_EXTENSION);
+            if (move_uploaded_file($avatarFile['tmp_name'], __DIR__ . '/../../public/uploads/avatars/' . $newName)) {
+                $user->setPhotoProfil($newName);
+            }
+        }
+        return $this->userRepository->update($user);
+    }
 }
-?>
