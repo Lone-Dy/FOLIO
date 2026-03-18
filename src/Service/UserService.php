@@ -43,7 +43,7 @@ class UserService
 
         $user->setPassword(password_hash($newPassword, PASSWORD_BCRYPT));
 
-        return $this->userRepository->update($user); // Utilise ta méthode CRUD update
+        return $this->userRepository->update($user);
     }
 
     // Met à jour l'adresse email de l'utilisateur après une vérification de sécurité par mot de passe
@@ -63,15 +63,34 @@ class UserService
     {
         $user->setNom($data['nom'] ?? $user->getNom())
             ->setPrenom($data['prenom'] ?? $user->getPrenom())
-            ->setBiographie($data['biographie'] ?? null);
+            ->setBiographie(!empty($data['biographie']) ? trim($data['biographie']) : null);
 
-        // Gestion de l'avatar
         if ($avatarFile && $avatarFile['error'] === UPLOAD_ERR_OK) {
-            $newName = uniqid('avatar_') . '.' . pathinfo($avatarFile['name'], PATHINFO_EXTENSION);
-            if (move_uploaded_file($avatarFile['tmp_name'], __DIR__ . '/../../public/uploads/avatars/' . $newName)) {
-                $user->setPhotoProfil($newName);
+
+            // Vérification de sécurité
+            $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
+            $finfo = new \finfo(FILEINFO_MIME_TYPE);
+            $mimeType = $finfo->file($avatarFile['tmp_name']);
+
+            if (in_array($mimeType, $allowedMimeTypes)) {
+                $extension = pathinfo($avatarFile['name'], PATHINFO_EXTENSION);
+                $newName = bin2hex(random_bytes(8)) . '.' . $extension; // Nom plus sécurisé et unique
+                $uploadDir = __DIR__ . '/../../public/uploads/avatars/';
+                $destination = $uploadDir . $newName;
+
+                if (move_uploaded_file($avatarFile['tmp_name'], $destination)) {
+
+                    // upprimer l'ancienne photo pour ne pas encombrer le serveur
+                    $oldPhoto = $user->getPhotoProfil();
+                    if ($oldPhoto && $oldPhoto !== 'default-avatar.png') {
+                        $oldFilePath = $uploadDir . $oldPhoto;
+                        if (file_exists($oldFilePath)) {
+                            unlink($oldFilePath);
+                        }
+                    }
+                    $user->setPhotoProfil($newName);
+                }
             }
         }
-        return $this->userRepository->update($user);
     }
 }

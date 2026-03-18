@@ -6,7 +6,8 @@ include_once(__DIR__ . '/view/header-profil.php');
     <aside class="profile-sidebar">
         <div class="profile-card">
             <div class="profile-avatar">
-                <img src="/assets/img/default-avatar.png" alt="Avatar de <?= htmlspecialchars($user->getPrenom()) ?>">
+                <img src="/assets/img/default-avatar.jpg" alt="Avatar de <?= htmlspecialchars($user->getPrenom()) ?>">
+                <button class="btn-edit" onclick="document.getElementById('avatarDialog').showModal()">Modifier la photo</button>
             </div>
             <h1 class="profile-name"><?= htmlspecialchars($user->getPrenom() . ' ' . $user->getNom()) ?></h1>
 
@@ -15,10 +16,17 @@ include_once(__DIR__ . '/view/header-profil.php');
                     <span class="label">Email</span>
                     <span class="value"><?= htmlspecialchars($user->getEmail()) ?></span>
                 </div>
+                <div class="detail-item">
+                    <span class="label">Ma Bio</span>
+                    <p class="bio-text">
+                        <?= $user->getBiographie() ? nl2br(htmlspecialchars($user->getBiographie())) : "<i>Aucune biographie rédigée.</i>" ?>
+                    </p>
+            </div>
             </div>
 
             <div class="profile-actions">
-                <button class="btn-submit" onclick="document.getElementById('mdpDialog').showModal()">Modifier le mot de passe</button>
+                <button class="btn-folio" onclick="document.getElementById('editProfileDialog').showModal()">Modifier mon profil</button>
+                <button class="btn-folio" onclick="document.getElementById('mdpDialog').showModal()">Modifier le mot de passe</button>
             </div>
         </div>
     </aside>
@@ -106,6 +114,47 @@ include_once(__DIR__ . '/view/header-profil.php');
         </div>
     </dialog>
 <?php endif; ?>
+
+<dialog id="editProfileDialog" class="modern-dialog">
+    <form method="POST" action="/profile/update" enctype="multipart/form-data">
+        <h2>Modifier mes informations</h2>
+        
+        <div class="field">
+            <label for="prenom">Prénom</label>
+            <input type="text" name="prenom" id="prenom" value="<?= htmlspecialchars($user->getPrenom()) ?>" required>
+        </div>
+
+        <div class="field">
+            <label for="nom">Nom</label>
+            <input type="text" name="nom" id="nom" value="<?= htmlspecialchars($user->getNom()) ?>" required>
+        </div>
+
+        <div class="field">
+            <label for="biographie">Biographie</label>
+            <textarea name="biographie" id="biographie" rows="5" placeholder="Parlez-nous de vous..."><?= htmlspecialchars($user->getBiographie() ?? '') ?></textarea>
+        </div>
+
+        <div class="dialog-actions">
+            <button type="submit" class="btn-submit">Enregistrer les modifications</button>
+            <button type="button" class="btn-text" onclick="this.closest('dialog').close()">Annuler</button>
+        </div>
+    </form>
+</dialog>
+
+<dialog id="avatarDialog" class="modern-dialog">
+    <form method="POST" action="/profile/updateAvatar" enctype="multipart/form-data">
+        <h2>Changer ma photo de profil</h2>
+        
+        <div class="field">
+            <input type="file" name="avatar" accept="image/*" required>
+        </div>
+
+        <div class="dialog-actions">
+            <button type="submit" class="btn-submit">Enregistrer</button>
+            <button type="button" class="btn-text" onclick="this.closest('dialog').close()">Annuler</button>
+        </div>
+    </form>
+</dialog>
 
 <dialog id="mdpDialog" class="modern-dialog">
     <form method="POST" action="/profile/updatePassword">

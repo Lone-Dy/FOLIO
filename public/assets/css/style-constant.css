@@ -313,21 +313,22 @@ select {
 }
 
 .btn-submit {
-    width: 100%; /* Pleine largeur */
-    background: #808080; /* Gris comme sur l'image */
-    color: white;
-    padding: 18px;
-    border: none;
-    border-radius: 8px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: background 0.3s;
+    background: var(--primary-color);
+    border-radius: 12px; /* Plus arrondi */
+    padding: 14px 24px;
+    font-size: 1rem;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-submit:hover:not(:disabled) {
-    background: #666666;
+    transform: scale(1.02);
+    background: #333;
+}
+
+#publishBtn:disabled {
+    background: #e5e5e7;
+    color: #a1a1a6;
+    border: none;
 }
 
 .btn-submit:disabled {
