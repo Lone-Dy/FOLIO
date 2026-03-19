@@ -26,6 +26,11 @@ class LoginController
             header('Location: /');
             exit();
         }
+
+        if (empty($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        }
+
         include __DIR__ . '/../../template/login_page.php';
     }
 
@@ -37,6 +42,15 @@ class LoginController
             $password = $_POST['password'];
 
             $authResult = $this->userService->authenticate($email, $password);
+
+            $postToken = $_POST['csrf_token'] ?? '';
+            $sessionToken = $_SESSION['csrf_token'] ?? '';
+
+            // Vérification du token CSRF
+            if (empty($postToken) || $postToken !== $sessionToken) {
+                header('Location: /login?error=csrf');
+                exit;
+            }
 
             if ($authResult instanceof \App\Entity\User) {
 
