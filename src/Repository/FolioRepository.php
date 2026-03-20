@@ -19,15 +19,16 @@ class FolioRepository
     // Insère une nouvelle ligne dans la table folio
     public function create(Folio $folio, int $userId): bool
     {
-        $sql = "INSERT INTO folio (titre, description, categorie_folio, id_user) 
-                VALUES (:titre, :description, :categorie, :user)";
+        $sql = "INSERT INTO folio (titre, description, categorie_folio, id_user, is_published) 
+                VALUES (:titre, :description, :categorie, :user, :published)";
 
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             'titre'       => $folio->getTitre(),
             'description' => $folio->getDescription(),
             'categorie'   => $folio->getCategorieFolio(),
-            'user'        => $userId
+            'user'        => $userId,
+            'published'   => $folio->getIsPublished() ? 1 : 0
         ]);
     }
 
@@ -102,17 +103,17 @@ class FolioRepository
     // Recherche le nom de l'utilisateur ou le titre du portfolio
     public function searchFolios(string $query): array 
     {
-    $sql = "SELECT * FROM folio 
-            JOIN user ON folio.id_user = user.id_user 
-            WHERE user.nom LIKE :q 
-            OR user.prenom LIKE :q 
-            OR folio.titre LIKE :q";
-            
-    $stmt = $this->pdo->prepare($sql);
-    $stmt->bindValue(':q', '%' . $query . '%'); // '%' cible les portfolios demandés
-    $stmt->execute();
-    
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $sql = "SELECT * FROM folio 
+                JOIN user ON folio.id_user = user.id_user 
+                WHERE user.nom LIKE :q 
+                OR user.prenom LIKE :q 
+                OR folio.titre LIKE :q";
+                
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':q', '%' . $query . '%'); // '%' cible les portfolios demandés
+        $stmt->execute();
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // CRUD - UPDATE

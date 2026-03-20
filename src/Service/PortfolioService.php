@@ -81,27 +81,6 @@ class PortfolioService
         }
     }
 
-    // Récupère l'ensemble des données du portfolio (folio et projets) associé à un identifiant d'utilisateur
-    public function getUserPortfolio(?int $userId = null)
-    {
-        // récupère les folios de base (table folio)
-        $folios = $this->folioRepo->findByUser($userId); 
-
-        // Pour chaque folio, recherche ses projets
-        foreach ($folios as &$folio) {
-
-        // Ajoute une clé 'projets_lies' au tableau du folio
-        $folio['projets_lies'] = $this->projetRepo->findByFolio((int)$folio['id_folio']);
-        }
-
-        return $folios;
-
-        if (!$userId) {
-            return [];
-        }
-        return $this->folioRepo->findByUser($userId);
-    }
-
     // S'occupe du traitement des fichiers
     private function uploadProjectMedia(int $idProjet, array $fileArray): void
     {
@@ -139,7 +118,7 @@ class PortfolioService
             $projet->setType($data['type']);
         }
 
-        if(isset($data['titre'])) {
+        if(isset($data['title'])) {
             $projet->setContenu($data['title']);
         }
 
@@ -149,6 +128,24 @@ class PortfolioService
     public function getGalleryFeed(): array
     {
         return $this->folioRepo->findPublishedForGallery();
+    }
+
+    // Récupère l'ensemble des données du portfolio (folio et projets) associé à un identifiant d'utilisateur
+    public function getUserPortfolio(?int $userId = null)
+    {
+        if (!$userId) {
+            return [];
+        }
+
+        // Récupère les folios de base
+        $folios = $this->folioRepo->findByUser($userId); 
+
+        // Pour chaque folio, recherche ses projets et les attache
+        foreach ($folios as &$folio) {
+            $folio['projets_lies'] = $this->projetRepo->findByFolio((int)$folio['id_folio']);
+        }
+
+        return $folios;
     }
 
     // Bouton "Publier mon portfolio"
@@ -161,7 +158,7 @@ class PortfolioService
         }
 
         // Vérification du portfolio s'il appartient bien à l'utilisateur
-        $folio->setIsPublished(true);
+        $folio->setIsPublished(!$folio->getIsPublished());
         return $this->folioRepo->update($folio);
     }
 

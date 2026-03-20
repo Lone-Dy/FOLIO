@@ -357,3 +357,98 @@ function openEditProjectModal(id, type, title) {
         console.error("Erreur : Impossible de trouver les éléments de la modale d'édition.");
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const projectCards = document.querySelectorAll('.project-card');
+    const slots = document.querySelectorAll('.project-slot');
+
+    projectCards.forEach(card => {
+        card.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text/plain', card.dataset.id);
+            // On stocke aussi le titre pour l'affichage immédiat
+            const title = card.querySelector('h4').innerText;
+            e.dataTransfer.setData('project-title', title);
+        });
+    });
+
+    slots.forEach(slot => {
+        slot.addEventListener('dragover', (e) => e.preventDefault());
+
+        slot.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const projectId = e.dataTransfer.getData('text/plain');
+            const projectTitle = e.dataTransfer.getData('project-title');
+            
+            if (projectId) {
+                fillSlot(slot, projectId, projectTitle);
+            }
+        });
+    });
+});
+
+/**
+ * Remplit un slot avec les données du projet et grise l'original
+ */
+function fillSlot(slot, id, title) {
+    // 1. On vérifie si le projet n'est pas déjà dans un autre slot
+    const alreadyUsed = document.querySelector(`.project-slot input[value="${id}"]`);
+    if (alreadyUsed) {
+        alert("Ce projet est déjà sélectionné dans votre assemblage !");
+        return;
+    }
+
+    // 2. On remplit le slot visuellement et avec l'input caché pour PHP
+    slot.innerHTML = `
+        <div class="selected-content" style="padding: 10px; background: #f0f2f5; border-radius: 8px; width: 100%;">
+            <button type="button" class="btn-remove-slot" onclick="removeProjectFromSlot(this, '${id}')">×</button>
+            <strong style="font-size: 0.9em; display: block; margin-bottom: 5px;">Projet Sélectionné :</strong>
+            <p style="margin: 0; color: #333;">${title}</p>
+            <input type="hidden" name="projets[]" value="${id}">
+        </div>
+    `;
+    slot.classList.add('filled');
+
+    // 3. On grise la carte originale dans la liste de gauche
+    const originalCard = document.querySelector(`.project-card[data-id="${id}"]`);
+    if (originalCard) {
+        originalCard.classList.add('is-used');
+    }
+
+    checkFormReady();
+}
+
+/**
+ * Vide le slot et réactive la carte projet à gauche
+ */
+function removeProjectFromSlot(button, id) {
+    const slot = button.closest('.project-slot');
+    
+    // 1. On remet le slot à son état initial
+    slot.innerHTML = '<p>Glissez un projet ici</p>';
+    slot.classList.remove('filled');
+
+    // 2. On réactive la carte dans la liste de gauche
+    const originalCard = document.querySelector(`.project-card[data-id="${id}"]`);
+    if (originalCard) {
+        originalCard.classList.remove('is-used');
+    }
+
+    checkFormReady();
+}
+
+/**
+ * Active les boutons de validation uniquement si 3 projets sont présents
+ */
+function checkFormReady() {
+    const filledSlots = document.querySelectorAll('.project-slot.filled').length;
+    const publishBtn = document.getElementById('publishBtn');
+    const draftBtn = document.querySelector('button[value="draft"]');
+
+    if (filledSlots === 3) {
+        publishBtn.disabled = false;
+        draftBtn.disabled = false;
+    } else {
+        publishBtn.disabled = true;
+        draftBtn.disabled = true;
+    }
+}

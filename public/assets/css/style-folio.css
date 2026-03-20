@@ -83,8 +83,31 @@
     transition: opacity 0.3s;
 }
 
+.media-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: grayscale(100%);
+    transition: filter 0.5s ease;
+}
+
+.project-used {
+    opacity: 0.4;
+    cursor: not-allowed;
+    border: 1px dashed #ccc;
+    background-color: #f9f9f9;
+}
+
 .project-card:hover .project-overlay {
     opacity: 1;
+}
+
+.project-card.is-used {
+    opacity: 0.4;
+    pointer-events: none; /* Empêche de le reglisser */
+    border: 2px dashed #ccc;
+    filter: grayscale(1);
+    transition: all 0.3s ease;
 }
 
 .project-card {
@@ -96,16 +119,12 @@
     transform: translateY(-5px);
 }
 
-.media-container img {
-    width: 100%;
-    height: auto;
-    display: block;
-    filter: grayscale(100%);
-    transition: filter 0.5s ease;
-}
-
 .project-card:hover img {
     filter: grayscale(0%);
+}
+
+.project-slot {
+    position: relative; /* Pour positionner le bouton X */
 }
 
 .portfolio-edit-container {
@@ -238,6 +257,25 @@
     cursor: pointer;
     transition: background 0.3s;
 }
+
+.btn-remove-slot {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #ff4757;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
 
 .btn-save:hover { 
     background: #444444; 
