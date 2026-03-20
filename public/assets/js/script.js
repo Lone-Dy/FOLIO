@@ -337,3 +337,23 @@ function togglePassword(inputId, svgId) {
         svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
     }
 }
+
+function openEditProjectModal(id, type, title) {
+    // Ciblage des champs de la modale
+    const inputId = document.getElementById('edit_id_projet');
+    const inputType = document.getElementById('edit_type');
+    const inputTitle = document.getElementById('edit_title');
+    const modal = document.getElementById('editProjectDialog');
+
+    // On vérifie que les éléments existent pour éviter les erreurs JS
+    if (inputId && inputType && inputTitle && modal) {
+        inputId.value = id;
+        inputType.value = type;
+        inputTitle.value = title;
+        
+        // Affichage de la modale
+        modal.showModal();
+    } else {
+        console.error("Erreur : Impossible de trouver les éléments de la modale d'édition.");
+    }
+}

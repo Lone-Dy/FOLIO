@@ -48,6 +48,45 @@ class ProjetController
         }
     }
 
+    // Gère la soumission du formulaire d'édition d'un projet
+    public function handleEditProjet()
+    {
+        $userId = $_SESSION['user']['id'] ?? null;
+        $idProjet = $_POST['id_projet'] ?? null;
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && $userId && $idProjet) {
+
+            try {
+                $this->portfolioService->updateProjet((int)$idProjet, $_POST);
+                header('Location: /profile?success=project_updated');
+            } catch (\Exception $e) {
+                header('Location: /profile?error=' . urlencode($e->getMessage()));
+            }
+            exit;
+        }
+    }
+
+    // Gère l'exposition dans la galerie
+    public function togglePublic(array $params)
+    {
+        $idFolio = isset($params[0]) ? (int)$params[0] : null;
+        $userId = $_SESSION['user']['id'] ?? null;
+
+        if ($idFolio && $userId) {
+
+            try {
+                $this->portfolioService->publishPortfolio($idFolio, $userId);
+                header('Location: /profile?success=published');
+            } catch (\Exception $e) {
+                header('Location: /profile?error=' . urlencode($e->getMessage()));
+            }
+            exit;
+        }
+        header('Location: /projet');
+        exit;
+    }
+
+    // Gère la suppression du portfolio
     public function delete(array $params)
     {
         $idFolio = isset($params[0]) ? (int)$params[0] : null;
@@ -55,7 +94,7 @@ class ProjetController
 
         if ($idFolio && $userId) {
 
-            $this->portfolioService->deleteProject($idFolio, $userId); 
+            $this->portfolioService->deletePortfolio($idFolio, $userId); 
             header('Location: /profile?success=deleted');
         } else {
             header('Location: /projet');

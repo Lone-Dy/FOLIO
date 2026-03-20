@@ -61,6 +61,11 @@ include_once(__DIR__ . '/view/header-profil.php');
                         <input type="file" name="projet_<?= $i ?>_files[]" class="drop-zone-input" accept="image/*,video/*" multiple>
                         <div class="media-list" id="mediaList<?= $i ?>"></div>
                     </div>
+
+                    <button type="button" class="btn-edit" onclick="openEditProjectModal(<?= $projet->getIdProjet() ?>, '<?= htmlspecialchars(addslashes($projet->getType()), ENT_QUOTES) ?>', '<?= htmlspecialchars(addslashes($projet->getContenu()), ENT_QUOTES) ?>')">
+                    Éditer ce projet
+                    </button>
+
                 </div>
             <?php endfor; ?>
         </div>
@@ -170,6 +175,29 @@ include_once(__DIR__ . '/view/header-profil.php');
         <div class="dialog-actions">
             <button type="submit" class="btn-submit">Mettre à jour</button>
             <button type="button" id="fermeDialog" class="btn-text" onclick="this.closest('dialog').close()">Fermer</button>
+        </div>
+    </form>
+</dialog>
+
+<dialog id="editProjectDialog" class="modern-dialog">
+    <form method="POST" action="/projet/edit">
+        <h2>Modifier le projet</h2>
+        
+        <input type="hidden" name="id_projet" id="edit_id_projet">
+        
+        <div class="field">
+            <label for="edit_type">Type de projet</label>
+            <input type="text" name="type" id="edit_type" required>
+        </div>
+        
+        <div class="field">
+            <label for="edit_title">Titre / Contenu</label>
+            <textarea name="title" id="edit_title" rows="4" required></textarea>
+        </div>
+
+        <div class="dialog-actions">
+            <button type="submit" class="btn-submit">Mettre à jour</button>
+            <button type="button" class="btn-text" onclick="this.closest('dialog').close()">Annuler</button>
         </div>
     </form>
 </dialog>

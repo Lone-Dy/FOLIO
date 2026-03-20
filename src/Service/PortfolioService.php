@@ -46,6 +46,10 @@ class PortfolioService
                 ->setDescription("Description par défaut")
                 ->setCategorieFolio("Général");
 
+            // Vérification du statut choisi dans le formulaire
+            $isPublished = (isset($data['status']) && $data['status'] === 'published');
+            $folio->setIsPublished($isPublished);
+
             // Adaptation du repo pour l'userId
             $this->folioRepo->createWithUser($folio, $userId);
             $idFolio = (int)$this->pdo->lastInsertId();
@@ -111,6 +115,25 @@ class PortfolioService
         }
     }
 
+    public function updateProjet(int $idProjet, array $data): bool
+    {
+        $projet = $this->projetRepo->findById($idProjet);
+
+        if (!$projet) {
+            throw new Exception("Projet introuvable.");
+        }
+
+        if (isset($data['type'])) {
+            $projet->setType($data['type']);
+        }
+
+        if(isset($data['titre'])) {
+            $projet->setContenu($data['title']);
+        }
+
+        return $this->projetRepo->update($projet);
+    }
+
     public function getGalleryFeed(): array
     {
         return $this->folioRepo->findPublishedForGallery();
@@ -130,12 +153,11 @@ class PortfolioService
         return $this->folioRepo->update($folio);
     }
 
-    public function deleteProject(int $idProjet, int $userId): bool
+    public function deletePortfolio(int $idFolio, int $userId): bool
     {   
 
         // Suppression en BDD
-        return $this->projetRepo->delete($idProjet);
+        return $this->folioRepo->delete($idFolio);
     }
-
 }
 ?>
