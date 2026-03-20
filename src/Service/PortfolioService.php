@@ -84,6 +84,18 @@ class PortfolioService
     // Récupère l'ensemble des données du portfolio (folio et projets) associé à un identifiant d'utilisateur
     public function getUserPortfolio(?int $userId = null)
     {
+        // récupère les folios de base (table folio)
+        $folios = $this->folioRepo->findByUser($userId); 
+
+        // Pour chaque folio, recherche ses projets
+        foreach ($folios as &$folio) {
+
+        // Ajoute une clé 'projets_lies' au tableau du folio
+        $folio['projets_lies'] = $this->projetRepo->findByFolio((int)$folio['id_folio']);
+        }
+
+        return $folios;
+
         if (!$userId) {
             return [];
         }

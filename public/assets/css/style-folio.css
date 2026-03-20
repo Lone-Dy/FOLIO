@@ -21,6 +21,12 @@
     box-shadow: 0 8px 25px rgba(0,0,0,0.05);
 }
 
+.project-header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
 .project-header span {
     font-size: 0.85rem;
     text-transform: uppercase;
@@ -131,6 +137,22 @@
     font-size: 2rem;
 }
 
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.status-published {
+    color: var(--success);
+}
+
+.status-draft {
+    color: var(--text-muted);
+}
+
 /* La grille Pinterest */
 
 .projects-grid {
@@ -157,6 +179,12 @@
 
 .portfolio-item:hover .portfolio-overlay {
     opacity: 1;
+}
+
+.portfolio-divider {
+    margin: 20px 0;
+    border-top: 1px solid #e5e5e7;
+    padding-top: 15px;
 }
 
 /* Chaque carte de portfolio */
@@ -215,6 +243,30 @@
     background: #444444; 
 }
 
+/* --- Liste des sous-projets --- */
+.sub-project-row {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sub-project-info {
+    flex: 1;
+}
+
+.sub-project-type {
+    color: var(--accent-color);
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.sub-project-preview {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-main);
+}
+
 /* Zone de Drop (Upload) */
 .drop-zone {
     border: 2px dashed #d2d2d7;
@@ -238,6 +290,38 @@
 .btn-submit:disabled {
     opacity: 0.5; 
     cursor: not-allowed;
+}
+
+/* --- Actions du pied de carte --- */
+.portfolio-footer-actions {
+    display: flex;
+    gap: 10px;
+    border-top: 1px solid #e5e5e7;
+    padding-top: 15px;
+}
+
+.btn-folio-action {
+    flex: 1;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-delete-link {
+    background: #ff3b3011;
+    color: #ff3b30;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.icon-small {
+    vertical-align: middle;
 }
 
 /* --- 3. RESPONSIVE GRILLE --- */

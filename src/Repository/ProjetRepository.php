@@ -75,8 +75,27 @@ class ProjetRepository
             ->setOrdreAffichage($row['ordre_affichage']);
     }
 
-    // Compter les projets d'un utilisateur spécifique
+    // Ajout de la récupération par folio
+    public function findByFolio(int $idFolio): array 
+    {
+        $sql = "SELECT * FROM projet WHERE id_folio = :id ORDER BY ordre_affichage ASC";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['id' => $idFolio]);
+        $projets = [];
 
+        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $projet = new \App\Entity\Projet();
+            $projet->setIdProjet($row['id_projet'])
+                ->setType($row['type'])
+                ->setContenu($row['contenu'])
+                ->setOrdreAffichage($row['ordre_affichage']);
+            $projets[] = $projet;
+        }
+        return $projets; 
+
+    }
+
+    // Compter les projets d'un utilisateur spécifique
     public function countByUserId(int $userId): int
     {
         $sql = "SELECT COUNT(p.id_projet) FROM projet p 
