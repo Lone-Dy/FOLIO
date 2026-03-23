@@ -282,7 +282,6 @@ select {
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    font-family: 'Lexend', sans-serif;
     font-weight: 500;
     transition: all 0.3s ease;
 }
@@ -410,7 +409,6 @@ dialog input {
     padding: 12px;
     border: 1px solid #ddd;
     border-radius: 6px;
-    font-family: 'Lexend', sans-serif;
 }
 
 .dialog-actions {
@@ -453,10 +451,16 @@ dialog input {
 }
 
 .error-message {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+    background-color: #fff2f1; /* Rouge très pâle */
+    color: var(--error);      /* Ton rouge #ff3b30 */
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+    border: 1px solid #ffccc7;
+    text-align: center;
 }
+
 .modern-dialog {
     border: none;
     border-radius: 15px;

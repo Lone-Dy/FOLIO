@@ -23,7 +23,6 @@
     border: 1px solid #e0e0e0;
     background: rgba(245, 245, 247, 0.8);
     font-size: 1.1rem;
-    font-family: 'Lexend', sans-serif;
     outline: none;
     transition: all 0.3s ease;
 }
@@ -56,12 +55,6 @@
     max-width: 1200px;
     margin: 50px auto;
     gap: 40px;
-}
-
-.auth-container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 20px;
 }
 
 .auth-box {
@@ -677,17 +670,6 @@ input[type="text"], input[type="email"], select, textarea {
     animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
 }
 
-/* Style affiné pour le message d'erreur (look Apple) */
-.error-message {
-    background-color: #fff2f1; /* Rouge très pâle */
-    color: var(--error);      /* Ton rouge #ff3b30 */
-    padding: 12px;
-    border-radius: 10px;
-    font-size: 0.85rem;
-    margin-bottom: 20px;
-    border: 1px solid #ffccc7;
-    text-align: center;
-}
 
 .password-hint {
     display: block;
