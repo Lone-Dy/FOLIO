@@ -34,13 +34,14 @@ class FolioRepository
 
     public function createWithUser(Folio $folio, int $userId): bool 
     {
-        $sql = "INSERT INTO folio (titre, description, categorie_folio, id_user)
-                VALUES (:titre, :description, :categorie, :user)";
+        $sql = "INSERT INTO folio (titre, description, categorie_folio, id_user, is_published)
+                VALUES (:titre, :description, :categorie, :user, :published)";
 
         return $this->pdo->prepare($sql)->execute([
             'titre'       => $folio->getTitre(),
             'description' => $folio->getDescription(),
             'categorie'   => $folio->getCategorieFolio(),
+            'published'   => $folio->getIsPublished() ? 1 : 0,
             'user'        => $userId
         ]);        
     }
@@ -84,7 +85,8 @@ class FolioRepository
         return $folio->setIdFolio($row['id_folio'])
                      ->setTitre($row['titre'])
                      ->setDescription($row['description'])
-                     ->setCategorieFolio($row['categorie_folio']);
+                     ->setCategorieFolio($row['categorie_folio'])
+                     ->setIsPublished((bool)$row['is_published']);
     }
 
     // Publication du portfolio dans la galerie

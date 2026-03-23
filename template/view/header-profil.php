@@ -12,7 +12,9 @@
 <body>
 <header class="header">
     <a href="/home" class="logo">
+        <h1>
         <img src="/assets/img/SVG/logo_folio_noir.svg" alt="Logo Folio" width="150">
+        </h1>
     </a>
     <nav class="nav">
         <?php if (isset($_SESSION['user'])): ?>

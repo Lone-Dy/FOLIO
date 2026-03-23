@@ -31,16 +31,15 @@ class ProjetController
         $userId = $_SESSION['user']['id'] ?? null;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && $userId) {
+
             try {
-                // Utilisation du PortfolioService avec les 3 arguments requis
-                // Attention : $_POST['projets'] pour correspondre au formulaire HTML
                 $this->portfolioService->createFullPortfolio(
                     $userId,
                     $_POST,   // Contient 'projets' et 'status'
                     $_FILES   // Contient les images
                 );
 
-                header('Location: /profile?success=1');
+                header('Location: /projet?success=folio_created');
             } catch (\Exception $e) {
                 header('Location: /portfolio?error=' . urlencode($e->getMessage()));
             }
@@ -76,7 +75,7 @@ class ProjetController
 
             try {
                 $this->portfolioService->publishPortfolio($idFolio, $userId);
-                header('Location: /profile?success=published');
+                header('Location: /projet?success=visibility_updated');
             } catch (\Exception $e) {
                 header('Location: /profile?error=' . urlencode($e->getMessage()));
             }

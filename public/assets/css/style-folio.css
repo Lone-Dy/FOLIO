@@ -362,6 +362,93 @@
     vertical-align: middle;
 }
 
+/* --- Gestion du Portfolio (portfolio.php) --- */
+
+.portfolio-management {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.portfolio-grid-admin {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.portfolio-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 25px;
+    box-shadow: var(--card-shadow);
+    border: 1px solid #e5e5e7;
+    transition: transform 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.portfolio-card:hover {
+    transform: translateY(-5px);
+}
+
+.portfolio-card h3 {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+    color: var(--primary-color);
+}
+
+/* Badge de statut */
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.status-public {
+    background: #e6f4ea;
+    color: #1e7e34;
+}
+
+.status-draft {
+    background: #f5f5f7;
+    color: #86868b;
+}
+
+/* Boutons d'action */
+.portfolio-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-toggle {
+    background: var(--accent-color);
+    color: white;
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.btn-delete {
+    color: var(--error);
+    text-align: center;
+    font-size: 0.9rem;
+    text-decoration: none;
+    padding: 8px;
+}
+
+.btn-delete:hover {
+    text-decoration: underline;
+}
+
 /* --- 3. RESPONSIVE GRILLE --- */
 
 @media (max-width: 1100px) {

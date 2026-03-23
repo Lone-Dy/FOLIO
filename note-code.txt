@@ -242,3 +242,80 @@ body {
             </button>
         </form>
     </section>
+
+
+
+    CREATE TABLE IF NOT EXISTS `user` (
+   `id_user` INT AUTO_INCREMENT,
+   `nom` VARCHAR(50) NOT NULL,
+   `prenom` VARCHAR(50) NOT NULL,
+   `email` VARCHAR(100) UNIQUE NOT NULL,
+   `motdepasse` VARCHAR(255) NOT NULL,
+   `statut_compte` VARCHAR(50) DEFAULT 'actif',
+   `role` ENUM('admin', 'user') NOT NULL DEFAULT 'user',
+   PRIMARY KEY (`id_user`)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS `folio` (
+  `id_folio` INT NOT NULL AUTO_INCREMENT,
+  `titre` VARCHAR(150) NOT NULL,
+  `description` TEXT,
+  `categorie_folio` VARCHAR(50) DEFAULT 'Non classé',
+  `image_url` VARCHAR(255),
+  `date_creation` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_folio`)
+) ENGINE = InnoDB
+
+CREATE TABLE IF NOT EXISTS `projet` (
+  `id_projet` INT NOT NULL AUTO_INCREMENT,
+  `type` VARCHAR(100) NOT NULL,
+  `contenu` TEXT,
+  `ordre_affichage` INT DEFAULT 0,
+  PRIMARY KEY (`id_projet`)
+) ENGINE = InnoDB
+
+CREATE TABLE IF NOT EXISTS `comment` (
+  `id_comment` INT NOT NULL AUTO_INCREMENT,
+  `id_utilisateur` INT NOT NULL,
+  `id_projet` INT NOT NULL,
+  `date_post` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `contenu_post` TEXT NOT NULL,
+  PRIMARY KEY (`id_comment`),
+  FOREIGN KEY (`id_user`) REFERENCES `user`(`id_user`) ON DELETE CASCADE,
+  FOREIGN KEY (`id_projet`) REFERENCES `projet`(`id_projet`) ON DELETE CASCADE
+) ENGINE = InnoDB;
+
+ALTER TABLE `user` 
+ADD COLUMN age INT NOT NULL AFTER email;
+
+ALTER TABLE `projet` 
+ADD COLUMN id_user INT NOT NULL;
+
+ALTER TABLE `projet` 
+ADD CONSTRAINT projet_user FOREIGN KEY (id_user) REFERENCES user(id_user);
+
+ALTER TABLE `projet`
+DROP COLUMN contenu;
+
+CREATE TABLE `media` (
+  `id_media` INT AUTO_INCREMENT PRIMARY KEY,
+  `id_projet` INT NOT NULL,
+  `chemin_fichier` VARCHAR(255) NOT NULL,
+  `media_type` ENUM('image', 'video') NOT NULL,
+  `ordre_affichage` INT NOT NULL DEFAULT 0,
+  `poids_fichier` INT NOT NULL,
+  FOREIGN KEY (`id_projet`) REFERENCES `projet`(`id_projet`) ON DELETE CASCADE
+) ENGINE = InnoDB;
+
+ALTER TABLE `folio`
+ADD COLUMN id_user INT NOT NULL;
+
+ALTER TABLE `folio`
+ADD is_published TINYINT(1) DEFAULT 0;
+
+ALTER TABLE `user`
+ADD COLUMN biographie TEXT NULL,
+ADD COLUMN photo_profile VARCHAR(255) DEFAULT 'default-avatar.png';
+
+ALTER TABLE `folio` ADD CONSTRAINT `fk_folio_user` 
+    FOREIGN KEY (`id_user`) REFERENCES `user`(`id_user`) ON DELETE CASCADE;

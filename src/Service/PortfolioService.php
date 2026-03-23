@@ -37,6 +37,13 @@ class PortfolioService
     // Gère la création complète d'un portfolio
     public function createFullPortfolio(int $userId, array $data, array $files): bool
     {
+
+        // Contrôle de la règle des 3 projets
+        if(!isset($data['projets']) || count($data['projets']) !== 3)
+            {
+                throw new Exception("Un portfolio doit contenir exactement 3 projets.");
+            }
+
         try {
             $this->pdo->beginTransaction();
 
@@ -124,7 +131,7 @@ class PortfolioService
 
         return $this->projetRepo->update($projet);
     }
-
+ 
     public function getGalleryFeed(): array
     {
         return $this->folioRepo->findPublishedForGallery();
@@ -162,6 +169,7 @@ class PortfolioService
         return $this->folioRepo->update($folio);
     }
 
+    // Suppression du portfolio
     public function deletePortfolio(int $idFolio, int $userId): bool
     {   
 
