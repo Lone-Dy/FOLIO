@@ -76,12 +76,12 @@ class User
     }
 
     // --- MOT DE PASSE ---
-    public function getPassword(): string
+    public function getMotDePasse(): string
     {
         return $this->mot_de_passe;
     }
 
-    public function setPassword(string $mdp): self
+    public function setMotDePasse(string $mdp): self
     {
         $this->mot_de_passe = $mdp;
         return $this;

@@ -109,7 +109,7 @@ class LoginController
                 ->setEmail($_POST['email'])
                 ->setAge((int)$_POST['age'])
                 // On hache le mot de passe pour la sécurité
-                ->setPassword(password_hash($_POST['password'], PASSWORD_BCRYPT))
+                ->setMotDePasse(password_hash($_POST['password'], PASSWORD_BCRYPT))
                 ->setRole('user')
                 ->setStatutCompte('actif');
 

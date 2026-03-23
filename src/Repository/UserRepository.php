@@ -23,7 +23,7 @@ class UserRepository
             ->setPrenom($donnees['prenom'])
             ->setEmail($donnees['email'])
             ->setAge((int)($donnees['age'] ?? 0))
-            ->setPassword($donnees['password'] ?? '')
+            ->setMotDePasse($donnees['mot_de_passe'] ?? '')
             ->setStatutCompte($donnees['statut_compte'] ?? 'actif')
             ->setRole($donnees['role'] ?? 'user')
             ->setBiographie($donnees['biographie'] ?? null)
@@ -36,8 +36,8 @@ class UserRepository
     // Insère un nouvel utilisateur (inscription) dans la table user
     public function create(User $user): bool
     {
-        $sql = "INSERT INTO user (nom, prenom, email, age, password, statut_compte, role) 
-            VALUES (:nom, :prenom, :email, :age, :password, :statut, :role)";
+        $sql = "INSERT INTO user (nom, prenom, email, age, mot_de_passe, statut_compte, role) 
+            VALUES (:nom, :prenom, :email, :age, :mot_de_passe, :statut, :role)";
 
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
@@ -45,7 +45,7 @@ class UserRepository
             'prenom'   => $user->getPrenom(),
             'email'    => $user->getEmail(),
             'age'      => $user->getAge(),
-            'password' => $user->getPassword(),
+            'mot_de_passe' => $user->getMotDePasse(),
             'statut'   => $user->getStatutCompte() ?? 'actif',
             'role'     => $user->getRole() ?? 'user'
         ]);
@@ -91,7 +91,7 @@ class UserRepository
             prenom = :prenom, 
             email = :email, 
             age = :age, 
-            password = :password, 
+            mot_de_passe = :mot_de_passe, 
             statut_compte = :statut, 
             role = :role,
             biographie = :bio,
@@ -104,7 +104,7 @@ class UserRepository
             'prenom'   => $user->getPrenom(),
             'email'    => $user->getEmail(),
             'age'      => $user->getAge(),
-            'password' => $user->getPassword(),
+            'password' => $user->getMotDePasse(),
             'statut'   => $user->getStatutCompte(),
             'role'     => $user->getRole(),
             'bio'      => $user->getBiographie(),
