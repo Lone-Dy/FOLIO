@@ -71,6 +71,20 @@ class ProjetController
         $idFolio = isset($params[0]) ? (int)$params[0] : null;
         $userId = $_SESSION['user']['id'] ?? null;
 
+        if(!$userId || !$idFolio) {
+            header('Location: /login');
+            exit;
+        }
+
+            try {
+            $this->portfolioService->toggleProjectVisibility($idFolio, $userId);
+                header('Location: /portfolio?success=status_updated');
+
+            } catch (\Exception $e) {
+                header('Location: /portfolio?error=' . urlencode($e->getMessage()));
+            }
+            exit;
+
         if ($idFolio && $userId) {
 
             try {

@@ -102,6 +102,14 @@ class FolioRepository
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function toggleStatus(int $id): bool
+    {
+        $sql = "UPDATE portfolio SET is_published = 1 - is_published WHERE id_folio = :id";
+        $stmt = $this->pdo->prepare($sql);
+
+        return $stmt->execute(['id' => $id]);
+    }
+
     // Recherche le nom de l'utilisateur ou le titre du portfolio
     public function searchFolios(string $query): array 
     {

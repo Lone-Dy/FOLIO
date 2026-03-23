@@ -137,6 +137,11 @@ class PortfolioService
         return $this->folioRepo->findPublishedForGallery();
     }
 
+    public function toggleProjectVisibility($projetId, $userId)
+    {
+        return $this->folioRepo->toggleStatus($projetId);
+    }
+
     // Récupère l'ensemble des données du portfolio (folio et projets) associé à un identifiant d'utilisateur
     public function getUserPortfolio(?int $userId = null)
     {
