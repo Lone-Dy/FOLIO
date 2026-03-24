@@ -5,8 +5,8 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Controller\{HomeController, E404Controller, LoginController, ConditionController, ProfileController, ProjetController, GalerieController};
+use App\Service\{DatabaseFactory, PortfolioService, UserService, FlashService, MediaService, ProjetService, FolioService};
 use App\Repository\{UserRepository, ProjetRepository, FolioRepository, MediaRepository};
-use App\Service\{DatabaseFactory, PortfolioService, UserService};
 
 session_set_cookie_params([
     'lifetime'  => 0,
@@ -90,8 +90,9 @@ $container = [
         $projetRepo = new ProjetRepository($pdo);
         $mediaRepo = new MediaRepository($pdo);
         $userService = new UserService($userRepo);
+        $flashService = new FlashService();
         $portfolioService = new PortfolioService($pdo, $folioRepo, $projetRepo, $mediaRepo);
-        return new ProfileController($userService, $userRepo, $portfolioService);
+        return new ProfileController($userService, $userRepo, $portfolioService, $flashService);
     },
 
     ProjetController::class=> function ($pdo) {

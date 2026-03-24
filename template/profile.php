@@ -2,6 +2,22 @@
 include_once(__DIR__ . '/view/header-profil.php');
 ?>
 
+<?php if (isset($_SESSION['flash_messages']['success'])): ?>
+    <div class="alert alert-success">
+        <?php foreach ($_SESSION['flash_messages']['success'] as $message): ?>
+            <p><?= htmlspecialchars($message) ?></p>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
+
+<?php if (isset($_SESSION['flash_messages']['error'])): ?>
+    <div class="alert alert-danger">
+        <?php foreach ($_SESSION['flash_messages']['error'] as $message): ?>
+            <p><?= htmlspecialchars($message) ?></p>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
+
 <main class="profile-container">
     <aside class="profile-sidebar">
         <div class="profile-card">

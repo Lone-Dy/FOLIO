@@ -2,16 +2,42 @@
 
 namespace App\Controller;
 
+use App\Service\UserService;
 use App\Service\PortfolioService;
+use App\Service\FlashService;
+use App\Service\FolioService;
+use App\Service\ProjetService;
+use App\Repository\UserRepository;
+
 
 class ProjetController
 {
+    private UserService $userService;
     private PortfolioService $portfolioService;
+    private FlashService $flashService;
+    private FolioService $folioService;
+    private ProjetService $projetService;
+    private UserRepository $userRepository;
 
+public function __construct( 
 
-    public function __construct(PortfolioService $portfolioService)
+        UserService $userService, 
+        PortfolioService $portfolioService,
+        FlashService $flashService,
+        FolioService $folioService,
+        ProjetService $projetService,
+        UserRepository $userRepository
+        )
+
     {
+
+        $this->userService = $userService;
         $this->portfolioService = $portfolioService;
+        $this->flashService = $flashService;
+        $this->folioService = $folioService;
+        $this->projetService = $projetService;
+        $this->userRepository = $userRepository;
+
     }
 
     // Affiche la liste des projets de l'utilisateur connecté
@@ -25,44 +51,49 @@ class ProjetController
     }
 
     // Récupère les données $_POST et $_FILES pour lancer la création globale d'un portfolio via le service dédié
-    public function handleCreatePortfolio()
+    public function handleCreatePortfolio(FlashService $flashService)
     {
-        
-        $userId = $_SESSION['user']['id'] ?? null;
+            $userId = $_SESSION['user']['id'] ?? null;
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && $userId) {
-
-            try {
-                $this->portfolioService->createFullPortfolio(
-                    $userId,
-                    $_POST,   // Contient 'projets' et 'status'
-                    $_FILES   // Contient les images
-                );
-
-                header('Location: /projet?success=folio_created');
-            } catch (\Exception $e) {
-                header('Location: /portfolio?error=' . urlencode($e->getMessage()));
-            }
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !$userId) {
+            $flashService->addError("Requête invalide.");
+            header('Location: /portfolio');
             exit;
         }
+
+        try {
+            $this->portfolioService->createFullPortfolio($userId, $_POST, $_FILES);
+            $flashService->addSuccess("Portfolio créé avec succès !");
+            header('Location: /projet');
+        } catch (\Exception $e) {
+            $flashService->addError($e->getMessage());
+            header('Location: /portfolio');
+        }
+        exit;
     }
 
     // Gère la soumission du formulaire d'édition d'un projet
-    public function handleEditProjet()
+    public function handleEditProjet(FlashService $flashService) 
     {
+        
         $userId = $_SESSION['user']['id'] ?? null;
         $idProjet = $_POST['id_projet'] ?? null;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && $userId && $idProjet) {
-
             try {
-                $this->portfolioService->updateProjet((int)$idProjet, $_POST);
-                header('Location: /profile?success=project_updated');
+                $this->projetService->updateProjet($idProjet, $_POST, $_FILES);
+                $flashService->addSuccess("Projet mis à jour avec succès !");
+                header('Location: /projet');
             } catch (\Exception $e) {
-                header('Location: /profile?error=' . urlencode($e->getMessage()));
+                $flashService->addError($e->getMessage());
+                header('Location: /projet/edit/' . $idProjet);
             }
             exit;
         }
+
+        $flashService->addError("Requête invalide.");
+        header('Location: /projet');
+        exit;
     }
 
     // Gère l'exposition dans la galerie

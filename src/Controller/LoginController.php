@@ -2,21 +2,41 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-use App\Repository\UserRepository;
 use App\Service\UserService;
+use App\Service\GalerieService;
+use App\Service\FlashService;
+use App\Service\FolioService;
+use App\Service\ProjetService;
+use App\Repository\UserRepository;
 
 class LoginController
 {
+    private UserService $userService;
+    private GalerieService $galerieService;
+    private FlashService $flashService;
+    private FolioService $folioService;
+    private ProjetService $projetService;
+    private UserRepository $userRepository;
 
-    private $userRepository;
-    private $userService;
+public function __construct( 
 
-    // le Repository au constructeur
-    public function __construct(UserRepository $userRepository, UserService $userService)
+        UserService $userService, 
+        GalerieService $galerieService,
+        FlashService $flashService,
+        FolioService $folioService,
+        ProjetService $projetService,
+        UserRepository $userRepository
+        )
+
     {
-        $this->userRepository = $userRepository;
+
         $this->userService = $userService;
+        $this->galerieService = $galerieService;
+        $this->flashService = $flashService;
+        $this->folioService = $folioService;
+        $this->projetService = $projetService;
+        $this->userRepository = $userRepository;
+
     }
 
     // Affiche la page de connexion/inscription
@@ -61,69 +81,25 @@ class LoginController
     }
     
     // Traite l'inscription d'un nouvel utilisateur
-    public function handleRegister()  // La création (Inscription)
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $password = $_POST['password'];
-
-        if(strlen($password) < 12 ||                   // 12 caractères minimum
-            !preg_match('@[A-Z]@', $password) ||        // Au moins une majuscule
-            !preg_match('@[a-z]@', $password) ||        // Au moins une minuscule
-            !preg_match('@[0-9]@', $password) ||        // Au moins un chiffre
-            !preg_match('@[^\w]@', $password)           // Au moins un caractère spécial
-        ) {
-            header('Location: /login?error=weak_password#register-section');
-            exit;
-        }
-
-            // Vérification de la case RGPD
-        if (!isset($_POST['accept_conditions'])) {
-            header('Location: /login?error=rgpd#register-section');
-            exit;
-        }
-
-            // Stopper l'inscription des deux personnes utilisant la même adresse mail
-            $existingUser = $this->userRepository->findByEmail($_POST['email']);
-            if ($existingUser) {
-                header('Location: /login?error=email_exists#register-section');
-                exit;
-            }
-
-            // Création de l'entité User
-            $user = new User();
-            $user->setNom($_POST['nom'])
-                ->setPrenom($_POST['prenom'])
-                ->setEmail($_POST['email'])
-                ->setAge((int)$_POST['age'])
-                // On hache le mot de passe pour la sécurité
-                ->setMotDePasse(password_hash($_POST['password'], PASSWORD_BCRYPT))
-                ->setRole('user')
-                ->setStatutCompte('actif');
-
-            // Appel au Repository pour l'insertion
-            $success = $this->userRepository->create($user);
-
-            if ($success) {
-
-                $newUser = $this->userRepository->findByEmail($user->getEmail());
-
-                $_SESSION['user'] = [
-                    'id' => $newUser->getIdUtilisateur(),
-                    'email' => $newUser->getEmail()
-                ];
-
-                // Redirection vers la page profile
-                header('Location: /profile?success=welcome&new=1');
-                exit;
-            } else {
-
-                $_SESSION['flash_error'] = "L'inscription a échoué. Veuillez vérifier vos informations.";
-                header('Location: /login#register-section');
-                exit;
-                
-            }
-        }
+    public function handleRegister(FlashService $flashService)  // La création (Inscription)
+{
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        $flashService->addError("Méthode non autorisée.");
+        header('Location: /login');
+        exit;
     }
+
+    try {
+        $this->userService->registerUser($_POST, $_FILES['avatar'] ?? null);
+        $flashService->addSuccess("Inscription réussie ! Bienvenue sur Folio.");
+        header('Location: /profile');
+        
+    } catch (\Exception $e) {
+        $flashService->addError($e->getMessage());
+        header('Location: /login#register-section');
+    }
+    exit;
+}
 
     // Détruit la session et redirige vers l'accueil
     public function logout()

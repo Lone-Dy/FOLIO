@@ -1,321 +1,76 @@
-HTML -------------------------------------------------------------
+    public function handleRegister(FlashService $flashService)  // La création (Inscription)
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $password = $_POST['password'];
 
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FOLIO | Silence Visuel</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+        if(strlen($password) < 12 ||                   // 12 caractères minimum
+            !preg_match('@[A-Z]@', $password) ||        // Au moins une majuscule
+            !preg_match('@[a-z]@', $password) ||        // Au moins une minuscule
+            !preg_match('@[0-9]@', $password) ||        // Au moins un chiffre
+            !preg_match('@[^\w]@', $password)           // Au moins un caractère spécial
+        ) {
+            header('Location: /login?error=weak_password#register-section');
+            exit;
+        }
 
-    <header class="header">
-        <div class="logo">FOLIO</div>
-        <nav class="nav">
-            <a href="#projets">Projets</a>
-            <a href="#contact">Contact</a>
-        </nav>
-    </header>
+            // Vérification de la case RGPD
+        if (!isset($_POST['accept_conditions'])) {
+            header('Location: /login?error=rgpd#register-section');
+            exit;
+        }
 
-    <main class="container" id="projets">
-        <section class="project-grid">
-            <article class="project-card">
-                <div class="media-container">
-                    <img src="miniature-optimisee.jpg" alt="Nom du projet">
-                </div>
-                <div class="project-info">
-                    <h3>Identité Visuelle - Client A</h3>
-                    <p>Processus & Design</p>
-                </div>
-            </article>
-            
-            </section>
-<section class="contact-section" id="contact">
-    <div class="contact-header">
-        <h2>Travaillons ensemble</h2>
-        <p>Décrivez votre projet ou votre opportunité de recrutement.</p>
-    </div>
+            // Stopper l'inscription des deux personnes utilisant la même adresse mail
+            $existingUser = $this->userRepository->findByEmail($_POST['email']);
+            if ($existingUser) {
+                header('Location: /login?error=email_exists#register-section');
+                exit;
+            }
 
-    <form class="contact-form" action="#" method="post">
-        <div class="form-group">
-            <label for="name">Nom & Prénom</label>
-            <input type="text" id="name" name="name" placeholder="Ex: Jean Dupont" required>
-        </div>
+            // Création de l'entité User
+            $user = new User();
+            $user->setNom($_POST['nom'])
+                ->setPrenom($_POST['prenom'])
+                ->setEmail($_POST['email'])
+                ->setAge((int)$_POST['age'])
+                // On hache le mot de passe pour la sécurité
+                ->setMotDePasse(password_hash($_POST['password'], PASSWORD_BCRYPT))
+                ->setRole('user')
+                ->setStatutCompte('actif');
 
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="nom@entreprise.com" required>
-        </div>
+            // Appel au Repository pour l'insertion
+            $success = $this->userRepository->create($user);
 
-        <div class="form-group">
-            <label for="intent">Objet de la prise de contact</label>
-            <select id="intent" name="intent" required>
-                <option value="" disabled selected>Choisissez une option...</option>
-                <option value="recrutement">Opportunité de recrutement (CDI/CDD)</option>
-                <option value="devis">Demande de devis (Freelance)</option>
-                <option value="autre">Autre demande</option>
-            </select>
-        </div>
+            if ($success) {
 
-        <div class="form-group">
-            <label for="message">Message</label>
-            <textarea id="message" name="message" rows="5" placeholder="Parlez-moi de votre projet..." required></textarea>
-        </div>
+                $newUser = $this->userRepository->findByEmail($user->getEmail());
 
-        <button type="submit" class="btn-submit">Envoyer le message</button>
-    </form>
+                $_SESSION['user'] = [
+                    'id' => $newUser->getIdUtilisateur(),
+                    'email' => $newUser->getEmail()
+                ];
 
-</section>
+                // Redirection vers la page profile
+                header('Location: /profile?success=welcome&new=1');
+                exit;
+            } else {
 
-    </main>
+                $_SESSION['flash_error'] = "L'inscription a échoué. Veuillez vérifier vos informations.";
+                header('Location: /login#register-section');
+                exit;
+                
+            }
+        }
+    }
 
-    <a href="#contact" class="btn-engage-me">Engage Me</a>
 
-    <footer class="footer">
-        <p>© 2026 Dylan GOUBELLE - FOLIO</p>
-    </footer>
-
-</body>
-</html>
-
-CSS -------------------------------------------------------------
-
-/* Reset et Base */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Inter', sans-serif; /* Rigueur et géométrie */
-    background-color: #ffffff;
-    color: #1a1a1a;
-    line-height: 1.6;
-}
-
-/* Header */
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 2rem 5%;
-    background: #fff;
-}
-
-.logo {
-    font-weight: 800;
-    font-size: 1.5rem;
-    letter-spacing: 2px;
-}
-
-/* Grille de Projets Responsive */
-.project-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-    gap: 2rem;
-    padding: 0 5%;
-}
-
-/* Tablette & Mobile Adjustment */
-@media (max-width: 768px) {
-    .project-grid {
-        grid-template-columns: 1fr;
+    public function handleCreatePortfolio{
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $userId) {
+        try {
+            $this->portfolioService->createFullPortfolio($userId, $_POST, $_FILES);
+            header('Location: /projet?success=folio_created');
+        } catch (\Exception $e) {
+            header('Location: /portfolio?error=' . urlencode($e->getMessage()));
+        }
+        exit;
     }
 }
-
-.project-card {
-    transition: transform 0.3s ease;
-    cursor: pointer;
-}
-
-.project-card:hover {
-    transform: translateY(-5px);
-}
-
-.media-container img {
-    width: 100%;
-    height: auto;
-    display: block;
-    filter: grayscale(100%); /* Silence visuel par défaut */
-    transition: filter 0.5s ease;
-}
-
-.project-card:hover img {
-    filter: grayscale(0%);
-}
-
-/* Bouton "Engage Me" Flottant */
-.btn-engage-me {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background-color: #000;
-    color: #fff;
-    padding: 15px 30px;
-    text-decoration: none;
-    border-radius: 50px;
-    font-weight: bold;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    z-index: 1000;
-    transition: scale 0.2s ease;
-}
-
-.btn-engage-me:hover {
-    scale: 1.05;
-}
-
-.contact-section {
-    max-width: 600px;
-    margin: 4rem auto;
-    padding: 0 1.5rem;
-}
-
-.contact-header {
-    text-align: center;
-    margin-bottom: 3rem;
-}
-
-.contact-header h2 {
-    font-size: 2rem;
-    letter-spacing: -1px;
-    margin-bottom: 1rem;
-}
-
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-.form-group label {
-    display: block;
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.form-group input, 
-.form-group select, 
-.form-group textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #e0e0e0; /* Bordure légère pour le silence visuel */
-    font-family: inherit;
-    font-size: 1rem;
-    outline: none;
-    transition: border-color 0.3s ease;
-}
-
-.form-group input:focus, 
-.form-group select:focus, 
-.form-group textarea:focus {
-    border-color: #000; /* Focus marqué mais simple */
-}
-
-.btn-submit {
-    width: 100%;
-    padding: 15px;
-    background-color: #000;
-    color: #fff;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-    text-transform: uppercase;
-    transition: opacity 0.3s ease;
-}
-
-.btn-submit:hover {
-    opacity: 0.8;
-}
-
-
-    <section class="search-container">
-        <form action="/folio" method="GET" class="search-form">
-            <input type="text" name="q" placeholder="Rechercher un graphiste..." aria-label="Recherche">
-            <button type="submit">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-            </button>
-        </form>
-    </section>
-
-
-
-    CREATE TABLE IF NOT EXISTS `user` (
-   `id_user` INT AUTO_INCREMENT,
-   `nom` VARCHAR(50) NOT NULL,
-   `prenom` VARCHAR(50) NOT NULL,
-   `email` VARCHAR(100) UNIQUE NOT NULL,
-   `motdepasse` VARCHAR(255) NOT NULL,
-   `statut_compte` VARCHAR(50) DEFAULT 'actif',
-   `role` ENUM('admin', 'user') NOT NULL DEFAULT 'user',
-   PRIMARY KEY (`id_user`)
-) ENGINE=InnoDB;
-
-CREATE TABLE IF NOT EXISTS `folio` (
-  `id_folio` INT NOT NULL AUTO_INCREMENT,
-  `titre` VARCHAR(150) NOT NULL,
-  `description` TEXT,
-  `categorie_folio` VARCHAR(50) DEFAULT 'Non classé',
-  `image_url` VARCHAR(255),
-  `date_creation` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id_folio`)
-) ENGINE = InnoDB
-
-CREATE TABLE IF NOT EXISTS `projet` (
-  `id_projet` INT NOT NULL AUTO_INCREMENT,
-  `type` VARCHAR(100) NOT NULL,
-  `contenu` TEXT,
-  `ordre_affichage` INT DEFAULT 0,
-  PRIMARY KEY (`id_projet`)
-) ENGINE = InnoDB
-
-CREATE TABLE IF NOT EXISTS `comment` (
-  `id_comment` INT NOT NULL AUTO_INCREMENT,
-  `id_utilisateur` INT NOT NULL,
-  `id_projet` INT NOT NULL,
-  `date_post` DATETIME DEFAULT CURRENT_TIMESTAMP,
-  `contenu_post` TEXT NOT NULL,
-  PRIMARY KEY (`id_comment`),
-  FOREIGN KEY (`id_user`) REFERENCES `user`(`id_user`) ON DELETE CASCADE,
-  FOREIGN KEY (`id_projet`) REFERENCES `projet`(`id_projet`) ON DELETE CASCADE
-) ENGINE = InnoDB;
-
-ALTER TABLE `user` 
-ADD COLUMN age INT NOT NULL AFTER email;
-
-ALTER TABLE `projet` 
-ADD COLUMN id_user INT NOT NULL;
-
-ALTER TABLE `projet` 
-ADD CONSTRAINT projet_user FOREIGN KEY (id_user) REFERENCES user(id_user);
-
-ALTER TABLE `projet`
-DROP COLUMN contenu;
-
-CREATE TABLE `media` (
-  `id_media` INT AUTO_INCREMENT PRIMARY KEY,
-  `id_projet` INT NOT NULL,
-  `chemin_fichier` VARCHAR(255) NOT NULL,
-  `media_type` ENUM('image', 'video') NOT NULL,
-  `ordre_affichage` INT NOT NULL DEFAULT 0,
-  `poids_fichier` INT NOT NULL,
-  FOREIGN KEY (`id_projet`) REFERENCES `projet`(`id_projet`) ON DELETE CASCADE
-) ENGINE = InnoDB;
-
-ALTER TABLE `folio`
-ADD COLUMN id_user INT NOT NULL;
-
-ALTER TABLE `folio`
-ADD is_published TINYINT(1) DEFAULT 0;
-
-ALTER TABLE `user`
-ADD COLUMN biographie TEXT NULL,
-ADD COLUMN photo_profile VARCHAR(255) DEFAULT 'default-avatar.png';
-
-ALTER TABLE `folio` ADD CONSTRAINT `fk_folio_user` 
-    FOREIGN KEY (`id_user`) REFERENCES `user`(`id_user`) ON DELETE CASCADE;

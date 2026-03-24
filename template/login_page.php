@@ -30,7 +30,6 @@ include_once(__DIR__ . '/view/header-login.php');
         <?php endif; ?>
 
         <form action="/login/handleLogin" method="POST">
-            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
             
             <h2>Se connecter</h2>
 
