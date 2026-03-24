@@ -102,6 +102,32 @@ class FolioRepository
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // Récupère tous les projets pour une liste d'IDs de folios
+    public function findByFolioIds(array $folioIds): array
+    {
+        if (empty($folioIds)) return [];
+
+        // Crée une chaîne de points d'interrogation (?,?,?) pour le IN
+        $placeholders = implode(',', array_fill(0, count($folioIds), '?'));
+        
+        $sql = "SELECT * FROM projet WHERE id_folio IN ($placeholders) ORDER BY ordre_affichage ASC";
+        
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($folioIds);
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    }
+
+    public function findAllPublished(): array 
+    {
+        $sql = "SELECT f.*, u.nom, u.prenom 
+                FROM folio f 
+                JOIN user u ON f.id_user = u.id_user 
+                WHERE f.is_published = 1";
+        return $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function toggleStatus(int $id): bool
     {
         $sql = "UPDATE portfolio SET is_published = 1 - is_published WHERE id_folio = :id";

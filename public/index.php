@@ -4,7 +4,7 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use App\Controller\{HomeController, E404Controller, LoginController, ConditionController, ProfileController, ProjetController};
+use App\Controller\{HomeController, E404Controller, LoginController, ConditionController, ProfileController, ProjetController, GalerieController};
 use App\Repository\{UserRepository, ProjetRepository, FolioRepository, MediaRepository};
 use App\Service\{DatabaseFactory, PortfolioService, UserService};
 
@@ -56,6 +56,15 @@ $container = [
 
     ConditionController::class => function ($pdo) {
         return new ConditionController();
+    },
+
+    GalerieController::class => function ($pdo) {
+
+        $folioRepo = new FolioRepository($pdo);
+        $projetRepo = new ProjetRepository($pdo);
+        $mediaRepo = new MediaRepository($pdo);
+        $portfolioService = new PortfolioService($pdo, $folioRepo, $projetRepo, $mediaRepo);
+        return new GalerieController($portfolioService);
     },
 
     LoginController::class => function ($pdo) {

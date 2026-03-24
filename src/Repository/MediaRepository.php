@@ -40,6 +40,21 @@ class MediaRepository
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    // Récupère tous les médias pour une liste d'IDs de projets
+    public function findByProjetIds(array $projetIds): array
+    {
+        if (empty($projetIds)) return [];
+
+        $placeholders = implode(',', array_fill(0, count($projetIds), '?'));
+        
+        $sql = "SELECT * FROM media WHERE id_projet IN ($placeholders) ORDER BY ordre_affichage ASC";
+        
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($projetIds);
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     // UPDATE
 
     // Modifie les informations d'un média existant
