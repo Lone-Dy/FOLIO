@@ -68,6 +68,18 @@ class ProjetController
     // Gère l'exposition dans la galerie
     public function togglePublic(array $params)
     {
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $_SESSION['flash_error'] = "Action non autorisée.";
+            header('Location: /projet');
+            exit;
+        }
+        
+        $referer = $_SERVER['HTTP_REFERER'] ?? '';
+        if (strpos($referer, $_SERVER['SERVER_NAME']) === false) {
+            die("Sécurité : Requête d'origine inconnue.");
+        }
+
         $idFolio = isset($params[0]) ? (int)$params[0] : null;
         $userId = $_SESSION['user']['id'] ?? null;
 
@@ -102,6 +114,19 @@ class ProjetController
     // Gère la suppression du portfolio
     public function delete(array $params)
     {
+        // Interdit le GET. L'action doit venir d'un formulaire <form method="POST">
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $_SESSION['flash_error'] = "Action non autorisée.";
+            header('Location: /projet');
+            exit;
+        }
+
+        // Vérifie que la requête vient bien du site
+        $referer = $_SERVER['HTTP_REFERER'] ?? '';
+        if (strpos($referer, $_SERVER['SERVER_NAME']) === false) {
+            die("Sécurité : Requête d'origine inconnue.");
+        }
+
         $idFolio = isset($params[0]) ? (int)$params[0] : null;
         $userId = $_SESSION['user']['id'] ?? null;
 

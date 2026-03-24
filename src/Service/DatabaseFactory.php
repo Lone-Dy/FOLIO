@@ -40,9 +40,9 @@ class DatabaseFactory
             ]);
         } catch (PDOException $e) {
 
-            error_log("PDO Connection Error: " . $e->getMessage());
+            error_log("Erreur de connexion PDO: " . $e->getMessage());
 
-            throw new Exception("Unable to connect to the database. ".$e->getMessage(),$e->getCode());
+            throw new Exception("Erreur de connexion à la base de données. ". $e->getCode());
         }
     }
 }

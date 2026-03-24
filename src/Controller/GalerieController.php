@@ -5,9 +5,9 @@ use App\Service\PortfolioService;
 
 Class GalerieController {
 
-    private GalerieController $portfolioService;
+    private PortfolioService $portfolioService;
 
-    public function __construct(GalerieController $portfolioService) 
+    public function __construct(PortfolioService $portfolioService) 
     {
         $this->portfolioService = $portfolioService;
     }

@@ -8,6 +8,15 @@ use App\Controller\{HomeController, E404Controller, LoginController, ConditionCo
 use App\Repository\{UserRepository, ProjetRepository, FolioRepository, MediaRepository};
 use App\Service\{DatabaseFactory, PortfolioService, UserService};
 
+session_set_cookie_params([
+    'lifetime'  => 0,
+    'path'      => '/',
+    'domain'    => '',
+    'secure'    => false,
+    'httponly'  => true,
+    'samesite'  => 'Strict'
+]);
+
 session_start();
 
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);

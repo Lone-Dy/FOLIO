@@ -47,7 +47,7 @@ class MediaRepository
 
         $placeholders = implode(',', array_fill(0, count($projetIds), '?'));
         
-        $sql = "SELECT * FROM media WHERE id_projet IN ($placeholders) ORDER BY ordre_affichage ASC";
+        $sql = "SELECT * FROM media WHERE id_projet IN ($placeholders) ORDER BY ordreAffichage ASC";
         
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($projetIds);

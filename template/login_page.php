@@ -61,6 +61,14 @@ include_once(__DIR__ . '/view/header-login.php');
     <section class="auth-box register-section" id="register-section">
         <form action="/login/handleRegister" method="POST">
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+
+            <?php if (isset($_SESSION['flash_error'])): ?>
+                <div class="error-message">
+                <?php echo htmlspecialchars($_SESSION['flash_error']);
+                unset($_SESSION['flash_error']); // Vide l'erreur pour qu'elle disparaisse au prochain rafraîchissement
+                ?>
+                </div>
+            <?php endif; ?>
             
             <h2>Créez votre compte</h2>
             

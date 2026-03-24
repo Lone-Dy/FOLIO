@@ -95,6 +95,23 @@ class ProjetRepository
 
     }
 
+    // Récupère tous les projets pour une liste d'IDs de folios
+    public function findByFolioIds(array $folioIds): array
+    {
+        if (empty($folioIds)) return [];
+
+        // Crée une chaîne de points d'interrogation (?,?,?) pour le IN
+        $placeholders = implode(',', array_fill(0, count($folioIds), '?'));
+        
+        $sql = "SELECT * FROM projet WHERE id_folio IN ($placeholders) ORDER BY ordre_affichage ASC";
+        
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($folioIds);
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    }
+
     // Compter les projets d'un utilisateur spécifique
     public function countByUserId(int $userId): int
     {

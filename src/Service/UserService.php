@@ -74,8 +74,9 @@ class UserService
             $mimeType = $finfo->file($avatarFile['tmp_name']);
 
             if (in_array($mimeType, $allowedMimeTypes)) {
-                $extension = pathinfo($avatarFile['name'], PATHINFO_EXTENSION);
-                $newName = bin2hex(random_bytes(8)) . '.' . $extension; // Nom plus sécurisé et unique
+                $extensions = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'];
+                $extension_securisee = $extensions[$mimeType];
+                $newName = bin2hex(random_bytes(8)) . '.' . $extension_securisee; // Nom plus sécurisé et unique
                 $uploadDir = __DIR__ . '/../../public/uploads/avatars/';
                 $destination = $uploadDir . $newName;
 

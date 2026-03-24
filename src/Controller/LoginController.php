@@ -27,10 +27,6 @@ class LoginController
             exit();
         }
 
-        if (empty($_SESSION['csrf_token'])) {
-            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-        }
-
         include __DIR__ . '/../../template/login_page.php';
     }
 
@@ -42,15 +38,6 @@ class LoginController
             $password = $_POST['password'];
 
             $authResult = $this->userService->authenticate($email, $password);
-
-            $postToken = $_POST['csrf_token'] ?? '';
-            $sessionToken = $_SESSION['csrf_token'] ?? '';
-
-            // Vérification du token CSRF
-            if (empty($postToken) || $postToken !== $sessionToken) {
-                header('Location: /login?error=csrf');
-                exit;
-            }
 
             if ($authResult instanceof \App\Entity\User) {
 
@@ -129,8 +116,11 @@ class LoginController
                 header('Location: /profile?success=welcome&new=1');
                 exit;
             } else {
-                header('Location: /login?error=reg_fail#register-section'); // Le #register-section à la fin de l'URL permet de faire descendre la page directement sur le formulaire d'inscription après le rechargement.
+
+                $_SESSION['flash_error'] = "L'inscription a échoué. Veuillez vérifier vos informations.";
+                header('Location: /login#register-section');
                 exit;
+                
             }
         }
     }
