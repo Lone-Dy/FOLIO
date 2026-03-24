@@ -27,7 +27,7 @@ class UserRepository
             ->setStatutCompte($donnees['statut_compte'] ?? 'actif')
             ->setRole($donnees['role'] ?? 'user')
             ->setBiographie($donnees['biographie'] ?? null)
-            ->setPhotoProfil($donnees['photo_profil'] ?? 'default-avatar.png');
+            ->setPhotoProfil($donnees['photo_profile'] ?? 'default-avatar.png');
         return $user;
     }
 
@@ -95,7 +95,7 @@ class UserRepository
             statut_compte = :statut, 
             role = :role,
             biographie = :bio,
-            photo_profil = :photo, 
+            photo_profile = :photo 
             WHERE id_user = :id";
 
         $stmt = $this->pdo->prepare($sql);
@@ -104,7 +104,7 @@ class UserRepository
             'prenom'   => $user->getPrenom(),
             'email'    => $user->getEmail(),
             'age'      => $user->getAge(),
-            'password' => $user->getMotDePasse(),
+            'mot_de_passe' => $user->getMotDePasse(),
             'statut'   => $user->getStatutCompte(),
             'role'     => $user->getRole(),
             'bio'      => $user->getBiographie(),

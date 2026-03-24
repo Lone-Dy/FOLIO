@@ -21,9 +21,6 @@ class ProfileController
 
     public function index()
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
 
         $userId = $_SESSION['user']['id'];
         if (!$userId) {
@@ -40,6 +37,43 @@ class ProfileController
         $projets = $this->portfolioService->getUserPortfolio($userId);
 
         include __DIR__ . '/../../template/profile.php';
+    }
+
+    public function update()
+    {
+
+        $userId = $_SESSION['user']['id'] ?? null;
+
+        if($_SERVER['REQUEST_METHOD'] === 'POST' && $userId) {
+            $user = $this->userRepository->findById($userId);
+
+            if($user) {
+                $this->userService->updateProfile($user, $_POST, $_FILES['avatar'] ?? null);
+                header('Location: /profile?success=1');
+                exit;
+            }
+        }
+        header('Location: /profile?error=update_failed');
+        exit;
+    }
+
+    public function updateAvatar()
+    {
+
+        $userId = $_SESSION['user']['id'] ?? null;
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && $userId) {
+            $user = $this->userRepository->findById($userId);
+
+            if ($user && isset($_FILES['avatar'])) {
+                $this->userService->updateProfile($user, [], $_FILES['avatar']);
+                header('Location: /profile?success=1');
+                exit;
+            }
+        }
+        
+        header('Location: /profile?error=avatar_failed');
+        exit;
     }
 
     public function updatePassword()

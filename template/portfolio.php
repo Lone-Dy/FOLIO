@@ -85,13 +85,13 @@ include_once(__DIR__ . '/view/header-profil.php');
             </div>
 
             <div class="card-actions">
-                <a href="/projet/togglePublic/<?= $folio['id_folio'] ?>" class="btn-secondary">
+                <button href="/projet/togglePublic/<?= $folio['id_folio'] ?>" class="btn-secondary">
                     <?= $folio['is_published'] ? 'Retirer' : 'Publier' ?>
-                </a>
+                </button>
 
-                <a href="/projet/delete/<?= $folio['id_folio'] ?>" class="btn-delete-text" onclick="return confirm('Supprimer définitivement ce portfolio ?')">
+                <button href="/projet/delete/<?= $folio['id_folio'] ?>" class="btn-secondary" onclick="return confirm('Supprimer définitivement ce portfolio ?')">
                     Supprimer
-                </a>
+                </button>
             </div>
         </div>
     <?php endforeach; ?>

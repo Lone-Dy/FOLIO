@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Repository\UserRepository;
+use App\Entity\User;
 use Exception;
 
 class UserService
@@ -25,7 +26,7 @@ class UserService
         }
 
         // L'utilisateur a un compte mais le mot de passe est mauvais
-        if (!password_verify($password, $user->getPassword())) {
+        if (!password_verify($password, $user->getMotDePasse())) {
             return 'INVALID_PASSWORD';
         }
 
@@ -37,11 +38,11 @@ class UserService
     {
         $user = $this->userRepository->findById($userId);
 
-        if (!$user || !password_verify($oldPassword, $user->getPassword())) {
+        if (!$user || !password_verify($oldPassword, $user->getMotDePasse())) {
             throw new \Exception("L'ancien mot de passe est incorrect.");
         }
 
-        $user->setPassword(password_hash($newPassword, PASSWORD_BCRYPT));
+        $user->setMotDePasse(password_hash($newPassword, PASSWORD_BCRYPT));
 
         return $this->userRepository->update($user);
     }
@@ -51,7 +52,7 @@ class UserService
     {
         $user = $this->userRepository->findById($userId);
 
-        if (!$user || !password_verify($password, $user->getPassword())) {
+        if (!$user || !password_verify($password, $user->getMotDePasse())) {
             throw new \Exception("Mot de passe incorrect.");
         }
 
@@ -92,5 +93,6 @@ class UserService
                 }
             }
         }
+        return $this->userRepository->update($user);
     }
 }
