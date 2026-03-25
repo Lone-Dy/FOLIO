@@ -2,21 +2,23 @@
 include_once(__DIR__ . '/view/header-profil.php');
 ?>
 
-<?php if (isset($_SESSION['flash_messages']['success'])): ?>
-    <div class="alert alert-success">
-        <?php foreach ($_SESSION['flash_messages']['success'] as $message): ?>
-            <p><?= htmlspecialchars($message) ?></p>
-        <?php endforeach; ?>
-    </div>
-<?php endif; ?>
+    <!-- Messages flash -->
 
-<?php if (isset($_SESSION['flash_messages']['error'])): ?>
-    <div class="alert alert-danger">
-        <?php foreach ($_SESSION['flash_messages']['error'] as $message): ?>
-            <p><?= htmlspecialchars($message) ?></p>
-        <?php endforeach; ?>
-    </div>
-<?php endif; ?>
+    <?php if (isset($_SESSION['flash_messages']['success'])): ?>
+        <div class="alert alert-success">
+            <?php foreach ($_SESSION['flash_messages']['success'] as $message): ?>
+                <p><?= htmlspecialchars($message) ?></p>
+            <?php endforeach; unset($_SESSION['flash_messages']['success']); ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if (isset($_SESSION['flash_messages']['error'])): ?>
+        <div class="alert alert-danger">
+            <?php foreach ($_SESSION['flash_messages']['error'] as $message): ?>
+                <p><?= htmlspecialchars($message) ?></p>
+            <?php endforeach; unset($_SESSION['flash_messages']['error']); ?>
+        </div>
+    <?php endif; ?>
 
 <main class="profile-container">
     <aside class="profile-sidebar">
@@ -35,7 +37,7 @@ include_once(__DIR__ . '/view/header-profil.php');
                 <div class="detail-item">
                     <span class="label">Ma Bio</span>
                     <p class="bio-text">
-                        <?= $user->getBiographie() ? nl2br(htmlspecialchars($user->getBiographie())) : "<i>Aucune biographie rédigée.</i>" ?>
+                        <span class="value"><?= nl2br(htmlspecialchars($user->getBiographie() ?? '')) ?></span>
                     </p>
             </div>
             </div>
@@ -104,6 +106,8 @@ include_once(__DIR__ . '/view/header-profil.php');
     </dialog>
 <?php endif; ?>
 
+<!-- Dialogue pour modifier les informations du profil -->
+
 <dialog id="editProfileDialog" class="modern-dialog">
     <form method="POST" action="/profile/update" enctype="multipart/form-data">
         <h2>Modifier mes informations</h2>
@@ -130,6 +134,8 @@ include_once(__DIR__ . '/view/header-profil.php');
     </form>
 </dialog>
 
+<!-- Dialogue pour modifier la photo de profil -->
+
 <dialog id="avatarDialog" class="modern-dialog">
     <form method="POST" action="/profile/updateAvatar" enctype="multipart/form-data">
         <h2>Changer ma photo de profil</h2>
@@ -144,6 +150,8 @@ include_once(__DIR__ . '/view/header-profil.php');
         </div>
     </form>
 </dialog>
+
+<!-- Dialogue pour modifier le mot de passe -->
 
 <dialog id="mdpDialog" class="modern-dialog">
     <form method="POST" action="/profile/updatePassword">

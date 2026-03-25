@@ -2,11 +2,15 @@
 
 namespace App\Service;
 
+use App\Entity\Folio;
+use App\Entity\Projet;
+
 use App\Repository\FolioRepository;
 use App\Repository\ProjetRepository;
-use App\Repository\MediaRepository;
 
 use App\Service\MediaService;
+use App\Service\FlashService;
+use App\Service\TemplateService;
 
 use PDO;
 use Exception;
@@ -16,18 +20,25 @@ class FolioService {
     private PDO $pdo;
     private FolioRepository $folioRepo;
     private ProjetRepository $projetRepo;
+
     private MediaService $mediaService;
+    private FlashService $flashService;
+    private TemplateService $templateService;
 
     public function __construct(
         PDO $pdo,
         FolioRepository $folioRepo,
         ProjetRepository $projetRepo,
-        MediaService $mediaService
+        MediaService $mediaService,
+        FlashService $flashService,
+        TemplateService $templateService,
     ) {
         $this->pdo = $pdo;
         $this->folioRepo = $folioRepo;
         $this->projetRepo = $projetRepo;
         $this->mediaService = $mediaService;
+        $this->flashService = $flashService;
+        $this->templateService = $templateService;
     }
 
     // Gère la création complète d'un portfolio
@@ -62,6 +73,30 @@ class FolioService {
             $this->pdo->rollBack();
             throw $e;
         }
+    }
+
+    public function showPortfolio(): void {
+        $this->templateService->render('portfolio.php');
+    }
+
+    public function handleCreateFolio(): void {
+        $userId = $_SESSION['user']['id'] ?? null;
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !$userId) {
+            $this->flashService->addError("Requête invalide.");
+            header('Location: /portfolio');
+            exit;
+        }
+
+        try {
+            $this->createFullFolio($userId, $_POST, $_FILES);
+            $this->flashService->addSuccess("Portfolio créé avec succès !");
+            header('Location: /projet');
+        } catch (\Exception $e) {
+            $this->flashService->addError($e->getMessage());
+            header('Location: /portfolio');
+        }
+        exit;
     }
 
     private function validateFolioData(array $data): void 

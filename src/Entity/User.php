@@ -10,10 +10,10 @@ class User
     private string $email;
     private int $age;
     private string $mot_de_passe;
-    private string $statut_compte;
-    private string $role;
+    private string $statut_compte = 'actif';
+    private string $role = 'user';
     private ?string $biographie = null;
-    private ?string $photo_profil = null;
+    private ?string $photo_profil = 'default-avatar.png';
 
     // --- ID ---
     public function getIdUtilisateur(): ?int

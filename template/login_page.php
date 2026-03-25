@@ -4,33 +4,10 @@ include_once(__DIR__ . '/view/header-login.php');
 
 <main class="auth-container">
     <section class="auth-box login-section">
-        <?php if (isset($_GET['error'])): ?>
-        <div class="error-message">
-            <?php 
-                if ($_GET['error'] === 'user_not_found') {
-                    echo "Aucun compte n'est associé à cet email.";
-                } elseif ($_GET['error'] === 'invalid_password') {
-                    echo "Le mot de passe saisi est incorrect.";
-                } elseif ($_GET['error'] === 'weak_password') {
-                    echo "Le mot de passe doit comporter au moins 12 caractères, une majuscule, un chiffre et un caractère spécial.";
-                } elseif ($_GET['error'] === 'email_exists') {
-                    echo "Cette adresse email est déjà utilisée par un autre membre.";
-                } elseif ($_GET['error'] === 'rgpd') {
-                    echo "Vous devez accepter les conditions générales pour continuer.";
-                } elseif ($_GET['error'] === 'reg_fail') {
-                    echo "L'inscription a échoué. Veuillez vérifier vos informations.";
-                } elseif ($_GET['error'] === 'csrf') {
-                    echo "Session expirée ou tentative invalide. Veuillez réessayer.";
-                } else {
-                    echo "Une erreur est survenue. Veuillez réessayer.";
-                }
-            ?>
-
-            </div>
-        <?php endif; ?>
-
         <form action="/login/handleLogin" method="POST">
             
+    <!-- Formulaire de connexion -->
+
             <h2>Se connecter</h2>
 
             <div class="field">
@@ -64,16 +41,18 @@ include_once(__DIR__ . '/view/header-login.php');
             <?php if (isset($_SESSION['flash_error'])): ?>
                 <div class="error-message">
                 <?php echo htmlspecialchars($_SESSION['flash_error']);
-                unset($_SESSION['flash_error']); // Vide l'erreur pour qu'elle disparaisse au prochain rafraîchissement
+                unset($_SESSION['flash_error']);
                 ?>
                 </div>
             <?php endif; ?>
+
+    <!-- Formulaire d'inscription -->
             
             <h2>Créez votre compte</h2>
             
             <div class="field">
                 <label for="register_email">Adresse E-mail <span class="required">*</span></label>
-                <input type="email" id="register_email" name="email" required />
+                <input type="email" id="register_email" name="email" value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" required>
             </div>
 
             <div class="field">

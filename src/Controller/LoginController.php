@@ -2,100 +2,89 @@
 
 namespace App\Controller;
 
-use App\Service\UserService;
+use App\Service\AuthService;
 use App\Service\FlashService;
 
-use App\Repository\UserRepository;
-
-class LoginController
-{
-    private UserService $userService;
+class LoginController {
+    private AuthService $authService;
     private FlashService $flashService;
-    private UserRepository $userRepository;
 
-public function __construct( 
-
-        UserService $userService, 
-        FlashService $flashService,
-        UserRepository $userRepository
-        )
-
-    {
-
-        $this->userService = $userService;
+    public function __construct(
+        AuthService $authService,
+        FlashService $flashService
+    ) {
+        $this->authService = $authService;
         $this->flashService = $flashService;
-        $this->userRepository = $userRepository;
+    }  
 
-    }
-
-    // Affiche la page de connexion/inscription
-    public function index(?array $params = null)
+    // Affiche la page de login/inscription
+    public function index()
     {
         if (isset($_SESSION['user'])) {
-            header('Location: /');
-            exit();
+            header('Location: /profile');
+            exit;
         }
-
-        include __DIR__ . '/../../template/login_page.php';
+        require __DIR__ . '/../../template/login_page.php';
     }
 
-    // Traite le formulaire de connexion
-    public function handleLogin(?array $params = null) // La vérification (Connexion)
+    // Gère la connexion
+    public function handleLogin()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $email = $_POST['email'];
-            $password = $_POST['password'];
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->flashService->addError("Méthode non autorisée.");
+            header('Location: /login');
+            exit;
+        }
 
-            $authResult = $this->userService->authenticate($email, $password);
+        $email = $_POST['email'] ?? '';
+        $password = $_POST['password'] ?? '';
 
-            if ($authResult instanceof \App\Entity\User) {
+        $user = $this->authService->login($email, $password);
 
-                session_regenerate_id(true);
-
-                $_SESSION['user'] = [
-                    'id' => $authResult->getIdUtilisateur(),
-                    'email' => $authResult->getEmail()
-                ];
-
-                // Redirection vers le home
-                header('Location: /');
-                exit;
-            } else {
-
-                $errorCode = strtolower($authResult);
-                header("Location: /login?error=$errorCode");
+        if ($user) {
+            if ($user->getStatutCompte() !== 'actif') {
+                $this->flashService->addError("Votre compte est désactivé.");
+                header('Location: /login');
                 exit;
             }
+
+            $_SESSION['user'] = [
+                'id' => $user->getIdUtilisateur(),
+                'email' => $user->getEmail(),
+                'role' => $user->getRole()
+            ];
+            $this->flashService->addSuccess("Connexion réussie !");
+            header('Location: /profile');
+        } else {
+            $this->flashService->addError("Email ou mot de passe incorrect.");
+            header('Location: /login');
         }
-    }
-    
-    // Traite l'inscription d'un nouvel utilisateur
-    public function handleRegister(FlashService $flashService)  // La création (Inscription)
-{
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        $flashService->addError("Méthode non autorisée.");
-        header('Location: /login');
         exit;
     }
 
-    try {
-        $this->userService->registerUser($_POST, $_FILES['avatar'] ?? null);
-        $flashService->addSuccess("Inscription réussie ! Bienvenue sur Folio.");
-        header('Location: /profile');
-        
-    } catch (\Exception $e) {
-        $flashService->addError($e->getMessage());
-        header('Location: /login#register-section');
-    }
-    exit;
-}
-
-    // Détruit la session et redirige vers l'accueil
-    public function logout()
+    // Gère l'inscription
+    public function handleRegister()
     {
-        session_destroy();
-        unset($_SESSION);
-        header('Location: /home'); // ou /login
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->flashService->addError("Méthode non autorisée.");
+            header('Location: /login');
+            exit;
+        }
+
+        if ($this->authService->register($_POST, $_FILES)) {
+            $this->flashService->addSuccess("Inscription réussie ! Bienvenue sur Folio.");
+            header('Location: /profile');
+        } else {
+            header('Location: /login#register-section');
+        }
+        exit;
+    }
+
+    // Gère la déconnexion
+    public function logout(): void
+    {
+        $this->authService->logout();
+        header('Location: /login');
         exit;
     }
 }

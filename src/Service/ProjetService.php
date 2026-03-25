@@ -2,15 +2,10 @@
 
 namespace App\Service;
 
-use App\Entity\Folio;
-use App\Entity\Projet;
-use App\Entity\Media;
-use App\Entity\User;
-
 use App\Repository\FolioRepository;
 use App\Repository\ProjetRepository;
 use App\Repository\MediaRepository;
-use App\Repository\UserRepository;
+
 
 use PDO;
 use Exception;

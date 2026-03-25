@@ -19,15 +19,15 @@ class UserRepository
     {
         $user = new User();
         $user->setIdUtilisateur($donnees['id_user'] ?? null)
-            ->setNom($donnees['nom'])
-            ->setPrenom($donnees['prenom'])
-            ->setEmail($donnees['email'])
-            ->setAge((int)($donnees['age'] ?? 0))
-            ->setMotDePasse($donnees['mot_de_passe'] ?? '')
-            ->setStatutCompte($donnees['statut_compte'] ?? 'actif')
-            ->setRole($donnees['role'] ?? 'user')
-            ->setBiographie($donnees['biographie'] ?? null)
-            ->setPhotoProfil($donnees['photo_profile'] ?? 'default-avatar.png');
+             ->setNom($donnees['nom'])
+             ->setPrenom($donnees['prenom'])
+             ->setEmail($donnees['email'])
+             ->setAge((int)($donnees['age'] ?? 0))
+             ->setMotDePasse($donnees['mot_de_passe'] ?? '')
+             ->setStatutCompte($donnees['statut_compte'] ?? 'actif')
+             ->setRole($donnees['role'] ?? 'user')
+             ->setBiographie($donnees['biographie'] ?? null)
+             ->setPhotoProfil($donnees['photo_profile'] ?? 'default-avatar.png');
         return $user;
     }
 
@@ -66,7 +66,6 @@ class UserRepository
 
     public function findById(int $id): ?User
     {
-        // Correction : id_user (selon ton SQL)
         $stmt = $this->pdo->prepare("SELECT * FROM user WHERE id_user = :id");
         $stmt->execute([':id' => $id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -80,6 +79,15 @@ class UserRepository
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row ? $this->hydrater($row) : null;
     }
+
+    public function emailExists(string $email): bool
+    {
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM user WHERE email = :email");
+        $stmt->execute([':email' => $email]);
+        return $stmt->fetchColumn() > 0;
+
+    }
+    
 
     // CRUD - UPDATE
 
@@ -113,12 +121,23 @@ class UserRepository
         ]);
     }
 
+    public function updatePassword(int $userId, string $newPassword): bool
+    {
+        $sql = "UPDATE user SET mot_de_passe = :password WHERE id_user = :id";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':password' => $newPassword,
+            ':id' => $userId
+        ]);
+    }
+
     // DELETE 
 
-    public function delete(int $id): bool 
+    public function delete(int $userId): bool 
     {
-        $stmt = $this->pdo->prepare("DELETE FROM user WHERE id_user = ?");
-        return $stmt->execute([$id]);
+        $stmt = $this->pdo->prepare("DELETE FROM user WHERE id_user = :id");
+
+        return $stmt->execute([':id' => $userId]);
     }
 }
 ?>
