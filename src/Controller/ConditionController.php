@@ -1,22 +1,25 @@
 <?php
 namespace App\Controller;
 
-use App\Service\ConditionService;
+use App\Service\TemplateService;
 
 class ConditionController {
+    private TemplateService $templateService;
 
-    private ConditionService $conditionService;
-
-    public function index(?array $params = null) {
-        include __DIR__.'/../../template/conditions-utilisation.php';
+    public function __construct(TemplateService $templateService) {
+        $this->templateService = $templateService;
     }
 
-    public function privacy(?array $params = null) {
-        include __DIR__.'/../../template/politique-confidentialite.php';
+    public function index(): void {
+        $this->templateService->render('conditions-utilisation.php');
     }
 
-    public function mentions(?array $params = null) {
-        include __DIR__.'/../../template/mentions-legales.php';
+    public function privacy(): void {
+        $this->templateService->render('politique-confidentialite.php');
+    }
+
+    public function mentions(): void {
+        $this->templateService->render('mentions-legales.php');
     }
 }
 ?>

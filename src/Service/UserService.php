@@ -2,31 +2,15 @@
 
 namespace App\Service;
 
-use App\Entity\User;
-
-use App\Service\FlashService;
-use App\Service\UserProfileService;
-
 use App\Repository\UserRepository;
 
 use Exception;
 
 class UserService
 {
-    private UserService $userService;
-    private UserProfileService $userProfileService;
-    private FlashService $flashService;
     private UserRepository $userRepository;
 
-    public function __construct(
-        UserService $userService, 
-        FlashService $flashService,
-        UserRepository $userRepository
-        )    
-
-    {
-        $this->userService = $userService;
-        $this->flashService = $flashService;
+    public function __construct(UserRepository $userRepository) {
         $this->userRepository = $userRepository;
     }
 

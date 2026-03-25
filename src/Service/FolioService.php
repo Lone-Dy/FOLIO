@@ -2,15 +2,9 @@
 
 namespace App\Service;
 
-use App\Entity\Folio;
-use App\Entity\Projet;
-use App\Entity\Media;
-use App\Entity\User;
-
 use App\Repository\FolioRepository;
 use App\Repository\ProjetRepository;
 use App\Repository\MediaRepository;
-use App\Repository\UserRepository;
 
 use App\Service\MediaService;
 
@@ -22,25 +16,22 @@ class FolioService {
     private PDO $pdo;
     private FolioRepository $folioRepo;
     private ProjetRepository $projetRepo;
-    private MediaRepository $mediaRepo;
     private MediaService $mediaService;
 
     public function __construct(
         PDO $pdo,
         FolioRepository $folioRepo,
         ProjetRepository $projetRepo,
-        MediaRepository $mediaRepo,
         MediaService $mediaService
     ) {
         $this->pdo = $pdo;
         $this->folioRepo = $folioRepo;
         $this->projetRepo = $projetRepo;
-        $this->mediaRepo = $mediaRepo;
         $this->mediaService = $mediaService;
     }
 
     // Gère la création complète d'un portfolio
-    public function createFullFolio(int $userId, array $data, array $files): void
+    public function createFullFolio(int $userId, array $data, array $files): void 
     {
         $this->validateFolioData($data);
 
@@ -49,41 +40,25 @@ class FolioService {
 
             // Création du Folio
             $folio = new Folio();
-            $folio->setTitre("Mon Portfolio")
-                ->setDescription("Description par défaut")
-                ->setCategorieFolio("Général");
+            $folio->setTitre($data['titre'] ?? "Mon Portfolio")
+                ->setDescription($data['description'] ?? "")
+                ->setUserId($userId);
 
-            // Vérification du statut choisi dans le formulaire
-            $isPublished = (isset($data['status']) && $data['status'] === 'published');
-            $folio->setIsPublished($isPublished);
+            $idFolio = $this->folioRepo->create($folio);
 
-            // Adaptation du repo pour l'userId
-            $this->folioRepo->createWithUser($folio, $userId);
-            $idFolio = (int)$this->pdo->lastInsertId();
-
-            // Création des projets
-            foreach ($data['projets'] as $index => $projData) {
+            // Création des projets et médias via MediaService
+            foreach ($data['projets'] as $index => $projetData) {
                 $projet = new Projet();
-                $type = $projData['type'] ?? ''; // Sécurise le bon nom de variable
-                $projet->setType($projData['type']) // Utilise la variable $type sécurisée
-                    ->setContenu($projData['title'] ?? '')
-                    ->setOrdreAffichage((string)$index);
+                $projet->setTitre($projetData['title'])
+                    ->setType($projetData['type'])
+                    ->setFolioId($idFolio);
 
-                // Adaptation du repo pour l'idFolio
-                $this->projetRepo->createWithFolio($projet, $idFolio);
-                $idProjet = (int)$this->pdo->lastInsertId();
-
-                // Gestion des médias du projet
-                $fileKey = "projet_" . $index . "_files";
-                if (isset($files[$fileKey])) 
-                {
-                    $this->mediaService->uploadProjectMedia($idProjet, $files[$fileKey]);
-                }
+                $idProjet = $this->projetRepo->create($projet);
+                $this->mediaService->uploadProjectMedia($idProjet, $files, $index);
             }
 
             $this->pdo->commit();
-            return true;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->pdo->rollBack();
             throw $e;
         }

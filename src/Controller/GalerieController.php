@@ -1,21 +1,21 @@
 <?php
 namespace App\Controller;
 
-use App\Service\PortfolioService;
+use App\Service\GalerieService;
 
 Class GalerieController {
 
-    private PortfolioService $portfolioService;
+    private GalerieService $galerieService;
 
-    public function __construct(PortfolioService $portfolioService) 
+    public function __construct(GalerieService $galerieService) 
     {
-        $this->portfolioService = $portfolioService;
+        $this->galerieService = $galerieService;
     }
 
     public function index(?array $params = null) {
 
         // Récupèration de tous les portfolios publiés
-        $galleryFeed = $this->portfolioService->getFullGallery();
+        $galleryFeed = $this->galerieService->getFullGallery();
 
         include __DIR__.'/../../template/galerie.php';
     }

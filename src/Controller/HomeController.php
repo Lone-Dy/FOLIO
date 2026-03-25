@@ -1,22 +1,25 @@
 <?php
 namespace App\Controller;
 
-use App\Service\PortfolioService;
+use App\Service\FolioService;
+use App\Service\GalerieService;
 
 class HomeController {
 
-    private PortfolioService $portfolioService;
+    private FolioService $folioService;
+    private GalerieService $galerieService;
 
-    public function __construct(PortfolioService $portfolioService) 
+    public function __construct(FolioService $folioService, GalerieService $galerieService) 
     {
-        $this->portfolioService = $portfolioService;
+        $this->folioService = $folioService;
+        $this->galerieService = $galerieService;
     }
 
     // J'ajoute un null pour donner un valeur par défaut. 
     public function index(?array $params = null) {
 
         // Récupèration de tous les portfolios publiés
-        $galleryFeed = $this->portfolioService->getGalleryFeed();
+        $galleryFeed = $this->galerieService->getGalleryFeed();
 
         include __DIR__.'/../../template/home_page.php';
     }

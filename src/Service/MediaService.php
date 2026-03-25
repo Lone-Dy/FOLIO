@@ -2,42 +2,36 @@
 
 namespace App\Service;
 
-use App\Entity\Folio;
-use App\Entity\Projet;
-use App\Entity\Media;
-use App\Entity\User;
-
-use App\Repository\FolioRepository;
-use App\Repository\ProjetRepository;
 use App\Repository\MediaRepository;
-use App\Repository\UserRepository;
+
 
 use PDO;
 use Exception;
 
 class MediaService {
     
-    private PDO $pdo;
-    private FolioRepository $folioRepo;
-    private ProjetRepository $projetRepo;
     private MediaRepository $mediaRepo;
 
-    public function __construct(
-        PDO $pdo,
-        FolioRepository $folioRepo,
-        ProjetRepository $projetRepo,
-        MediaRepository $mediaRepo
-    ) {
-        $this->pdo = $pdo;
-        $this->folioRepo = $folioRepo;
-        $this->projetRepo = $projetRepo;
+    public function __construct(MediaRepository $mediaRepo) {
+        
         $this->mediaRepo = $mediaRepo;
     }
 
 
     // S'occupe du traitement des fichiers
-    public function uploadProjectMedia(int $idProjet, array $fileArray): void
+    public function uploadProjectMedia(int $idProjet, array $fileArray, array $files, int $index): void
     {
+        $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
+        $maxSize = 2 * 1024 * 1024; // 2 Mo
+
+        if (!in_array($files['type'][$index], $allowedMimes)) {
+            throw new \Exception("Type de fichier non autorisé.");
+        }
+
+        if ($files['size'][$index] > $maxSize) {
+            throw new \Exception("Fichier trop volumineux (max 2 Mo).");
+        }
+
         $uploadDir = __DIR__ . '/../../public/uploads/projets';
         if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
 

@@ -3,38 +3,27 @@
 namespace App\Controller;
 
 use App\Service\UserService;
-use App\Service\GalerieService;
 use App\Service\FlashService;
-use App\Service\FolioService;
-use App\Service\ProjetService;
+
 use App\Repository\UserRepository;
 
 class LoginController
 {
     private UserService $userService;
-    private GalerieService $galerieService;
     private FlashService $flashService;
-    private FolioService $folioService;
-    private ProjetService $projetService;
     private UserRepository $userRepository;
 
 public function __construct( 
 
         UserService $userService, 
-        GalerieService $galerieService,
         FlashService $flashService,
-        FolioService $folioService,
-        ProjetService $projetService,
         UserRepository $userRepository
         )
 
     {
 
         $this->userService = $userService;
-        $this->galerieService = $galerieService;
         $this->flashService = $flashService;
-        $this->folioService = $folioService;
-        $this->projetService = $projetService;
         $this->userRepository = $userRepository;
 
     }

@@ -2,22 +2,17 @@
 
 namespace App\Service;
 
-use App\Entity\Folio;
-use App\Entity\Projet;
-use App\Entity\Media;
-use App\Entity\User;
 
 use App\Repository\FolioRepository;
 use App\Repository\ProjetRepository;
 use App\Repository\MediaRepository;
-use App\Repository\UserRepository;
 
 use PDO;
 use Exception;
 
 class GalerieService
 {
-    private PDO $pdo;
+
     private FolioRepository $folioRepo;
     private ProjetRepository $projetRepo;
     private MediaRepository $mediaRepo;
@@ -25,12 +20,10 @@ class GalerieService
     // INJECTION DE DÉPENDANCES
 
     public function __construct(
-        PDO $pdo,
         FolioRepository $folioRepo,
         ProjetRepository $projetRepo,
         MediaRepository $mediaRepo
         ) {
-            $this->pdo = $pdo;
             $this->folioRepo = $folioRepo;
             $this->projetRepo = $projetRepo;
             $this->mediaRepo = $mediaRepo;

@@ -4,9 +4,30 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use App\Controller\{HomeController, E404Controller, LoginController, ConditionController, ProfileController, ProjetController, GalerieController};
-use App\Service\{DatabaseFactory, PortfolioService, UserService, FlashService, MediaService, ProjetService, FolioService};
-use App\Repository\{UserRepository, ProjetRepository, FolioRepository, MediaRepository};
+use App\Controller\{
+HomeController, 
+E404Controller, 
+LoginController, 
+ConditionController, 
+ProfileController, 
+ProjetController, 
+GalerieController};
+
+use App\Service\{
+DatabaseFactory, 
+GalerieService, 
+UserService, 
+FlashService, 
+MediaService, 
+ProjetService, 
+FolioService,
+TemplateService};
+
+use App\Repository\{
+UserRepository, 
+ProjetRepository, 
+FolioRepository, 
+MediaRepository};
 
 session_set_cookie_params([
     'lifetime'  => 0,
@@ -55,8 +76,10 @@ $container = [
         $folioRepo = new FolioRepository($pdo);
         $projetRepo = new ProjetRepository($pdo);
         $mediaRepo = new MediaRepository($pdo);
-        $portfolioService = new PortfolioService($pdo, $folioRepo, $projetRepo, $mediaRepo);
-        return new HomeController($portfolioService);
+        $mediaService = new MediaService($mediaRepo);
+        $folioService = new FolioService($pdo, $folioRepo, $projetRepo, $mediaService);
+        $galerieService = new GalerieService($folioRepo, $projetRepo, $mediaRepo);
+        return new HomeController($folioService, $galerieService);
     },
 
     E404Controller::class => function ($pdo) {
@@ -64,7 +87,8 @@ $container = [
     },
 
     ConditionController::class => function ($pdo) {
-        return new ConditionController();
+        $templateService = new TemplateService();
+        return new ConditionController($templateService);
     },
 
     GalerieController::class => function ($pdo) {
@@ -72,8 +96,9 @@ $container = [
         $folioRepo = new FolioRepository($pdo);
         $projetRepo = new ProjetRepository($pdo);
         $mediaRepo = new MediaRepository($pdo);
-        $portfolioService = new PortfolioService($pdo, $folioRepo, $projetRepo, $mediaRepo);
-        return new GalerieController($portfolioService);
+        $mediaService = new MediaService($mediaRepo);
+        $folioService = new FolioService($pdo, $folioRepo, $projetRepo, $mediaService);
+        return new GalerieController($folioService);
     },
 
     LoginController::class => function ($pdo) {
@@ -91,8 +116,9 @@ $container = [
         $mediaRepo = new MediaRepository($pdo);
         $userService = new UserService($userRepo);
         $flashService = new FlashService();
-        $portfolioService = new PortfolioService($pdo, $folioRepo, $projetRepo, $mediaRepo);
-        return new ProfileController($userService, $userRepo, $portfolioService, $flashService);
+        $mediaService = new MediaService($mediaRepo);
+        $folioService = new FolioService($pdo, $folioRepo, $projetRepo, $mediaService);
+        return new ProfileController($userService, $userRepo, $folioService, $flashService);
     },
 
     ProjetController::class=> function ($pdo) {
@@ -100,8 +126,11 @@ $container = [
         $folioRepo = new FolioRepository($pdo);
         $projetRepo = new ProjetRepository($pdo);
         $mediaRepo = new MediaRepository($pdo);
-        $portfolioService = new PortfolioService($pdo, $folioRepo, $projetRepo, $mediaRepo);
-        return new ProjetController($portfolioService);
+        $mediaService = new MediaService($mediaRepo);
+        $folioService = new FolioService($pdo, $folioRepo, $projetRepo, $mediaService);
+        $flashService = new FlashService();
+        $templateService = new TemplateService();
+        return new ProjetController($folioService, $flashService, $templateService);
     }
 
 ];
