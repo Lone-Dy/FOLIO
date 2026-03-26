@@ -2,8 +2,6 @@
 include_once(__DIR__ . '/view/header-profil.php');
 ?>
 
-    <!-- Messages flash -->
-
     <?php if (isset($_SESSION['flash_messages']['success'])): ?>
         <div class="alert alert-success">
             <?php foreach ($_SESSION['flash_messages']['success'] as $message): ?>
@@ -21,9 +19,12 @@ include_once(__DIR__ . '/view/header-profil.php');
     <?php endif; ?>
 
 <main class="profile-container">
+
+    <!-- PARTIE INFORMATIONS PROFIL -->
+
     <aside class="profile-sidebar">
         <div class="profile-card">
-            <div class="profile-avatar">
+            <div class="profile-avatar"> 
                 <img src="/assets/img/default-avatar.jpg" alt="Avatar de <?= htmlspecialchars($user->getPrenom()) ?>">
                 <button class="btn-edit" onclick="document.getElementById('avatarDialog').showModal()">Modifier la photo</button>
             </div>
@@ -46,8 +47,25 @@ include_once(__DIR__ . '/view/header-profil.php');
                 <button class="btn-folio" onclick="document.getElementById('editProfileDialog').showModal()">Modifier mon profil</button>
                 <button class="btn-folio" onclick="document.getElementById('mdpDialog').showModal()">Modifier le mot de passe</button>
             </div>
+
+            <div class="account-deletion">
+                <h3>Supprimer mon compte</h3>
+                <p>Cette action est irréversible. Toutes vos données seront perdues.</p>
+
+                <form action="/profile/delete" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer votre compte ?');">
+                    <div class="form-group">
+                        <label for="password_confirmation">Confirmez votre mot de passe :</label>
+                        <input type="password" id="password_confirmation" name="password_confirmation" required>
+                    </div>
+                    <button type="submit" class="btn btn-danger">Supprimer définitivement mon compte</button>
+                </form>
+            </div>
+
         </div>
     </aside>
+
+    <!-- PARTIE DASHBOARD -->
+
     <section class="portfolio-section">
         <header class="section-header">
             <div class="header-text">
@@ -93,6 +111,8 @@ include_once(__DIR__ . '/view/header-profil.php');
         </div>
     </form>
 </main>
+
+<!-- Message de bienvenue -->
 
 <?php if (isset($_GET['new']) && $_GET['new'] == '1'): ?>
     <dialog id="welcomeDialog" class="welcome-modal">

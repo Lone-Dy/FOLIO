@@ -6,6 +6,7 @@ use App\Service\AuthService;
 use App\Service\FlashService;
 
 class LoginController {
+
     private AuthService $authService;
     private FlashService $flashService;
 
@@ -42,21 +43,14 @@ class LoginController {
         $user = $this->authService->login($email, $password);
 
         if ($user) {
-            if ($user->getStatutCompte() !== 'actif') {
-                $this->flashService->addError("Votre compte est désactivé.");
-                header('Location: /login');
-                exit;
-            }
 
             $_SESSION['user'] = [
                 'id' => $user->getIdUtilisateur(),
                 'email' => $user->getEmail(),
                 'role' => $user->getRole()
             ];
-            $this->flashService->addSuccess("Connexion réussie !");
             header('Location: /profile');
         } else {
-            $this->flashService->addError("Email ou mot de passe incorrect.");
             header('Location: /login');
         }
         exit;

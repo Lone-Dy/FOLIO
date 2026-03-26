@@ -6,7 +6,6 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Service\FlashService;
 
-
 Class AuthService {
 
     private UserRepository $userRepo;
@@ -21,7 +20,7 @@ Class AuthService {
         $this->flashService = $flashService;
     }
 
-    // --- INSCRIPTION ---
+    // Gére l'inscription
     public function register(array $userData, array $files): bool
     {
         // 1. Validation des données
@@ -45,40 +44,24 @@ Class AuthService {
             ->setRole('user')
             ->setStatutCompte('actif');
 
-        // 3. Gestion de la photo de profil
-        if (isset($files['photo_profil']) && $files['photo_profil']['error'] === UPLOAD_ERR_OK) {
-            $allowedMimes = ['image/jpeg', 'image/png', 'image/gif'];
-            $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
-            $mime = finfo_file($fileInfo, $files['photo_profil']['tmp_name']);
-            finfo_close($fileInfo);
-
-            if (!in_array($mime, $allowedMimes)) {
-                $this->flashService->addError("Type de fichier non autorisé.");
-                return false;
-            }
-
-            $uploadDir = __DIR__ . '/../../public/uploads/';
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0755, true);
-            }
-
-            $extension = pathinfo($files['photo_profil']['name'], PATHINFO_EXTENSION);
-            $filename = uniqid() . '.' . $extension;
-            $destination = $uploadDir . $filename;
-
-            if (!move_uploaded_file($files['photo_profil']['tmp_name'], $destination)) {
-                $this->flashService->addError("Erreur lors de l'upload de la photo.");
-                return false;
-            }
-
-            $user->setPhotoProfil($filename);
-        }
-
-        // 4. Sauvegarde en base
+        // 3. Sauvegarde en base
         return $this->userRepo->create($user);
     }
 
-    // --- CONNEXION ---
+    // Vérification des mots de passe
+    public function getPasswordRequirements(): array
+    {
+        return [
+            'min_length' => 12,
+            'require_uppercase' => true,
+            'require_lowercase' => true,
+            'require_number' => true,
+            'require_special' => true,
+            'special_chars' => '!@#$%^&*()_+-=[]{}|;:,.<>?'
+        ];
+    }
+
+    // Gére la connexion
     public function login(string $email, string $password): ?User
     {
         $user = $this->userRepo->findByEmail($email);
@@ -92,59 +75,26 @@ Class AuthService {
             $this->flashService->addError("Email ou mot de passe incorrect.");
             return null;
         }
-
+        
+        $this->flashService->addSuccess("Connexion réussie !");
         return $user;
     }
 
-    // --- DÉCONNEXION ---
+    // Gére la reconnexion
+    public function getCurrentUser(): ?User 
+    {
+        if (!isset($_SESSION['user']['id']))
+            {
+                return null;
+            }
+        return $this->userRepo->findById($_SESSION['user']['id']);
+    }
+
+    // Gére la déconnexion
     public function logout(): void
     {
         session_destroy();
         unset($_SESSION);
     }
 
-    // --- MISE À JOUR DU PROFIL ---
-    public function updateProfile(int $userId, array $userData, array $files): bool
-    {
-        $user = $this->userRepo->findById($userId);
-        if (!$user) {
-            return false;
-        }
-
-        // Mise à jour des champs
-        $user->setNom($userData['nom'] ?? $user->getNom())
-            ->setPrenom($userData['prenom'] ?? $user->getPrenom())
-            ->setEmail($userData['email'] ?? $user->getEmail())
-            ->setAge((int)($userData['age'] ?? $user->getAge()))
-            ->setBiographie($userData['biographie'] ?? $user->getBiographie());
-
-        // Gestion de la photo de profil
-        if (isset($files['photo_profil']) && $files['photo_profil']['error'] === UPLOAD_ERR_OK) {
-            $uploadDir = __DIR__ . '/../../public/uploads/';
-            $filename = uniqid() . '_' . basename($files['photo_profil']['name']);
-            move_uploaded_file($files['photo_profil']['tmp_name'], $uploadDir . $filename);
-            $user->setPhotoProfil($filename);
-        }
-
-        return $this->userRepo->update($user);
-    }
-
-    // --- MISE À JOUR DU MOT DE PASSE ---
-    public function changePassword(int $userId, string $oldPassword, string $newPassword): bool
-    {
-        $user = $this->userRepo->findById($userId);
-        if (!$user || !password_verify($oldPassword, $user->getMotDePasse())) {
-            $this->flashService->addError("Ancien mot de passe incorrect.");
-            return false;
-        }
-
-        $user->setMotDePasse(password_hash($newPassword, PASSWORD_BCRYPT));
-        return $this->userRepo->updatePassword($userId, $user->getMotDePasse());
-    }
-
-    // --- AFFICHE LES INFORMATIONS DE L'UTILISATEUR ---
-    public function getUserById(int $userId): ?User
-    {
-        return $this->userRepo->findById($userId);
-    }
 }

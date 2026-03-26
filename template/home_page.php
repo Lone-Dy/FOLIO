@@ -18,24 +18,25 @@ include_once(__DIR__ . '/view/header.php');
         <a href="<?= $destination ?>" class="btn-main"><?= $label ?></a>
     </div>
 
-    <section class="gallery-section">
-    <h2 class="gallery-title">Découvrez les derniers portfolios</h2>
-    
-    <div class="pinterest-grid">
-    <?php foreach ($galleryFeed as $folio): ?>
-        <div class="portfolio-card">
-            <?php if (!empty($folio['cover_image'])): ?>
-                <img src="/<?= htmlspecialchars($folio['cover_image']) ?>" alt="Image Portfolio">
-            <?php endif; ?>
-            
-            <div class="card-info">
-                <h3><?= htmlspecialchars($folio['titre']) ?></h3>
-                <p>Par <?= htmlspecialchars($folio['prenom'] . ' ' . $folio['nom']) ?></p>
+        <section class="gallery-section">
+        <h2 class="gallery-title">Découvrez les derniers portfolios</h2>
+        
+            <div class="pinterest-grid">
+            <?php foreach ($galleryFeed as $folio): ?>
+                <div class="portfolio-card">
+                    <?php if (!empty($folio['cover_image'])): ?>
+                        <img src="/<?= htmlspecialchars($folio['cover_image']) ?>" alt="Image Portfolio">
+                    <?php endif; ?>
+                    
+                    <div class="card-info">
+                        <h3><?= htmlspecialchars($folio['titre']) ?></h3>
+                        <p>Par <?= htmlspecialchars($folio['prenom'] . ' ' . $folio['nom']) ?></p>
+                    </div>
+                </div>
+            <?php endforeach; ?>
             </div>
-        </div>
-    <?php endforeach; ?>
-    </div>
-    </section>
+            
+        </section>
 
     <div id="dummy">
         <div id="back">RETOUR EN HAUT</div>

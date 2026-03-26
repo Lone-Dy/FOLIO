@@ -72,11 +72,11 @@ try {
 $container = [
 
     HomeController::class => function ($pdo) {
-        $folioRepo = new FolioRepository($pdo);
-        $projetRepo = new ProjetRepository($pdo);
-        $mediaRepo = new MediaRepository($pdo);
         $flashService = new FlashService();
         $templateService = new TemplateService();
+        $mediaRepo = new MediaRepository($pdo);
+        $folioRepo = new FolioRepository($pdo);
+        $projetRepo = new ProjetRepository($pdo);
         $mediaService = new MediaService($mediaRepo);
         $folioService = new FolioService($pdo, $folioRepo, $projetRepo, $mediaService, $flashService, $templateService);
         $galerieService = new GalerieService($folioRepo, $projetRepo, $mediaRepo);
@@ -102,32 +102,31 @@ $container = [
         $mediaService = new MediaService($mediaRepo);
         $folioService = new FolioService($pdo, $folioRepo, $projetRepo, $mediaService, $flashService, $templateService);
 
-        return new GalerieController($folioService);
+        return new GalerieController();
     },
 
-    LoginController::class => function () {
+    LoginController::class => function ($pdo) {
         $userRepo = new UserRepository($pdo);
         $flashService = new FlashService();
-        $authService = new AuthService();
+        $authService = new AuthService($userRepo, $flashService);
 
-        return new LoginController($flashService, $userRepo);
+        return new LoginController($authService, $flashService);
     },
 
     ProfileController::class => function ($pdo) {
         $userRepo = new UserRepository($pdo);
         $flashService = new FlashService();
-        $authService = new AuthService();
-
-        return new ProfileController($flashService, $userRepo);
+        $authService = new AuthService($userRepo, $flashService);
+        $profileService = new ProfileService($userRepo, $flashService);
+        return new ProfileController($authService, $profileService, $flashService);
     },
 
     ProjetController::class => function ($pdo) {
-        $folioRepo = new FolioRepository($pdo);
-        $projetRepo = new ProjetRepository($pdo);
-        $mediaRepo = new MediaRepository($pdo);
-
         $flashService = new FlashService();
         $templateService = new TemplateService();
+        $mediaRepo = new MediaRepository($pdo);
+        $folioRepo = new FolioRepository($pdo);
+        $projetRepo = new ProjetRepository($pdo);
         $mediaService = new MediaService($mediaRepo);
         $folioService = new FolioService($pdo, $folioRepo, $projetRepo, $mediaService, $flashService, $templateService);
 

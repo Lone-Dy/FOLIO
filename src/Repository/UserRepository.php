@@ -80,7 +80,7 @@ class UserRepository
         return $row ? $this->hydrater($row) : null;
     }
 
-    public function emailExists(string $email): bool
+    public function emailExists(string $email): bool // Doublon email
     {
         $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM user WHERE email = :email");
         $stmt->execute([':email' => $email]);
