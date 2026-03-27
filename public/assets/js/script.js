@@ -72,16 +72,27 @@ if (mdpDialog && ouvreBtn && fermeBtn) {
     });
 }
 
+function togglePassword(inputId, iconId) {
+    const input = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+
+    if (input.type === "password") {
+        input.type = "text";
+        icon.innerHTML = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8a10.03 10.03 0 0 1-2.06.56"></path>
+                        <line x1="1" y1="1" x2="23" y2="23"></line>`;
+    } else {
+        input.type = "password";
+        icon.innerHTML = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>`;
+    }
+}
+
 // Message de bienvenue
 const welcomeModal = document.getElementById('welcomeDialog');
     
     // Ouvre la modale au chargement de la page
     window.onload = () => {
         welcomeModal.showModal();
-    }
-
-    function closeWelcome() {
-        welcomeModal.close();
     }
 
 // Gestion du Drag and Drop et Validation du Portfolio

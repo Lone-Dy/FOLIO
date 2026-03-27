@@ -24,6 +24,7 @@ class ProfileController {
         $this->authService = $authService;
     }
 
+    // Affiche la page profile
     public function index()
     {
         $user = $this->authService->getCurrentUser();

@@ -21,31 +21,63 @@ Class AuthService {
     }
 
     // Gére l'inscription
-    public function register(array $userData, array $files): bool
+    public function register(array $userData): bool
     {
         // 1. Validation des données
-        if ($this->userRepo->emailExists($userData['email'])) {
-            $this->flashService->addError("Cet email est déjà utilisé.");
-            return false;
+        $errors = [];
+
+        // Validation du nom et prénom
+        if (!isset($userData['nom']) || !ctype_alpha(str_replace(['-', ' '], '', $userData['nom']))) {
+            $errors[] = "Le nom contient des caractères non autorisés."; //ctype_alpha = retourne TRUE si tous les caractères de la chaîne text sont des lettres
         }
 
-        if ($userData['password'] !== $userData['confirm_password']) {
-            $this->flashService->addError("Les mots de passe ne correspondent pas.");
+        if (!isset($userData['prenom']) || !ctype_alpha(str_replace(['-', ' '], '', $userData['prenom']))) {
+            $errors[] = "Le prénom contient des caractères non autorisés.";
+        }
+
+        // Validation de l'email
+        if (!isset($userData['email']) || !filter_var($userData['email'], FILTER_VALIDATE_EMAIL)) { //filter_var = vérifie la présence de chaînes de caractères telles que des adresses e-mail
+            $errors[] = "L'adresse email n'est pas valide.";
+        } elseif ($this->userRepo->emailExists($userData['email'])) {
+            $errors[] = "Cet email est déjà utilisé.";
+        }
+
+        // Validation de l'âge
+        if (!isset($userData['age']) || !is_numeric($userData['age']) || $userData['age'] < 18) {
+            $errors[] = "L'âge doit être un nombre valide (minimum 18 ans).";
+        }
+
+        // Validation du mot de passe
+        if (!isset($userData['password']) || strlen($userData['password']) < 12) {
+            $errors[] = "Le mot de passe doit contenir au moins 12 caractères.";
+        } elseif ($userData['password'] !== ($userData['password_confirmation'] ?? '')) {
+            $errors[] = "Les mots de passe ne correspondent pas.";
+        }
+
+        // Si des erreurs existent, les enregistrer en session
+        if (!empty($errors)) {
+            $_SESSION['flash_error'] = implode('<br>', $errors);
             return false;
         }
 
         // 2. Création de l'utilisateur
-        $user = new User();
-        $user->setNom($userData['nom'])
-            ->setPrenom($userData['prenom'])
-            ->setEmail($userData['email'])
-            ->setAge((int)$userData['age'])
-            ->setMotDePasse(password_hash($userData['password'], PASSWORD_BCRYPT))
-            ->setRole('user')
-            ->setStatutCompte('actif');
+        try {
+            $user = new User();
+            $user->setNom(htmlspecialchars($userData['nom']))
+                 ->setPrenom(htmlspecialchars($userData['prenom']))
+                 ->setEmail(htmlspecialchars($userData['email']))
+                 ->setAge((int)$userData['age'])
+                 ->setMotDePasse(password_hash($userData['password'], PASSWORD_BCRYPT))
+                 ->setRole('user')
+                 ->setStatutCompte('actif');
 
-        // 3. Sauvegarde en base
-        return $this->userRepo->create($user);
+            // 3. Sauvegarde en base
+            return $this->userRepo->create($user);
+        } catch (\Exception $e) {
+            $_SESSION['flash_error'] = "Une erreur est survenue lors de la création du compte.";
+            error_log("Erreur lors de l'inscription: " . $e->getMessage());
+            return false;
+        }
     }
 
     // Vérification des mots de passe

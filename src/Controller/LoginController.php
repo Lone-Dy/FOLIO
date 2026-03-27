@@ -65,13 +65,54 @@ class LoginController {
             exit;
         }
 
-        if ($this->authService->register($_POST, $_FILES)) {
-            $this->flashService->addSuccess("Inscription réussie ! Bienvenue sur Folio.");
-            header('Location: /profile');
-        } else {
-            header('Location: /login#register-section');
+        // Récupération des données du formulaire
+        $userData = [
+            'nom' => trim($_POST['nom'] ?? ''),
+            'prenom' => trim($_POST['prenom'] ?? ''),
+            'email' => trim($_POST['email'] ?? ''),
+            'age' => intval($_POST['age'] ?? 0),
+            'password' => $_POST['password'] ?? '',
+            'password_confirmation' => $_POST['password_confirmation'] ?? '',
+            'accept_conditions' => isset($_POST['accept_conditions'])
+        ];
+
+        // Validation des données
+        $errors = [];
+        if (empty($userData['nom'])) $errors[] = "Le nom est requis.";
+        if (empty($userData['prenom'])) $errors[] = "Le prénom est requis.";
+        if (empty($userData['email']) || !filter_var($userData['email'], FILTER_VALIDATE_EMAIL)) {
+            $errors[] = "Email invalide.";
         }
-        exit;
+        if ($userData['age'] < 18) $errors[] = "Vous devez avoir au moins 18 ans.";
+        if (strlen($userData['password']) < 12) $errors[] = "Le mot de passe doit contenir au moins 12 caractères.";
+        if ($userData['password'] !== $userData['password_confirmation']) {
+            $errors[] = "Les mots de passe ne correspondent pas.";
+        }
+        if (!$userData['accept_conditions']) $errors[] = "Vous devez accepter les conditions.";
+
+        if (!empty($errors)) {
+            foreach ($errors as $error) {
+                $this->flashService->addError($error);
+            }
+            $_SESSION['form_data'] = [
+                'nom' => $userData['nom'],
+                'prenom' => $userData['prenom'],
+                'email' => $userData['email'],
+                'age' => $userData['age']
+            ];
+            header('Location: /login#register-section');
+            exit;
+        }
+
+        // Appel du service d'authentification
+        if ($this->authService->register($userData, $_FILES)) {
+            $this->flashService->addSuccess("Inscription réussie ! Bienvenue sur Folio.");
+            header('Location: /profile?new=1');
+        } else {
+            $this->flashService->addError("Une erreur est survenue lors de l'inscription.");
+            header('Location: /login');
+            exit;
+        }
     }
 
     // Gère la déconnexion

@@ -71,7 +71,8 @@ try {
 
 $container = [
 
-    HomeController::class => function ($pdo) {
+    HomeController::class => function ($pdo) 
+    {
         $flashService = new FlashService();
         $templateService = new TemplateService();
         $mediaRepo = new MediaRepository($pdo);
@@ -84,16 +85,19 @@ $container = [
         return new HomeController($folioService, $galerieService);
     },
 
-    E404Controller::class => function () {
+    E404Controller::class => function () 
+    {
         return new E404Controller();
     },
 
-    ConditionController::class => function () {
+    ConditionController::class => function () 
+    {
         $templateService = new TemplateService();
         return new ConditionController($templateService);
     },
 
-    GalerieController::class => function ($pdo) {
+    GalerieController::class => function ($pdo) 
+    {
         $folioRepo = new FolioRepository($pdo);
         $projetRepo = new ProjetRepository($pdo);
         $mediaRepo = new MediaRepository($pdo);
@@ -105,7 +109,8 @@ $container = [
         return new GalerieController();
     },
 
-    LoginController::class => function ($pdo) {
+    LoginController::class => function ($pdo) 
+    {
         $userRepo = new UserRepository($pdo);
         $flashService = new FlashService();
         $authService = new AuthService($userRepo, $flashService);
@@ -113,15 +118,17 @@ $container = [
         return new LoginController($authService, $flashService);
     },
 
-    ProfileController::class => function ($pdo) {
+    ProfileController::class => function ($pdo) 
+    {
         $userRepo = new UserRepository($pdo);
         $flashService = new FlashService();
         $authService = new AuthService($userRepo, $flashService);
         $profileService = new ProfileService($userRepo, $flashService);
-        return new ProfileController($authService, $profileService, $flashService);
+        return new ProfileController($profileService, $flashService, $authService,);
     },
 
-    ProjetController::class => function ($pdo) {
+    ProjetController::class => function ($pdo) 
+    {
         $flashService = new FlashService();
         $templateService = new TemplateService();
         $mediaRepo = new MediaRepository($pdo);

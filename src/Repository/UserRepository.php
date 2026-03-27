@@ -36,19 +36,35 @@ class UserRepository
     // Insère un nouvel utilisateur (inscription) dans la table user
     public function create(User $user): bool
     {
-        $sql = "INSERT INTO user (nom, prenom, email, age, mot_de_passe, statut_compte, role) 
-            VALUES (:nom, :prenom, :email, :age, :mot_de_passe, :statut, :role)";
+        $sql = "INSERT INTO user (nom, prenom, email, age, mot_de_passe, statut_compte, role)
+                VALUES (:nom, :prenom, :email, :age, :mot_de_passe, :statut_compte, :role)";
 
-        $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute([
-            'nom'      => $user->getNom(),
-            'prenom'   => $user->getPrenom(),
-            'email'    => $user->getEmail(),
-            'age'      => $user->getAge(),
-            'mot_de_passe' => $user->getMotDePasse(),
-            'statut'   => $user->getStatutCompte() ?? 'actif',
-            'role'     => $user->getRole() ?? 'user'
-        ]);
+        try {
+            $stmt = $this->pdo->prepare($sql);
+
+            $stmt->bindValue(':nom', $user->getNom(), PDO::PARAM_STR);
+            $stmt->bindValue(':prenom', $user->getPrenom(), PDO::PARAM_STR);
+            $stmt->bindValue(':email', $user->getEmail(), PDO::PARAM_STR);
+            $stmt->bindValue(':age', $user->getAge(), PDO::PARAM_INT);
+            $stmt->bindValue(':mot_de_passe', $user->getMotDePasse(), PDO::PARAM_STR);
+            $stmt->bindValue(':statut_compte', $user->getStatutCompte(), PDO::PARAM_STR);
+            $stmt->bindValue(':role', $user->getRole(), PDO::PARAM_STR);
+
+            return $stmt->execute();
+        } catch (\PDOException $e) {
+            error_log("Erreur PDO: " . $e->getMessage());
+            error_log("Requête SQL: " . $sql);
+            error_log("Données utilisateur: " . print_r([
+                'nom' => $user->getNom(),
+                'prenom' => $user->getPrenom(),
+                'email' => $user->getEmail(),
+                'age' => $user->getAge(),
+                'mot_de_passe' => $user->getMotDePasse(),
+                'statut_compte' => $user->getStatutCompte(),
+                'role' => $user->getRole()
+            ], true));
+            return false;
+        }
     }
 
     // CRUD - READ
