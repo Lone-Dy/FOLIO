@@ -34,7 +34,7 @@ class ProfileController {
         }
 
         $passwordRequirements = $this->profileService->getPasswordRequirements();
-        require __DIR__ . '/../../template/profile_page.php';
+        require __DIR__ . '/../../template/profile.php';
     }
 
     // Gère la mise à jour du profil

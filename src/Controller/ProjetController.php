@@ -21,11 +21,20 @@ class ProjetController {
         $this->templateService = $templateService;
     }
 
-    public function showPortfolio(): void {
+        // Affiche la page profile
+    public function index(): void
+    {
+        $this->showPortfolio();
+        require __DIR__ . '/../../template/portfolio.php';
+    }
+
+    public function showPortfolio(): void 
+    {
         $this->templateService->render('portfolio.php');
     }
 
-    public function handleCreateFolio(): void {
+    public function handleCreateFolio(): void 
+    {
         $userId = $_SESSION['user']['id'] ?? null;
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !$userId) {

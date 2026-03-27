@@ -19,7 +19,7 @@ include_once(__DIR__ . '/view/header-profil.php');
     <?php endif; ?>
 
 <main class="profile-container">
-
+ 
     <!-- PARTIE INFORMATIONS PROFIL -->
 
     <aside class="profile-sidebar">
@@ -28,7 +28,7 @@ include_once(__DIR__ . '/view/header-profil.php');
                 <img src="/assets/img/default-avatar.jpg" alt="Avatar de <?= htmlspecialchars($user->getPrenom()) ?>">
                 <button class="btn-edit" onclick="document.getElementById('avatarDialog').showModal()">Modifier la photo</button>
             </div>
-            <h1 class="profile-name"><?= htmlspecialchars($user->getPrenom() . ' ' . $user->getNom()) ?></h1>
+            <h2 class="profile-name"><?= htmlspecialchars($user->getPrenom() . ' ' . $user->getNom()) ?></h2>
 
             <div class="profile-details">
                 <div class="detail-item">
@@ -46,19 +46,7 @@ include_once(__DIR__ . '/view/header-profil.php');
             <div class="profile-actions">
                 <button class="btn-folio" onclick="document.getElementById('editProfileDialog').showModal()">Modifier mon profil</button>
                 <button class="btn-folio" onclick="document.getElementById('mdpDialog').showModal()">Modifier le mot de passe</button>
-            </div>
-
-            <div class="account-deletion">
-                <h3>Supprimer mon compte</h3>
-                <p>Cette action est irréversible. Toutes vos données seront perdues.</p>
-
-                <form action="/profile/delete" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer votre compte ?');">
-                    <div class="form-group">
-                        <label for="password_confirmation">Confirmez votre mot de passe :</label>
-                        <input type="password" id="password_confirmation" name="password_confirmation" required>
-                    </div>
-                    <button type="submit" class="btn btn-danger">Supprimer définitivement mon compte</button>
-                </form>
+                <button class="btn-folio" onclick="document.getElementById('accountDialog').showModal()">Supprimer mon compte</button>
             </div>
 
         </div>
@@ -66,50 +54,100 @@ include_once(__DIR__ . '/view/header-profil.php');
 
     <!-- PARTIE DASHBOARD -->
 
-    <section class="portfolio-section">
-        <header class="section-header">
-            <div class="header-text">
-                <h2>Mon Portfolio</h2>
-                <button class="btn-folio" onclick="window.location.href='/projet'">Gérez vos projets exposés</button>
+    <header class="portfolio-header">
+        <h2>Gestion de mon Portfolio</h2>
+        <p class="subtitle">Organisez et publiez vos projets pour la galerie.</p>
+
+    <?php if (empty($projets)): ?>
+        <div class="empty-state">
+            <p>Vous n'avez pas encore de portfolio.</p>
+            <button class="btn-submit" onclick="window.location.href='/projet'">Créez-en un ici</button>
+        </div>
+    <?php else: ?>
+
+    <?php if (isset($projets) && !empty($projets)): ?>
+
+    <?php foreach ($projets as $folio): ?>
+
+        <div class="portfolio-item card">
+            <div class="portfolio-projects-edit">
+                <h3>Modifier les projets de ce portfolio :</h3>
+
+                <?php if (!empty($folio['projets_lies'])): ?>
+                    <div class="edit-projects-grid" style="display: flex; flex-direction: column; gap: 10px;">
+                <?php foreach ($folio['projets_lies'] as $projet): ?>
+
+                <form action="/projet/handleEditProjet" method="POST" class="edit-projet-form" style="display: flex; gap: 10px; align-items: center;">
+                    <input type="hidden" name="id_projet" value="<?= $projet->getIdProjet() ?>">
+
+                    <span class="project-order">Projet #<?= htmlspecialchars($projet->getOrdreAffichage()) ?></span>
+
+                    <input type="text" name="title" value="<?= htmlspecialchars($projet->getContenu()) ?>" required placeholder="Titre du projet">
+
+                    <select name="type">
+                        <option value="web" <?= $projet->getType() === 'web' ? 'selected' : '' ?>>Développement Web</option>
+                        <option value="design" <?= $projet->getType() === 'design' ? 'selected' : '' ?>>Design Graphique</option>
+                        <option value="photo" <?= $projet->getType() === 'photo' ? 'selected' : '' ?>>Photographie</option>
+                        <option value="video" <?= $projet->getType() === 'video' ? 'selected' : '' ?>>Vidéo</option>
+                    </select>
+
+                    <button type="submit" class="btn-submit btn-small">Mettre à jour</button>
+
+                </form>
+
+                <?php endforeach; ?>
             </div>
-        </header>
-    <form action="/projet/handleCreatePortfolio" method="POST" class="portfolio-form" enctype="multipart/form-data" id="portfolioForm">
-        <h2>Configurer mon Portfolio</h2>
-        <p class="subtitle">Importez vos 3 meilleurs travaux pour pouvoir publier votre portfolio.</p>
 
-        <div class="projects-grid">
-            <?php for ($i = 1; $i <= 3; $i++): ?>
-                <div class="project-card-edit" data-project-index="<?= $i ?>">
-                    <header class="project-header">
-                        <span>Projet #<?= $i ?></span>
-                        <input type="text" name="projets[<?= $i ?>][title]" class="project-title-input" placeholder="Titre du projet..." required>
+                <?php else: ?>
+                    <p><em>Aucun projet n'est lié à ce portfolio.</em></p>
+                <?php endif; ?>
 
-                        <select name="projets[<?= $i ?>][type]" class="project-type-select">
-                            <option value="web">Développement Web</option>
-                            <option value="design">Design Graphique</option>
-                            <option value="photo">Photographie</option>
-                            <option value="video">Vidéo</option>
-                        </select>
-                    </header>
+        </div> 
+                
+    <?php endforeach; ?>
 
-                    <div class="drop-zone" id="drop-zone-<?= $i ?>">
-                        <span class="drop-zone-prompt">Glissez vos fichiers ou cliquez ici (Max 5)</span>
-                        <input type="file" name="projet_<?= $i ?>_files[]" class="drop-zone-input" accept="image/*,video/*" multiple>
-                        <div class="media-list" id="mediaList<?= $i ?>"></div>
-                    </div>
-                </div>
-            <?php endfor; ?>
+    <?php else: ?>
+        <div class="alert alert-info">
+            <p><strong>Info :</strong> Vous n'avez pas encore de portfolio créé. Utilisez le formulaire ci-dessus pour commencer.</p>
         </div>
+    <?php endif; ?>
 
-        <div class="form-actions">
-            <button type="submit" name="status" value="draft" class="btn-folio">
-                Enregistrer le brouillon
-            </button>
-            <button type="submit" name="status" value="published" id="publishBtn" class="btn-submit" disabled>
-                Publier le Portfolio
-            </button>
+    <?php foreach ($projets as $folio): ?>
+        <div class="portfolio-card">
+            <div class="card-image">
+
+                <?php if (!empty($folio['image_url'])): ?>
+                    <img src="<?= htmlspecialchars($folio['image_url']) ?>" alt="Aperçu de <?= htmlspecialchars($folio['titre']) ?>">
+                <?php else: ?>
+                    <div class="placeholder-image">Pas d'aperçu disponible</div>
+                <?php endif; ?>
+
+            </div>
+            <h3><?= htmlspecialchars($folio['titre']) ?></h3>
+            <p class="card-description">
+                <?= mb_strimwidth(htmlspecialchars($folio['description']), 0, 80, "...") ?>
+            </p>
+
+            <div class="card-content">
+                <span class="status-badge <?= $folio['is_published'] ? 'status-public' : 'status-draft' ?>">
+                <?= $folio['is_published'] ? '● Public' : '○ Brouillon' ?>
+                </span>
+            </div>
+
+            <div class="card-actions">
+                <button href="/projet/togglePublic/<?= $folio['id_folio'] ?>" class="btn-secondary">
+                    <?= $folio['is_published'] ? 'Retirer' : 'Publier' ?>
+                </button>
+
+                <button href="/projet/delete/<?= $folio['id_folio'] ?>" class="btn-secondary" onclick="return confirm('Supprimer définitivement ce portfolio ?')">
+                    Supprimer
+                </button>
+            </div>
         </div>
-    </form>
+    <?php endforeach; ?>
+
+    <?php endif; ?>
+    </header>
 </main>
 
 <!-- Message de bienvenue -->
@@ -186,9 +224,27 @@ include_once(__DIR__ . '/view/header-profil.php');
         </div>
         <div class="dialog-actions">
             <button type="submit" class="btn-submit">Mettre à jour</button>
-            <button type="button" id="fermeDialog" class="btn-text" onclick="this.closest('dialog').close()">Fermer</button>
+            <button type="button" id="fermeDialog" class="btn-folio" onclick="this.closest('dialog').close()">Fermer</button>
         </div>
     </form>
+</dialog>
+
+<!-- Dialogue pour suppression du compte utilisateur -->
+
+<dialog id="accountDialog" class="modern-dialog">
+    <div class="account-deletion">
+        <h2>Supprimer mon compte</h2>
+        <p>Cette action est irréversible. Toutes vos données seront perdues.</p>
+
+        <form action="/profile/delete" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer votre compte ?');">
+            <div class="form-group">
+                <label for="password_confirmation">Confirmez votre mot de passe :</label>
+                <input type="password" id="password_confirmation" name="password_confirmation" required>
+            </div>
+                <button type="submit" class="btn-submit">Supprimer définitivement mon compte</button>
+                <button type="button" class="btn-folio" onclick="this.closest('dialog').close()">Annuler</button>
+        </form>
+    </div>
 </dialog>
 
 <?php

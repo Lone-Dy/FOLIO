@@ -128,7 +128,7 @@ Class ProfileService {
         }
 
         // Suppression de l'utilisateur
-        if ($this->userRepo->delete($user->getId())) {
+        if ($this->userRepo->delete($user->getIdUtilisateur())) {
             $this->flashService->addSuccess("Votre compte a été supprimé avec succès.");
             return true;
         }

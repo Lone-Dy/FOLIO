@@ -20,7 +20,7 @@
         <?php if (isset($_SESSION['user'])): ?>
             <a href="/projet">MON FOLIO</a>
             <a href="/profile">MON PROFIL</a>
-            <a href="/login/logout">DÉCONNEXION</a>
+            <a href="/login">DÉCONNEXION</a>
         <?php else: ?>
             <a href="/login">CONNEXION</a>
         <?php endif; ?>
