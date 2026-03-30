@@ -82,3 +82,19 @@
                             <circle cx="12" cy="12" r="3"></circle>
                         </svg>
                     </button>
+
+
+
+                    <head>
+    <meta charset="UTF-8">
+    <title>FOLIO</title>
+    <meta name="description" content="Plateforme de partage de portfolios créatifs." />
+    <meta name="author" content="Nom de l’auteur" />
+    <meta name="copyright" content="Propriétaire du copyright et année" />
+    <meta name="robots" content="index, follow" />
+    <meta http-equiv="refresh" content="5; url=https://exemple.fr/" />
+    <link rel="icon" type="image/png" href="/assets/ico/favicon-folio.png">
+    <link rel="stylesheet" href="/assets/css/style-constant.css">
+    <link rel="stylesheet" href="/assets/css/style-special.css">
+    <link rel="stylesheet" href="/assets/css/style-folio.css">
+</head>

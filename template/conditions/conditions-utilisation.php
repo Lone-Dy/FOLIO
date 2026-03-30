@@ -1,7 +1,5 @@
-<?php
-include_once(__DIR__ . '/view/header.php');
-?>
-<main class="legal-content">
+
+<section class="legal-content">
     <h1>Conditions Générales d'Utilisation</h1>
     <p>Dernière mise à jour : Mars 2026</p>
     <p>Bienvenue sur FOLIO. En utilisant notre plateforme, vous acceptez les présentes conditions. 
@@ -33,7 +31,4 @@ include_once(__DIR__ . '/view/header.php');
         <h2>7. Limitation de responsabilité</h2>
         <p>FOLIO est un outil. Nous ne sommes pas responsables des contrats ou échanges qui pourraient avoir lieu entre un créatif inscrit et un recruteur via la plateforme.</p>
     </section>
-</main>
-<?php
-include_once(__DIR__ . '/view/footer.php');
-?>
+</section>

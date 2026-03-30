@@ -2,23 +2,27 @@
 
 namespace App\Controller;
 
+use App\Service\Renderer;
 use App\Service\ProfileService;
 use App\Service\FlashService;
 use App\Service\AuthService;
 
 class ProfileController {
 
+    private Renderer $renderer;
     private ProfileService $profileService;
     private FlashService $flashService;
     private AuthService $authService;
 
     public function __construct(
 
+        Renderer $renderer,
         ProfileService $profileService,
         FlashService $flashService,
         AuthService $authService,
     ) {
 
+        $this->renderer = $renderer;
         $this->profileService = $profileService;
         $this->flashService = $flashService;
         $this->authService = $authService;
@@ -27,6 +31,16 @@ class ProfileController {
     // Affiche la page profile
     public function index()
     {
+        $data = [
+            'title' => 'Accueil - Folio',
+            'description' => 'Plateforme de partage de portfolios créatifs.',
+            'author' => 'Nom de l’auteur',
+            'copyright' => 'Propriétaire du copyright et année',
+            'robots' => 'index, follow',
+        ];
+
+        $this->renderer->render('profile', $data);
+
         $user = $this->authService->getCurrentUser();
         if (!$user) {
             header('Location: /login');
@@ -34,7 +48,6 @@ class ProfileController {
         }
 
         $passwordRequirements = $this->profileService->getPasswordRequirements();
-        require __DIR__ . '/../../template/profile.php';
     }
 
     // Gère la mise à jour du profil

@@ -1,8 +1,4 @@
-<?php
-include_once(__DIR__ . '/view/header.php');
-?>
-
-<main class="legal-content">
+<section class="legal-content">
     <h1>Mentions Légales</h1>
     <section class="legal-section">
         <h2>1. Édition du site</h2>
@@ -25,8 +21,4 @@ include_once(__DIR__ . '/view/header.php');
         <h2>Limitation de responsabilité</h2>
         <p>L'éditeur s'efforce de fournir des informations aussi précises que possible. Toutefois, il ne pourra être tenu responsable des omissions ou des carences dans la mise à jour, qu'elles soient de son fait ou du fait des tiers partenaires qui lui fournissent ces informations.</p>
     </section>
-</main>
-
-<?php
-include_once(__DIR__ . '/view/footer.php');
-?>
+</section>

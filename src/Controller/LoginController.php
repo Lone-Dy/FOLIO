@@ -2,18 +2,22 @@
 
 namespace App\Controller;
 
+use App\Service\Renderer;
 use App\Service\AuthService;
 use App\Service\FlashService;
 
 class LoginController {
 
+    private Renderer $renderer;
     private AuthService $authService;
     private FlashService $flashService;
 
     public function __construct(
+        Renderer $renderer,
         AuthService $authService,
         FlashService $flashService
     ) {
+        $this->renderer = $renderer;
         $this->authService = $authService;
         $this->flashService = $flashService;
     }  
@@ -21,11 +25,20 @@ class LoginController {
     // Affiche la page de login/inscription
     public function index()
     {
+        // Préparation des données pour le template
+        $data = [
+            'title' => 'Accueil - Folio',
+            'description' => 'Plateforme de partage de portfolios créatifs.',
+            'author' => 'Nom de l’auteur',
+            'copyright' => 'Propriétaire du copyright et année',
+            'robots' => 'index, follow',
+        ];
+
         if (isset($_SESSION['user'])) {
             header('Location: /profile');
             exit;
         }
-        require __DIR__ . '/../../template/login_page.php';
+        $this->renderer->render('login', $data);
     }
 
     // Gère la connexion

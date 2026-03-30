@@ -1,8 +1,4 @@
-<?php
-include_once(__DIR__ . '/view/header-profil.php');
-?>
-
-<main class="portfolio-management-container">
+<div class="portfolio-management-container">
 
 <!-- PARTIE DASHBOARD -->
 
@@ -44,8 +40,4 @@ include_once(__DIR__ . '/view/header-profil.php');
             </button>
         </div>
     </form>
-</main>
-
-<?php
-include_once(__DIR__ . '/view/footer.php');
-?>
+</div>

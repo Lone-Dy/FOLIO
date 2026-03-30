@@ -11,7 +11,12 @@ LoginController,
 ConditionController, 
 ProfileController, 
 ProjetController, 
-GalerieController};
+GalerieController,
+SecurityController};
+
+use App\Exception\{
+ServiceException, 
+RenderException};
 
 use App\Service\{
 DatabaseFactory, 
@@ -20,7 +25,8 @@ FlashService,
 MediaService, 
 FolioService,
 AuthService,
-ProfileService};
+ProfileService,
+SecurityService};
 
 use App\Repository\{
 UserRepository, 
@@ -65,6 +71,11 @@ try {
     error_log("Erreur PDO: " . $e->getMessage());
     die("Une erreur technique est survenue. Veuillez réessayer plus tard.");
 }
+
+// Instancie le SecurityService, Renderer et Request
+    $securityService = new SecurityService(new UserRepository($pdo));
+    $renderer = new Renderer(__DIR__ . '/../templates', $securityService);
+    $request = new Request();
 
 // 2. Configuration des dépendances
 
@@ -133,7 +144,12 @@ $container = [
         $folioService = new FolioService($pdo, $folioRepo, $projetRepo, $mediaService, $flashService);
 
         return new ProjetController($folioService, $flashService);
-    }
+    },
+
+    SecurityController::class => function($pdo) 
+    {
+        return new SecurityController();
+    },
 ];
 
 // Est-ce que le contrôleur existe dans mon container ?

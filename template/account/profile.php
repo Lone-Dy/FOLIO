@@ -1,6 +1,3 @@
-<?php
-include_once(__DIR__ . '/view/header-profil.php');
-?>
 
     <?php if (isset($_SESSION['flash_messages']['success'])): ?>
         <div class="alert alert-success">
@@ -18,7 +15,7 @@ include_once(__DIR__ . '/view/header-profil.php');
         </div>
     <?php endif; ?>
 
-<main class="profile-container">
+<div class="profile-container">
  
     <!-- PARTIE INFORMATIONS PROFIL -->
 
@@ -148,7 +145,7 @@ include_once(__DIR__ . '/view/header-profil.php');
 
     <?php endif; ?>
     </header>
-</main>
+</div>
 
 <!-- Message de bienvenue -->
 
@@ -246,7 +243,3 @@ include_once(__DIR__ . '/view/header-profil.php');
         </form>
     </div>
 </dialog>
-
-<?php
-include_once(__DIR__ . '/view/footer.php');
-?>

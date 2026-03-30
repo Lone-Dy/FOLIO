@@ -14,7 +14,7 @@
     <a href="/home" class="logo">
         <img src="/assets/img/SVG/logo_folio_noir.svg" alt="Logo Folio - identité visuelle" width="150">
     </a>
-    <h1>Le portfolio qui se construit aussi vite qu'une idée.</h1>
+    <h1>Plateforme de partage de portfolios créatifs.</h1>
     <nav class="nav">
         <?php if (isset($_SESSION['user'])): ?>
             <a href="/projet">MON FOLIO</a>
