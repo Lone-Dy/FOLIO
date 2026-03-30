@@ -8,14 +8,15 @@
     <link rel="stylesheet" href="/assets/css/style-constant.css">
     <link rel="stylesheet" href="/assets/css/style-special.css">
     <link rel="stylesheet" href="/assets/css/style-folio.css">
+    <meta name="description" content= <? echo $description ?> />
 </head>
+
 <body>
 <header class="header">
     <a href="/home" class="logo">
-        <h1>
-        <img src="/assets/img/SVG/logo_folio_noir.svg" alt="Logo Folio" width="150">
-        </h1>
+        <img src="/assets/img/SVG/logo_folio_noir.svg" alt="Logo Folio - identité visuelle" width="150">
     </a>
+    <h1>Le portfolio qui se construit aussi vite qu'une idée.</h1>
     <div class="header-search">
         <form action="/folio" method="GET">
             <input type="text" name="q" placeholder="Rechercher un créatif..." aria-label="Rechercher">

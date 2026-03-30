@@ -4,33 +4,27 @@ namespace App\Controller;
 
 use App\Service\FolioService;
 use App\Service\FlashService;
-use App\Service\TemplateService;
 
 class ProjetController {
     private FolioService $folioService;
     private FlashService $flashService;
-    private TemplateService $templateService;
 
     public function __construct(
         FolioService $folioService,
         FlashService $flashService,
-        TemplateService $templateService
     ) {
         $this->folioService = $folioService;
         $this->flashService = $flashService;
-        $this->templateService = $templateService;
     }
 
         // Affiche la page profile
     public function index(): void
     {
-        $this->showPortfolio();
+        if (isset($_SESSION['user'])) {
+            header('Location: /profile');
+            exit;
+        }
         require __DIR__ . '/../../template/portfolio.php';
-    }
-
-    public function showPortfolio(): void 
-    {
-        $this->templateService->render('portfolio.php');
     }
 
     public function handleCreateFolio(): void 

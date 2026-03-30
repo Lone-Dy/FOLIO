@@ -10,7 +10,6 @@ use App\Repository\ProjetRepository;
 
 use App\Service\MediaService;
 use App\Service\FlashService;
-use App\Service\TemplateService;
 
 use PDO;
 use Exception;
@@ -23,7 +22,6 @@ class FolioService {
 
     private MediaService $mediaService;
     private FlashService $flashService;
-    private TemplateService $templateService;
 
     public function __construct(
         PDO $pdo,
@@ -31,14 +29,12 @@ class FolioService {
         ProjetRepository $projetRepo,
         MediaService $mediaService,
         FlashService $flashService,
-        TemplateService $templateService,
     ) {
         $this->pdo = $pdo;
         $this->folioRepo = $folioRepo;
         $this->projetRepo = $projetRepo;
         $this->mediaService = $mediaService;
         $this->flashService = $flashService;
-        $this->templateService = $templateService;
     }
 
     // Gère la création complète d'un portfolio

@@ -20,7 +20,6 @@ class HomeController {
 
         // Récupèration de tous les portfolios publiés
         $galleryFeed = $this->galerieService->getGalleryFeed();
-
         include __DIR__.'/../../template/home_page.php';
     }
 }

@@ -13,8 +13,7 @@
 <body>
     <header class="header">
         <a href="/home" class="logo">
-            <h1>
-            <img src="/assets/img/SVG/logo_folio_noir.svg" alt="Logo Folio" width="150">
-            </h1>
+            <img src="/assets/img/SVG/logo_folio_noir.svg" alt="Logo Folio - identité visuelle" width="150">
         </a>
+        <h1>Le portfolio qui se construit aussi vite qu'une idée.</h1>
     </header>
