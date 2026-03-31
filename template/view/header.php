@@ -15,7 +15,6 @@
     <a href="/home" class="logo">
         <img src="/assets/img/SVG/logo_folio_noir.svg" alt="Logo Folio - identité visuelle" width="150">
     </a>
-    <h1>Plateforme de partage de portfolios créatifs.</h1>
     <div class="header-search">
         <form action="/folio" method="GET">
             <input type="text" name="q" placeholder="Rechercher un créatif..." aria-label="Rechercher">

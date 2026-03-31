@@ -1,9 +1,6 @@
 <section class="home-content">
 
-    <div class="text text0">Glissez.</div>
-    <div class="text text1">Déposez.</div>
-    <div class="text text2">Publiez.</div>
-    <div class="text text3">Rayonnez.</div>
+    <h1>Plateforme de partage de portfolios créatifs.</h1>
 
     <?php
     $destination = isset($_SESSION['user_id']) ? '/projet' : '/login#register-section';

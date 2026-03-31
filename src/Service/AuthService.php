@@ -98,18 +98,26 @@ Class AuthService {
     {
         $user = $this->userRepo->findByEmail($email);
 
-        if ($user->getStatutCompte() !== 'actif') {
-            $this->flashService->addError("Votre compte est désactivé.");
-            return null;
-        }
+            // Vérification si l'utilisateur existe
+            if (!$user) {
+                $this->flashService->addError("Email ou mot de passe incorrect.");
+                return null;
+            }
 
-        if (!$user || !password_verify($password, $user->getMotDePasse())) {
-            $this->flashService->addError("Email ou mot de passe incorrect.");
-            return null;
-        }
-        
-        $this->flashService->addSuccess("Connexion réussie !");
-        return $user;
+            // Vérification du statut
+            if ($user->getStatutCompte() !== 'actif') {
+                $this->flashService->addError("Votre compte est désactivé.");
+                return null;
+            }
+
+            // Vérification du mot de passe
+            if (!password_verify($password, $user->getMotDePasse())) {
+                $this->flashService->addError("Email ou mot de passe incorrect.");
+                return null;
+            }
+            
+            $this->flashService->addSuccess("Connexion réussie !");
+            return $user;
     }
 
     // Gére la reconnexion
