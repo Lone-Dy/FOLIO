@@ -49,7 +49,6 @@ class AuthServiceTest extends TestCase
 
     public function testLoginWithValidCredentialsReturnsUser(): void
     {
-        // 1. Initialisation
         $userRepoMock = $this->createMock(UserRepository::class);
         $flashServiceMock = $this->createMock(FlashService::class);
         $authService = new AuthService($userRepoMock, $flashServiceMock);
@@ -57,29 +56,23 @@ class AuthServiceTest extends TestCase
         $user = new User();
         $user->setEmail('test@test.com')
              ->setStatutCompte('actif')
-             // On simule un mot de passe hashé
              ->setMotDePasse(password_hash('password123', PASSWORD_BCRYPT));
 
-        // Configuration du Mock Repository
         $userRepoMock->method('findByEmail')
                      ->with('test@test.com')
                      ->willReturn($user);
 
-        // Configuration du Mock FlashService
         $flashServiceMock->expects($this->once())
                          ->method('addSuccess')
                          ->with("Connexion réussie !");
 
-        // 2. Action
         $result = $authService->login('test@test.com', 'password123');
 
-        // 3. Attentes
         $this->assertSame($user, $result);
     }
 
     public function testGetCurrentUserReturnsUserWhenSessionExists(): void
     {
-        // 1. Initialisation
         $userRepoMock = $this->createMock(UserRepository::class);
         $flashServiceMock = $this->createMock(FlashService::class);
         $authService = new AuthService($userRepoMock, $flashServiceMock);
@@ -90,21 +83,17 @@ class AuthServiceTest extends TestCase
         $user = new User();
         $user->setIdUtilisateur(42);
 
-        // Configuration du Mock
         $userRepoMock->method('findById')
                      ->with(42)
                      ->willReturn($user);
 
-        // 2. Action
         $result = $authService->getCurrentUser();
 
-        // 3. Attentes
         $this->assertSame($user, $result);
     }
 
     public function testLogoutClearsSession(): void
     {
-        // 1. Initialisation
         $userRepoMock = $this->createMock(UserRepository::class);
         $flashServiceMock = $this->createMock(FlashService::class);
         $authService = new AuthService($userRepoMock, $flashServiceMock);
@@ -113,10 +102,8 @@ class AuthServiceTest extends TestCase
         $_SESSION['user']['id'] = 42;
         $_SESSION['flash_error'] = "Une erreur";
 
-        // 2. Action (On mute les potentiels warnings liés à l'absence de vraie session active en CLI)
         @$authService->logout();
 
-        // 3. Attentes
         $this->assertEmpty($_SESSION);
     }
 }

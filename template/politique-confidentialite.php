@@ -44,7 +44,3 @@ include_once(__DIR__ . '/view/header.php');
         <p>FOLIO utilise des cookies dits "techniques". Ils sont indispensables pour vous reconnaître lorsque vous naviguez d'une page à l'autre sans avoir à vous reconnecter sans cesse.</p>
     </section>
 </main>
-
-<?php
-include_once(__DIR__ . '/view/footer.php');
-?>

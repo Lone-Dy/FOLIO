@@ -1,6 +1,6 @@
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
-// 1. Animation du Header (Transparence vers Flou)
+// Animation du Header (Transparence vers Flou)
 gsap.to('.header', {
   scrollTrigger: {
     trigger: 'body',
@@ -15,36 +15,8 @@ gsap.to('.header', {
   backdropFilter: 'blur(25px)',
 });
 
-// 2. Animation des textes (Mouvement + Apparition)
-const textElements = ['.text0', '.text1', '.text2', '.text3'];
 
-textElements.forEach((selector, index) => {
-  const isRight = index % 2 === 0;
-
-  gsap.to(selector, {
-    x: isRight ? '10%' : '-10%',
-    rotate: isRight ? 5 : -5,
-    opacity: 1,
-    y: 0,
-    scrollTrigger: {
-      trigger: selector,
-      start: 'top 90%', // Apparaît plus tôt
-      end: 'top 20%',
-      scrub: 1,
-    }
-  });
-});
-
-// 3. Retour en haut
-const backBtn = document.querySelector('#back');
-
-if (backBtn) {
-    backBtn.addEventListener('click', () => {
-        gsap.to(window, { duration: 1, scrollTo: 0 });
-    });
-}
-
-// 4. Etirement de la barre de recherche
+// Etirement de la barre de recherche
 const searchInput = document.querySelector('.header-search input');
 
 if (searchInput) {
@@ -306,18 +278,12 @@ document.querySelectorAll('.drop-zone').forEach((zone) => {
             }
 
             // Création du bouton de suppression
-            const removeBtn = document.createElement('button');
-            removeBtn.innerHTML = '×';
-            removeBtn.classList.add('btn-remove');
-            removeBtn.onclick = (e) => {
+            removeBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                // Supprime l'élément du tableau via l'index
                 filesCollection.splice(index, 1);
-
-                // Relance le rendu pour mettre à jour la vue
                 renderMedias();
                 updatePublishButton();
-            };
+            });
 
             item.appendChild(removeBtn);
             mediaList.appendChild(item);
@@ -397,21 +363,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-/**
- * Remplit un slot avec les données du projet et grise l'original
- */
-function fillSlot(slot, id, title) {
-    // 1. On vérifie si le projet n'est pas déjà dans un autre slot
+
+function fillSlot(slot, id, title) 
+{
     const alreadyUsed = document.querySelector(`.project-slot input[value="${id}"]`);
     if (alreadyUsed) {
         alert("Ce projet est déjà sélectionné dans votre assemblage !");
         return;
     }
 
-    // 2. On remplit le slot visuellement et avec l'input caché pour PHP
+    // Le HTML sans le onclick
     slot.innerHTML = `
         <div class="selected-content" style="padding: 10px; background: #f0f2f5; border-radius: 8px; width: 100%;">
-            <button type="button" class="btn-remove-slot" onclick="removeProjectFromSlot(this, '${id}')">×</button>
+            <button type="button" class="btn-remove-slot">×</button>
             <strong style="font-size: 0.9em; display: block; margin-bottom: 5px;">Projet Sélectionné :</strong>
             <p style="margin: 0; color: #333;">${title}</p>
             <input type="hidden" name="projets[]" value="${id}">
@@ -419,7 +383,12 @@ function fillSlot(slot, id, title) {
     `;
     slot.classList.add('filled');
 
-    // 3. On grise la carte originale dans la liste de gauche
+    // On ajoute l'écouteur d'événement directement ici !
+    const removeBtn = slot.querySelector('.btn-remove-slot');
+    removeBtn.addEventListener('click', function() {
+        removeProjectFromSlot(this, id);
+    });
+
     const originalCard = document.querySelector(`.project-card[data-id="${id}"]`);
     if (originalCard) {
         originalCard.classList.add('is-used');
@@ -428,9 +397,7 @@ function fillSlot(slot, id, title) {
     checkFormReady();
 }
 
-/**
- * Vide le slot et réactive la carte projet à gauche
- */
+
 function removeProjectFromSlot(button, id) {
     const slot = button.closest('.project-slot');
     
@@ -463,3 +430,63 @@ function checkFormReady() {
         draftBtn.disabled = true;
     }
 }
+
+document.addEventListener('click', (e) => {
+    const openBtn = e.target.closest('[data-open]');
+    const closeBtn = e.target.closest('[data-close]');
+
+    // Si on clique sur un bouton d'ouverture
+    if (openBtn) {
+        const dialogId = openBtn.getAttribute('data-open');
+        const dialog = document.getElementById(dialogId);
+        if (dialog) dialog.showModal();
+    }
+
+    // Si on clique sur un bouton de fermeture
+    if (closeBtn) {
+        const dialog = e.target.closest('dialog');
+        if (dialog) dialog.close();
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    // 1. Gestionnaire universel pour ouvrir/fermer les modales
+    document.addEventListener('click', (e) => {
+        const openBtn = e.target.closest('[data-open]');
+        const closeBtn = e.target.closest('[data-close]');
+
+        if (openBtn) {
+            const dialogId = openBtn.getAttribute('data-open');
+            const dialog = document.getElementById(dialogId);
+            if (dialog) dialog.showModal();
+        }
+
+        if (closeBtn) {
+            const dialog = e.target.closest('dialog');
+            if (dialog) dialog.close();
+        }
+    });
+
+    // 2. Gestionnaire universel pour les demandes de confirmation (liens et formulaires)
+    document.addEventListener('click', (e) => {
+        const confirmElement = e.target.closest('a[data-confirm]');
+        if (confirmElement) {
+            const message = confirmElement.getAttribute('data-confirm');
+            if (!confirm(message)) {
+                e.preventDefault(); // Annule le clic si l'utilisateur refuse
+            }
+        }
+    });
+
+    document.addEventListener('submit', (e) => {
+        const confirmForm = e.target.closest('form[data-confirm]');
+        if (confirmForm) {
+            const message = confirmForm.getAttribute('data-confirm');
+            if (!confirm(message)) {
+                e.preventDefault(); // Annule l'envoi du formulaire si l'utilisateur refuse
+            }
+        }
+    });
+
+});

@@ -1,5 +1,4 @@
-
-    <?php if (isset($_SESSION['flash_messages']['success'])): ?>
+<?php if (isset($_SESSION['flash_messages']['success'])): ?>
         <div class="alert alert-success">
             <?php foreach ($_SESSION['flash_messages']['success'] as $message): ?>
                 <p><?= htmlspecialchars($message) ?></p>
@@ -17,13 +16,11 @@
 
 <div class="profile-container">
  
-    <!-- PARTIE INFORMATIONS PROFIL -->
-
     <aside class="profile-sidebar">
         <div class="profile-card">
             <div class="profile-avatar"> 
                 <img src="/assets/img/default-avatar.jpg" alt="Avatar de <?= htmlspecialchars($user->getPrenom()) ?>">
-                <button class="btn-edit" onclick="document.getElementById('avatarDialog').showModal()">Modifier la photo</button>
+                <button class="btn-edit" data-open="avatarDialog">Modifier la photo</button>
             </div>
             <h2 class="profile-name"><?= htmlspecialchars($user->getPrenom() . ' ' . $user->getNom()) ?></h2>
 
@@ -37,19 +34,17 @@
                     <p class="bio-text">
                         <span class="value"><?= nl2br(htmlspecialchars($user->getBiographie() ?? '')) ?></span>
                     </p>
-            </div>
+                </div>
             </div>
 
             <div class="profile-actions">
-                <button class="btn-folio" onclick="document.getElementById('editProfileDialog').showModal()">Modifier mon profil</button>
-                <button class="btn-folio" onclick="document.getElementById('mdpDialog').showModal()">Modifier le mot de passe</button>
-                <button class="btn-folio" onclick="document.getElementById('accountDialog').showModal()">Supprimer mon compte</button>
+                <button class="btn-folio" data-open="editProfileDialog">Modifier mon profil</button>
+                <button class="btn-folio" data-open="mdpDialog">Modifier le mot de passe</button>
+                <button class="btn-folio" data-open="accountDialog">Supprimer mon compte</button>
             </div>
 
         </div>
     </aside>
-
-    <!-- PARTIE DASHBOARD -->
 
     <header class="portfolio-header">
         <h2>Gestion de mon Portfolio</h2>
@@ -58,7 +53,7 @@
     <?php if (empty($projets)): ?>
         <div class="empty-state">
             <p>Vous n'avez pas encore de portfolio.</p>
-            <button class="btn-submit" onclick="window.location.href='/projet'">Créez-en un ici</button>
+            <a href="/projet" class="btn-submit">Créez-en un ici</a>
         </div>
     <?php else: ?>
 
@@ -132,13 +127,13 @@
             </div>
 
             <div class="card-actions">
-                <button href="/projet/togglePublic/<?= $folio['id_folio'] ?>" class="btn-secondary">
+                <a href="/projet/togglePublic/<?= $folio['id_folio'] ?>" class="btn-secondary">
                     <?= $folio['is_published'] ? 'Retirer' : 'Publier' ?>
-                </button>
+                </a>
 
-                <button href="/projet/delete/<?= $folio['id_folio'] ?>" class="btn-secondary" onclick="return confirm('Supprimer définitivement ce portfolio ?')">
+                <a href="/projet/delete/<?= $folio['id_folio'] ?>" class="btn-secondary" data-confirm="Supprimer définitivement ce portfolio ?">
                     Supprimer
-                </button>
+                </a>
             </div>
         </div>
     <?php endforeach; ?>
@@ -147,21 +142,17 @@
     </header>
 </div>
 
-<!-- Message de bienvenue -->
-
 <?php if (isset($_GET['new']) && $_GET['new'] == '1'): ?>
     <dialog id="welcomeDialog" class="welcome-modal">
         <div class="modal-content">
             <h2>Bienvenue, <?= htmlspecialchars($user->getPrenom()) ?> !</h2>
             <p>Votre compte a été créé avec succès.<br>Votre aventure sur FOLIO commence maintenant.</p>
             <div class="next-steps">
-                <button class="btn-submit" onclick="closeWelcome()">C'est parti !</button>
+                <button class="btn-submit" data-close>C'est parti !</button>
             </div>
         </div>
     </dialog>
 <?php endif; ?>
-
-<!-- Dialogue pour modifier les informations du profil -->
 
 <dialog id="editProfileDialog" class="modern-dialog">
     <form method="POST" action="/profile/update" enctype="multipart/form-data">
@@ -184,12 +175,10 @@
 
         <div class="dialog-actions">
             <button type="submit" class="btn-submit">Enregistrer les modifications</button>
-            <button type="button" class="btn-folio" onclick="this.closest('dialog').close()">Annuler</button>
+            <button type="button" class="btn-folio" data-close>Annuler</button>
         </div>
     </form>
 </dialog>
-
-<!-- Dialogue pour modifier la photo de profil -->
 
 <dialog id="avatarDialog" class="modern-dialog">
     <form method="POST" action="/profile/updateAvatar" enctype="multipart/form-data">
@@ -201,12 +190,10 @@
 
         <div class="dialog-actions">
             <button type="submit" class="btn-submit">Enregistrer</button>
-            <button type="button" class="btn-folio" onclick="this.closest('dialog').close()">Annuler</button>
+            <button type="button" class="btn-folio" data-close>Annuler</button>
         </div>
     </form>
 </dialog>
-
-<!-- Dialogue pour modifier le mot de passe -->
 
 <dialog id="mdpDialog" class="modern-dialog">
     <form method="POST" action="/profile/updatePassword">
@@ -221,25 +208,23 @@
         </div>
         <div class="dialog-actions">
             <button type="submit" class="btn-submit">Mettre à jour</button>
-            <button type="button" id="fermeDialog" class="btn-folio" onclick="this.closest('dialog').close()">Fermer</button>
+            <button type="button" id="fermeDialog" class="btn-folio" data-close>Fermer</button>
         </div>
     </form>
 </dialog>
-
-<!-- Dialogue pour suppression du compte utilisateur -->
 
 <dialog id="accountDialog" class="modern-dialog">
     <div class="account-deletion">
         <h2>Supprimer mon compte</h2>
         <p>Cette action est irréversible. Toutes vos données seront perdues.</p>
 
-        <form action="/profile/delete" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer votre compte ?');">
+        <form action="/profile/delete" method="POST" data-confirm="Êtes-vous sûr de vouloir supprimer votre compte ?">
             <div class="form-group">
                 <label for="password_confirmation">Confirmez votre mot de passe :</label>
                 <input type="password" id="password_confirmation" name="password_confirmation" required>
             </div>
                 <button type="submit" class="btn-submit">Supprimer définitivement mon compte</button>
-                <button type="button" class="btn-folio" onclick="this.closest('dialog').close()">Annuler</button>
+                <button type="button" class="btn-folio" data-close>Annuler</button>
         </form>
     </div>
 </dialog>
