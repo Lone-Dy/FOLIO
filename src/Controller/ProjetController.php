@@ -22,7 +22,7 @@ class ProjetController {
         $this->flashService = $flashService;
     }
 
-        // Affiche la page profile
+    // Affiche la page profile
     public function index(): void
     {
         $data = [

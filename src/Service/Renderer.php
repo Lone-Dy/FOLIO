@@ -21,13 +21,16 @@ class Renderer {
         // Démarrage de la temporisation de sortie
         ob_start();
 
-        // Inclusion du template
-        include $this->templateDir . '/layout.php';
+        // Inclusion du contenu spécifique au template
+        include $this->templateDir . '/' . $template . '.php';
 
         // Récupération du contenu généré
         $ob_content = ob_get_clean();
 
-        // Inclusion du contenu spécifique au template
-        include $this->templateDir . '/' . $template . '.php';
+        //Initialisation de $ob_modal pour éviter un warning PHP si la variable n'est pas passée dans $data
+        $ob_modal = $ob_modal ?? '';
+
+        // Inclusion du template
+        include $this->templateDir . '/layout.php';
     }
 }

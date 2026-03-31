@@ -26,7 +26,9 @@ MediaService,
 FolioService,
 AuthService,
 ProfileService,
-SecurityService};
+SecurityService,
+Renderer,
+Request};
 
 use App\Repository\{
 UserRepository, 
@@ -74,67 +76,66 @@ try {
 
 // Instancie le SecurityService, Renderer et Request
     $securityService = new SecurityService(new UserRepository($pdo));
-    $renderer = new Renderer(__DIR__ . '/../templates', $securityService);
+    $renderer = new Renderer(__DIR__ . '/../template', $securityService);
     $request = new Request();
 
 // 2. Configuration des dépendances
 
 $container = [
 
-    HomeController::class => function ($pdo) 
+HomeController::class => function ($pdo) use ($renderer)
     {
-        $flashService = new FlashService();
-        $mediaRepo = new MediaRepository($pdo);
         $folioRepo = new FolioRepository($pdo);
         $projetRepo = new ProjetRepository($pdo);
-        $mediaService = new MediaService($mediaRepo);
-        $folioService = new FolioService($pdo, $folioRepo, $projetRepo, $mediaService, $flashService);
+        $mediaRepo = new MediaRepository($pdo);    
+
         $galerieService = new GalerieService($folioRepo, $projetRepo, $mediaRepo);
 
-        return new HomeController($folioService, $galerieService);
+        return new HomeController($renderer, $galerieService);
     },
 
-    E404Controller::class => function () 
+    E404Controller::class => function () use ($renderer)
     {
-        return new E404Controller();
+    
+        return new E404Controller($renderer);
     },
 
-    ConditionController::class => function () 
+    ConditionController::class => function ($pdo) use ($renderer) 
     {
-        return new ConditionController();
+    
+        return new ConditionController($renderer);
     },
 
-    GalerieController::class => function ($pdo) 
+    GalerieController::class => function ($pdo) use ($renderer)
     {
         $folioRepo = new FolioRepository($pdo);
         $projetRepo = new ProjetRepository($pdo);
         $mediaRepo = new MediaRepository($pdo);
-        $flashService = new FlashService();
-        $mediaService = new MediaService($mediaRepo);
-        $folioService = new FolioService($pdo, $folioRepo, $projetRepo, $mediaService, $flashService);
+        $galerieService = new GalerieService($folioRepo, $projetRepo, $mediaRepo);
 
-        return new GalerieController();
+        return new GalerieController($renderer, $galerieService);
     },
 
-    LoginController::class => function ($pdo) 
+    LoginController::class => function ($pdo) use ($renderer)
     {
         $userRepo = new UserRepository($pdo);
         $flashService = new FlashService();
         $authService = new AuthService($userRepo, $flashService);
 
-        return new LoginController($authService, $flashService);
+        return new LoginController($renderer, $authService, $flashService);
     },
 
-    ProfileController::class => function ($pdo) 
+    ProfileController::class => function ($pdo) use ($renderer)
     {
         $userRepo = new UserRepository($pdo);
         $flashService = new FlashService();
         $authService = new AuthService($userRepo, $flashService);
         $profileService = new ProfileService($userRepo, $flashService);
-        return new ProfileController($profileService, $flashService, $authService,);
+
+        return new ProfileController($renderer, $profileService, $flashService, $authService);
     },
 
-    ProjetController::class => function ($pdo) 
+    ProjetController::class => function ($pdo) use ($renderer)
     {
         $folioRepo = new FolioRepository($pdo);
         $projetRepo = new ProjetRepository($pdo);
@@ -143,12 +144,13 @@ $container = [
         $mediaService = new MediaService($mediaRepo);
         $folioService = new FolioService($pdo, $folioRepo, $projetRepo, $mediaService, $flashService);
 
-        return new ProjetController($folioService, $flashService);
+        return new ProjetController($renderer, $folioService, $flashService);
     },
 
     SecurityController::class => function($pdo) 
     {
-        return new SecurityController();
+        $userRepo = new UserRepository($pdo);
+        return new SecurityController($userRepo);
     },
 ];
 

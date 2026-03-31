@@ -5,9 +5,11 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 
 class SecurityService {
+
     private UserRepository $userRepo;
 
     public function __construct(UserRepository $repo) {
+        
         $this->userRepo = $repo;
         if (session_status() === PHP_SESSION_NONE) {
             session_start();

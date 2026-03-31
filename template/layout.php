@@ -8,7 +8,6 @@
     <meta name="author" content="<?= $author ?? 'Nom de l’auteur' ?>"> <!-- Spécifie le nom de l'auteur de la page. -->
     <meta name="copyright" content="<?= $copyright ?? 'Propriétaire du copyright et année' ?>"> <!-- Spécifie les informations de copyright pour la page. -->
     <meta name="robots" content="<?= $robots ?? 'index, follow' ?>"> <!-- Fournit des directives aux moteurs de recherche sur la manière d'indexer -->
-    <meta http-equiv="refresh" content="5; url=https://exemple.fr/" />
     <link rel="icon" type="image/png" href="/assets/ico/favicon-folio.png">
     <link rel="stylesheet" href="/assets/css/style-constant.css">
     <link rel="stylesheet" href="/assets/css/style-special.css">

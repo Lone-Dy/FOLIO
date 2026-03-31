@@ -1,14 +1,17 @@
 <?php
 namespace App\Controller;
 
+use App\Service\Renderer;
 use App\Service\GalerieService;
 
 Class GalerieController {
 
+    private Renderer $renderer;
     private GalerieService $galerieService;
 
-    public function __construct(GalerieService $galerieService) 
+    public function __construct(Renderer $renderer, GalerieService $galerieService) 
     {
+        $this->renderer = $renderer;
         $this->galerieService = $galerieService;
     }
 
@@ -17,7 +20,7 @@ Class GalerieController {
         // Récupèration de tous les portfolios publiés
         $galleryFeed = $this->galerieService->getFullGallery();
 
-        include __DIR__.'/../../template/galerie.php';
+        $this->renderer->render('home', $data);
     }
 }
 ?>

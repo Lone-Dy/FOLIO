@@ -18,10 +18,9 @@ class HomeController {
     // J'ajoute un null pour donner un valeur par défaut. 
     public function index(?array $params = null) {
 
-        // Récupèration de tous les portfolios publiés
-        $galleryFeed = $this->galerieService->getGalleryFeed();
+        $galleryFeed = $this->galerieService->getFullGallery();
 
-            // Préparation des données pour le template
+        // Préparation des données pour le template
         $data = [
             'title' => 'Accueil - Folio',
             'description' => 'Plateforme de partage de portfolios créatifs.',
@@ -29,10 +28,10 @@ class HomeController {
             'copyright' => 'Propriétaire du copyright et année',
             'robots' => 'index, follow',
             'galleryFeed' => $galleryFeed
-    ];
+        ];
 
-    // Utilisation du Renderer pour afficher le template
-    $this->renderer->render('home', $data);
+        // Utilisation du Renderer pour afficher le template
+        $this->renderer->render('home', $data);
     }
 }
 ?>
