@@ -24,7 +24,7 @@ class E404Controller {
         ];
 
         // Utilisation du Renderer pour afficher le template
-        $this->renderer->render('home', $data);
+        $this->renderer->render('error_404', $data);
     }
 }
 

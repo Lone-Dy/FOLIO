@@ -156,18 +156,18 @@ HomeController::class => function ($pdo) use ($renderer)
 
 // Est-ce que le contrôleur existe dans mon container ?
 
-if (!isset($container[$controllerClass])) {
+ if (!isset($container[$controllerClass])) {
     $controllerClass = E404Controller::class;
     $method = 'index';
 }
 
 // Est-ce que la méthode (l'action) existe dans cet objet ?
 
-$controllerInstance = $container[$controllerClass]($pdo);
-if (!method_exists($controllerInstance, $method)) {
-    $method = 'index'; // Méthode par défaut
-}
+ $controllerInstance = $container[$controllerClass]($pdo);
+ if (!method_exists($controllerInstance, $method)) {
+    $method = 'index';  // Méthode par défaut
+ }
 
-// Je lance l'action avec les paramètres restants
+//Je lance l'action avec les paramètres restants
 
-$controllerInstance->$method(...$params);
+ $controllerInstance->$method(...$params);

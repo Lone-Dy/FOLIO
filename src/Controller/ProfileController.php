@@ -6,6 +6,7 @@ use App\Service\Renderer;
 use App\Service\ProfileService;
 use App\Service\FlashService;
 use App\Service\AuthService;
+use App\Exception\ServiceException;
 
 class ProfileController {
 
@@ -31,23 +32,25 @@ class ProfileController {
     // Affiche la page profile
     public function index()
     {
-        $data = [
-            'title' => 'Accueil - Folio',
-            'description' => 'Plateforme de partage de portfolios créatifs.',
-            'author' => 'Nom de l’auteur',
-            'copyright' => 'Propriétaire du copyright et année',
-            'robots' => 'index, follow',
-        ];
-
-        $this->renderer->render('profile', $data);
-
         $user = $this->authService->getCurrentUser();
         if (!$user) {
             header('Location: /login');
             exit;
         }
 
+        $data = [
+            'title' => 'Accueil - Folio',
+            'description' => 'Plateforme de partage de portfolios créatifs.',
+            'author' => 'Nom de l’auteur',
+            'copyright' => 'Propriétaire du copyright et année',
+            'robots' => 'index, follow',
+            'user' => $user,
+        ];
+
         $passwordRequirements = $this->profileService->getPasswordRequirements();
+        
+        $this->renderer->render('profile', $data);
+
     }
 
     // Gère la mise à jour du profil
@@ -110,21 +113,23 @@ class ProfileController {
         }
 
         $user = $this->authService->getCurrentUser();
-        if (!$user) {
-            header('Location: /login');
-            exit;
-        }
-
         $passwordConfirmation = $_POST['password_confirmation'] ?? '';
 
-        if ($this->profileService->accountDeletion($user, $passwordConfirmation)) {
-            $this->authService->logout();
-            header('Location: /');
+        try {
+            
+            if ($this->profileService->accountDeletion($user, $passwordConfirmation)) {
+                $this->authService->logout();
+                $this->flashService->addSuccess("Votre compte a été supprimé.");
+                header('Location: /login');
+                exit;
+            }
+        
+        } catch (\App\Exception\ServiceException $e) {
+            
+            $this->flashService->addError($e->getMessage());
+            header('Location: /profile');
             exit;
         }
-
-        header('Location: /profile');
-        exit;
     }
 }
 ?>

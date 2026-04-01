@@ -25,6 +25,12 @@ class ProjetController {
     // Affiche la page profile
     public function index(): void
     {
+        if (!isset($_SESSION['user'])) {
+            $this->flashService->addError("Vous devez être connecté pour créer un portfolio.");
+            header('Location: /login');
+            exit;
+        }
+
         $data = [
             'title' => 'Accueil - Folio',
             'description' => 'Plateforme de partage de portfolios créatifs.',
@@ -33,7 +39,7 @@ class ProjetController {
             'robots' => 'index, follow',
         ];
 
-        $this->renderer->render('folio', $data);
+        $this->renderer->render('portfolio', $data);
 
         if (isset($_SESSION['user'])) {
             header('Location: /profile');
@@ -55,7 +61,7 @@ class ProjetController {
         try {
             $this->folioService->createFullFolio($userId, $_POST, $_FILES);
             $this->flashService->addSuccess("Portfolio créé avec succès !");
-            header('Location: /projet');
+            header('Location: /profile');
         } catch (\Exception $e) {
             $this->flashService->addError($e->getMessage());
             header('Location: /portfolio');

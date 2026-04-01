@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Service\FlashService;
+use App\Exception\ServiceException;
 
 Class ProfileService {
 
@@ -133,7 +134,6 @@ Class ProfileService {
             return true;
         }
 
-        $this->flashService->addError("Une erreur est survenue lors de la suppression.");
-        return false;
+        throw new \App\Exception\ServiceException("Une erreur est survenue lors de la suppression.");
     }  
 }

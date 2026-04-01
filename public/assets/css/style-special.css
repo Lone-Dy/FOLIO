@@ -1,5 +1,4 @@
 /* --- 1. RECHERCHE PRINCIPALE (Landing) --- */
-
 /* Barre de recherche des folios */
 
 .search-container {
@@ -268,6 +267,37 @@ input[type="password"] {
     animation: fadeInUp 0.5s ease;
 }
 
+/* --- Mise en valeur du H1 de la page d'accueil --- */
+
+.home-content h1 {
+    font-size: clamp(2.5rem, 8vw, 4.5rem); /* Taille adaptative : min 2.5rem, max 4.5rem */
+    font-weight: 800;
+    text-align: center;
+    letter-spacing: -0.03em; 
+    line-height: 1.1;
+    max-width: 900px;
+    margin: 80px auto 40px;
+    padding: 0 20px;
+    
+    /* Effet de dégradé sur le texte */
+    background: linear-gradient(180deg, var(--primary-color) 0%, #666 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    
+    /* Animation d'entrée fluide */
+    opacity: 0;
+    transform: translateY(20px);
+    animation: revealTitle 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Animation d'apparition */
+@keyframes revealTitle {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* Message de bienvenue */
 
 .welcome-modal {
@@ -345,7 +375,6 @@ main h1 {
     font-size: 2.5rem;
     margin-bottom: 30px;
     letter-spacing: -1px;
-    border-bottom: 2px solid #1a1a1a;
     display: inline-block;
 }
 

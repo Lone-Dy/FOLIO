@@ -52,7 +52,8 @@ class ProfileServiceTest extends TestCase
         $this->assertEquals('NouveauNom', $user->getNom());
         $this->assertEquals('nouveau@test.com', $user->getEmail());
     }
-    
+
+    // Test des exigences de mot de passe
     public function testUpdateProfileWithInvalidEmailReturnsFalse(): void
     {
         $userRepoMock = $this->createMock(UserRepository::class);
@@ -96,7 +97,7 @@ class ProfileServiceTest extends TestCase
         $this->assertTrue(password_verify('NouveauMdp123!', $user->getMotDePasse()));
     }
 
-    // Test du changement de mot de passe (Mauvais mot de passe actuel)
+    // Test du changement de mot de passe (Mauvais mot de passe)
     public function testChangePasswordWithWrongCurrentPasswordReturnsFalse(): void
     {
         $userRepoMock = $this->createMock(UserRepository::class);
