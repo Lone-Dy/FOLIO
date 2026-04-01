@@ -19,7 +19,7 @@ class AuthServiceTest extends TestCase
         $requirements = $authService->getPasswordRequirements();
 
         $this->assertIsArray($requirements);
-        $this->assertEquals(12, $requirements['min_lenght']);
+        $this->assertEquals(12, $requirements['min_length']);
         $this->assertTrue($requirements['require_uppercase']);
 
     }
@@ -104,6 +104,6 @@ class AuthServiceTest extends TestCase
 
         @$authService->logout();
 
-        $this->assertEmpty($_SESSION);
+        $this->assertFalse(isset($_SESSION));
     }
 }
