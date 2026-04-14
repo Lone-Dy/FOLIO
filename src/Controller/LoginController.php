@@ -34,6 +34,26 @@ class LoginController {
             'robots' => 'index, follow',
         ];
 
+        // Récupération des messages flash via le service
+        $flashMessages = $this->flashService->getMessages();
+        $ob_modal = '';
+
+        if (!empty($flashMessages)) {
+            ob_start();
+            foreach ($flashMessages as $type => $messages) {
+                foreach ($messages as $message) {
+                    $success = ($type === 'success');
+                    $url = '/login';
+                    
+                    include __DIR__ . '/../../template/message_modal.php'; 
+                }
+            }
+            $ob_modal = ob_get_clean();
+        }
+
+        // La modale générée passe les données du template
+        $data['ob_modal'] = $ob_modal;
+
         if (isset($_SESSION['user'])) {
             header('Location: /profile');
             exit;

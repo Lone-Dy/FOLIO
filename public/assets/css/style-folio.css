@@ -47,13 +47,6 @@
     letter-spacing: 0.5px;
 }
 
-.project-header-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
 .project-header span {
     font-size: 0.85rem;
     text-transform: uppercase;
@@ -63,7 +56,7 @@
 }
 
 .project-card-edit span { 
-    font-weight: 800; /* Plus épais pour le "Projet #1" */
+    font-weight: 800;
     color: #2d3436; 
     font-size: 1.1rem;
     display: block;
@@ -89,24 +82,10 @@
     box-shadow: 0 0 0 3px rgba(68, 68, 68, 0.1);
 }
 
-.project-meta {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    margin-bottom: 10px;
-}
-
 .project-media img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-}
-
-.project-actions {
-    margin-top: auto;
-    padding-top: 18px;
-    border-top: 1px solid #f2f2f2;
-    display: flex;
-    gap: 20px;
 }
 
 .project-actions a {
@@ -122,30 +101,12 @@
     text-decoration: underline;
 }
 
-.project-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
 .media-container img {
     width: 100%;
     height: auto;
     display: block;
     filter: grayscale(100%);
     transition: filter 0.5s ease;
-}
-
-.project-used {
-    opacity: 0.4;
-    cursor: not-allowed;
-    border: 1px dashed #ccc;
-    background-color: #f9f9f9;
 }
 
 .project-card:hover .project-overlay {
@@ -195,6 +156,7 @@
 }
 
 /* Conteneur principal */
+
 .gallery-section {
     padding: 40px 5%;
     background-color: #f9f9f9;
@@ -210,10 +172,6 @@
     margin-bottom: 0;
     padding: 4px 10px;
     font-size: 0.75rem;
-}
-
-.status-published {
-    color: var(--success);
 }
 
 .status-badge {
@@ -259,31 +217,6 @@
     background-color: #e5e5e7;
 }
 
-/* La grille Pinterest */
-
-.projects-grid {
-    display: grid !important;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important;
-    gap: 20px !important;
-}
-
-.portfolio-item {
-    position: relative;
-    padding: 40px;
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-.portfolio-overlay {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    background: linear-gradient(transparent, rgba(0,0,0,0.8));
-    color: white;
-    padding: 15px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
 .portfolio-item:hover .portfolio-overlay {
     opacity: 1;
 }
@@ -318,7 +251,6 @@
     height: auto;
 }
 
-/* Overlay au survol */
 .portfolio-overlay {
     position: absolute;
     bottom: 0;
@@ -364,36 +296,8 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
-
-.btn-save:hover { 
-    background: #444444; 
-}
-
-/* --- Liste des sous-projets --- */
-.sub-project-row {
-    margin-bottom: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.sub-project-info {
-    flex: 1;
-}
-
-.sub-project-type {
-    color: var(--accent-color);
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-.sub-project-preview {
-    margin: 0;
-    font-size: 0.9rem;
-    color: var(--text-main);
-}
-
 /* Zone de Drop (Upload) */
+
 .drop-zone {
     border: 2px dashed #d2d2d7;
     border-radius: 12px;
@@ -411,11 +315,6 @@
 .drop-zone-prompt {
     font-size: 0.9rem;
     color: var(--text-muted);
-}
-
-.btn-submit:disabled {
-    opacity: 0.5; 
-    cursor: not-allowed;
 }
 
 /* --- Actions du pied de carte --- */
@@ -471,19 +370,6 @@
     color: var(--primary-color);
 }
 
-.subtitle {
-    color: var(--text-muted);
-}
-
-/* Grille de cartes */
-.portfolio-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 30px;
-    margin-top: 40px;
-}
-
-/* Style de la carte (aligné sur .profile-card) */
 .portfolio-card {
     padding: 30px !important;
     display: flex;
@@ -547,15 +433,6 @@
     overflow: hidden;
 }
 
-.btn-delete-text {
-    flex: 1;
-    color: var(--error);
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-decoration: none;
-    text-align: right;
-}
-
 .btn-delete-text:hover {
     text-decoration: underline;
 }
@@ -587,24 +464,6 @@
     flex-direction: column;
     gap: 10px;
     margin-top: 20px;
-}
-
-.btn-toggle {
-    background: var(--accent-color);
-    color: white;
-    text-align: center;
-    padding: 10px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.btn-delete {
-    color: var(--error);
-    text-align: center;
-    font-size: 0.9rem;
-    text-decoration: none;
-    padding: 8px;
 }
 
 .btn-delete:hover {

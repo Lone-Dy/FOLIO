@@ -87,15 +87,6 @@ body {
     opacity: 0.5;
 }
 
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 40px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #eee;
-}
-
 .header-text h2 {
     font-size: 2rem;
     font-weight: 800;
@@ -116,11 +107,6 @@ body {
 }
 .header .logo:hover img {
     opacity: 0.7;
-}
-
-.profile-header {
-    text-align: center;
-    margin-bottom: 80px;
 }
 
 .nav {
@@ -305,10 +291,6 @@ select {
     transform: translateY(-2px);
 }
 
-.btn-submit:hover {
-    background-color: #555;
-}
-
 .btn-submit {
     background: var(--primary-color);
     color: #fff;
@@ -323,17 +305,18 @@ select {
     background: #333;
 }
 
+.btn-submit:disabled {
+    background: #a0a0a0;
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
 #publishBtn:disabled {
     background: #e5e5e7;
     color: #a1a1a6;
     border: none;
 }
 
-.btn-submit:disabled {
-    background: #a0a0a0;
-    opacity: 0.7;
-    cursor: not-allowed;
-}
 
 /* Petit bouton secondaire pour le brouillon */
 .btn-secondary {
@@ -343,21 +326,6 @@ select {
     cursor: pointer;
     font-size: 0.9rem;
     align-self: flex-start; /* Aligné à gauche comme ton bouton "Enregistrer" */
-}
-
-.btn-submit:hover {
-    opacity: 0.8;
-}
-
-.btn-action {
-    background: white;
-    color: black;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 50px;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
 .btn-folio {

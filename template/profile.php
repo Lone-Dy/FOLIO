@@ -70,6 +70,7 @@
                 <?php foreach ($folio['projets_lies'] as $projet): ?>
 
                 <form action="/projet/handleEditProjet" method="POST" class="edit-projet-form" style="display: flex; gap: 10px; align-items: center;">
+                    
                     <input type="hidden" name="id_projet" value="<?= $projet->getIdProjet() ?>">
 
                     <span class="project-order">Projet #<?= htmlspecialchars($projet->getOrdreAffichage()) ?></span>

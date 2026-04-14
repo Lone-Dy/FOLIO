@@ -199,24 +199,6 @@
 }
 
 /* Positionnement de l'icône dans l'input */
-.toggle-password-btn {
-    position: absolute;
-    right: 10px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 5px;
-    color: var(--text-muted);
-    transition: color 0.2s ease;
-}
-
-.toggle-password-btn:hover {
-    color: var(--primary-color);
-}
-
-.toggle-password-btn svg {
-    pointer-events: none;
-}
 
 input[type="password"] {
     padding-right: 40px; /* Espace pour le bouton */
@@ -227,44 +209,6 @@ input[type="password"] {
     margin-bottom: 15px;
     display: flex;
     flex-direction: column;
-}
-
-/* Erreur d'identification */
-.error-shake {
-    color: #d93025; 
-    background-color: #fce8e6; 
-    padding: 10px; 
-    border-radius: 4px; 
-    border: 1px solid #d93025; 
-    margin-bottom: 15px; 
-    font-size: 0.9em; 
-    text-align: center;
-}
-
-.error-shake a {
-    color: white;
-    text-decoration: underline;
-    font-weight: 600;
-}
-
-@keyframes shake {
-    10%, 90% { transform: translate3d(-1px, 0, 0); }
-    20%, 80% { transform: translate3d(2px, 0, 0); }
-    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-    40%, 60% { transform: translate3d(4px, 0, 0); }
-}
-
-/* Message de succes */
-.success-alert {
-    background: #28a745;
-    color: white;
-    padding: 12px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    text-align: center;
-    font-size: 0.9rem;
-    border: 1px solid rgba(255,255,255,0.2);
-    animation: fadeInUp 0.5s ease;
 }
 
 /* --- Mise en valeur du H1 de la page d'accueil --- */
@@ -467,19 +411,6 @@ main h1 {
     gap: 12px;
 }
 
-.profile-header-edit {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 20px;
-}
-
-.avatar-upload {
-    position: relative;
-    width: 100px;
-    height: 100px;
-}
-
 .avatar-upload img {
     width: 100%;
     height: 100%;
@@ -488,12 +419,6 @@ main h1 {
     border: 3px solid #eee;
 }
 
-.fields-group {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    flex-grow: 1;
-}
 
 input[type="text"], input[type="email"], select, textarea {
     width: 100%;
@@ -667,19 +592,13 @@ input[type="text"], input[type="email"], select, textarea {
     max-width: 500px;
 }
 
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-}
-
 .folio-container {
     max-width: 1100px;
     margin: 0 auto;
     padding: 60px 20px;
 }
 
-.alert alert-info {
+.alert-info {
     background: #e1f5fe; 
     padding: 15px; 
     border-radius: 5px; 
@@ -692,21 +611,6 @@ input[type="text"], input[type="email"], select, textarea {
     40%, 80% { transform: translateX(8px); }
 }
 
-/* La classe qui déclenche l'animation */
-.apply-shake {
-    animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
-}
-
-
-.password-hint {
-    display: block;
-    margin-top: 6px;
-    font-size: 0.75rem;
-    color: var(--text-muted); /* Ton gris #86868b */
-    line-height: 1.2;
-    opacity: 0.8;
-    transition: opacity 0.3s ease;
-}
 
 /* Le texte devient plus noir quand on tape le mot de passe */
 .field input:focus + .toggle-password-btn + .password-hint,
@@ -718,6 +622,65 @@ input[type="text"], input[type="email"], select, textarea {
 
 .register-section .btn-submit {
     margin-top: 10px;
+}
+
+dialog.success_dialog,
+dialog.error_dialog {
+    position: fixed;
+    top: 120px; /* Positionné juste sous ton header fixe qui est à 100px */
+    right: 25px;
+    left: auto;
+    transform: none;
+    width: 350px;
+    max-width: 90vw;
+    margin: 0; /* Annule les marges auto par défaut du dialog */
+    background-color: #fcc2c2;
+    border: 2px solid #c53a3a;;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    
+    padding: 16px 45px 16px 20px; /* Large padding à droite pour laisser la place au X */
+    z-index: 10000;
+}
+
+/* Texte du message */
+dialog p {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-main);
+    text-align: left;
+    line-height: 1.4;
+}
+
+/* Formulaire contenant le bouton de fermeture */
+dialog form {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+}
+
+/* Bouton de fermeture (Croix "X") */
+dialog input[type="submit"] {
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    font-weight: 400;
+    cursor: pointer;
+    color: #c53a3a;
+    padding: 5px;
+    line-height: 1;
+    transition: color 0.2s ease;
+}
+
+dialog input[type="submit"]:hover {
+    color: var(--text-main);
+}
+
+/* Suppression totale de l'arrière-plan bloquant pour permettre l'interaction */
+dialog::backdrop {
+    background: none !important;
 }
 
 /* Responsive*/

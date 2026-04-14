@@ -1,3 +1,8 @@
+<?php
+$flashMessages = $_SESSION['flash_messages'] ?? [];
+unset($_SESSION['flash_messages']);
+?>
+
 <div class="auth-container">
 
     <!-- Formulaire de connexion -->
@@ -5,17 +10,30 @@
     <section class="auth-box login-section">
         <form action="/login/handleLogin" method="POST">
 
+            <?php if (!empty($flashMessages)): ?>
+                <?php foreach ($flashMessages as $type => $messages): ?>
+                    <?php foreach ($messages as $message): ?>
+                        <div class="alert <?= ($type === 'error') ? 'error-message' : 'success-message'; ?>">
+                            <?= htmlspecialchars($message); ?>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
+
             <h2>Se connecter</h2>
 
             <div class="field">
                 <label for="login_email">E-mail <span class="required">*</span></label>
-                <input type="email" id="login_email" name="email" required placeholder="nom@exemple.com" />
+                <input type="email" id="login_email" name="email" required placeholder="nom@exemple.com" 
+                value="<?php echo htmlspecialchars($_SESSION['form_data']['email'] ?? ''); ?>"/>
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             </div>
 
             <div class="field">
                 <label for="login_password">Mot de passe <span class="required">*</span></label>
                 <div class="input-wrapper">
-                    <input type="password" id="login_password" name="password" required placeholder="••••••••••••" />
+                    <input type="password" id="login_password" name="password" required placeholder="••••••••••••"/>
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                 </div>
             </div>
 
@@ -30,6 +48,16 @@
     <section class="auth-box register-section" id="register-section">
         <form action="/login/handleRegister" method="POST" enctype="multipart/form-data">
 
+            <?php if (!empty($flashMessages)): ?>
+                <?php foreach ($flashMessages as $type => $messages): ?>
+                    <?php foreach ($messages as $message): ?>
+                        <div class="alert <?= ($type === 'error') ? 'error-message' : 'success-message'; ?>">
+                            <?= htmlspecialchars($message); ?>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
+
             <h2>Créez votre compte</h2>
 
             <div class="form-grid">
@@ -37,11 +65,13 @@
                     <label for="prenom">Prénom <span class="required">*</span></label>
                     <input type="text" id="prenom" name="prenom" required
                         value="<?php echo htmlspecialchars($_SESSION['form_data']['prenom'] ?? ''); ?>" />
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                 </div>
                 <div class="field">
                     <label for="nom">Nom <span class="required">*</span></label>
                     <input type="text" id="nom" name="nom" required
                         value="<?php echo htmlspecialchars($_SESSION['form_data']['nom'] ?? ''); ?>" />
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                 </div>
             </div>
 
@@ -49,16 +79,19 @@
                 <label for="email">Email <span class="required">*</span></label>
                 <input type="email" id="email" name="email" required placeholder="nom@exemple.com"
                     value="<?php echo htmlspecialchars($_SESSION['form_data']['email'] ?? ''); ?>" />
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             </div>
 
             <div class="field">
                 <label for="password">Mot de passe <span class="required">*</span></label>
                 <input type="password" id="password" name="password" required placeholder="••••••••••••" />
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             </div>
 
             <div class="field">
                 <label for="password_confirmation">Confirmer le mot de passe <span class="required">*</span></label>
                 <input type="password" id="password_confirmation" name="password_confirmation" required placeholder="••••••••••••" />
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             </div>
 
             <div class="field">
@@ -73,17 +106,6 @@
                     <?php endfor; ?>
                 </select>
             </div>
-
-            <?php if (isset($_SESSION['flash_messages'])): ?>
-                <?php foreach ($_SESSION['flash_messages'] as $type => $messages): ?>
-                    <?php foreach ($messages as $message): ?>
-                        <div class="alert alert-<?php echo $type; ?>">
-                            <?php echo htmlspecialchars($message); ?>
-                        </div>
-                    <?php endforeach; ?>
-                <?php endforeach; ?>
-                <?php unset($_SESSION['flash_messages']); ?>
-            <?php endif; ?>
 
             <div class="checkbox-group">
                 <div class="checkbox-wrapper">

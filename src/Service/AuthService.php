@@ -26,6 +26,15 @@ Class AuthService {
         // 1. Validation des données
         $errors = [];
 
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Vérification de l'existence et de la validité du token
+        if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        // Erreur 403 : Accès interdit ou tentative de fraude
+            header('HTTP/1.1 403 Forbidden');
+            exit("Erreur de sécurité : Jeton CSRF invalide.");
+        }
+        }  
+
         // Validation du nom et prénom
         if (!isset($userData['nom']) || !ctype_alpha(str_replace(['-', ' '], '', $userData['nom']))) {
             $errors[] = "Le nom contient des caractères non autorisés."; //ctype_alpha = retourne TRUE si tous les caractères de la chaîne text sont des lettres
@@ -97,6 +106,15 @@ Class AuthService {
     public function login(string $email, string $password): ?User
     {
         $user = $this->userRepo->findByEmail($email);
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Vérification de l'existence et de la validité du token
+            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+                // Erreur 403 : Accès interdit ou tentative de fraude
+                header('HTTP/1.1 403 Forbidden');
+                exit("Erreur de sécurité : Jeton CSRF invalide.");
+            }
+            }
 
             // Vérification si l'utilisateur existe
             if (!$user) {

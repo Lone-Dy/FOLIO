@@ -1,6 +1,6 @@
-gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 // Animation du Header (Transparence vers Flou)
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 gsap.to('.header', {
   scrollTrigger: {
     trigger: 'body',
@@ -9,7 +9,7 @@ gsap.to('.header', {
     scrub: true,
   },
   height: '65px',
-  paddingLeft: '20px', // On écarte les éléments des bords au scroll
+  paddingLeft: '20px',
   paddingRight: '20px',
   backgroundColor: 'rgba(255, 255, 255, 0.1)',
   backdropFilter: 'blur(25px)',
@@ -169,7 +169,8 @@ if (portfolioForm) {
 // Interface UI : Elle prend deux informations (arguments) : la zone concernée et le fichier sélectionné.
 
 function updateThumbnail(zone, file) {
-    let thumbnailElement = zone.querySelector('.drop-zone-thumb'); // Si c'est le premier fichier, elle crée une nouvelle couche visuelle (drop-zone-thumb)
+    
+    let thumbnailElement = zone.querySelector('.drop-zone-thumb');
     const prompt = zone.querySelector('.drop-zone-prompt');
 
     if (prompt) prompt.style.display = 'none';
@@ -184,7 +185,8 @@ function updateThumbnail(zone, file) {
     thumbnailElement.dataset.label = file.name;
 
     if (file.type.startsWith('image/')) {
-        const reader = new FileReader(); // FileReader = Objet qui lit le contenu du fichier sur l'ordinateur de l'utilisateur pour en faire une image de fond
+        const reader = new FileReader(); 
+        // FileReader = Objet qui lit le contenu du fichier sur l'ordinateur de l'utilisateur pour en faire une image de fond
         reader.readAsDataURL(file);
         reader.onload = () => {
             thumbnailElement.style.backgroundImage = `url('${reader.result}')`;

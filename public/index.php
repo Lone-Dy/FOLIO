@@ -45,7 +45,14 @@ session_set_cookie_params([
     'httponly'  => true,
     'samesite'  => 'Strict'
 ]);
+
 session_start();
+
+if (empty($_SESSION['csrf_token'])) {
+// random_byte est cryptographiquement sûre
+// on le stocke dans la SESSION en hexadecimal
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $request = trim($uri, '/');
