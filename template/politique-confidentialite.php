@@ -1,6 +1,3 @@
-<?php
-include_once(__DIR__ . '/view/header.php');
-?>
 <main class="legal-content">
     <h1>Politique de Confidentialité</h1>
     <p>Dernière mise à jour : Mars 2026</p>

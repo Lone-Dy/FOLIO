@@ -27,6 +27,13 @@
                 </button>
             </form>
         </div>
+
+        <button class="burger-menu" aria-label="Ouvrir le menu" aria-expanded="false">
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+        </button>
+
         <nav class="nav">
             <?php if (isset($_SESSION['user'])): ?>
                 <a href="/projet">MON FOLIO</a>
@@ -82,5 +89,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
 <script src="/assets/js/script.js" defer></script>
+<script src="/assets/script-projets.js" defer></script>
 
 </html>

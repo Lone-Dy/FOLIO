@@ -1,10 +1,10 @@
 <?php
 namespace App\Service;
 
-use App\Entity\User;
 use App\Repository\UserRepository;
 
 class SecurityService {
+
     private UserRepository $userRepo;
 
     public function __construct(UserRepository $repo) {
@@ -17,10 +17,10 @@ class SecurityService {
     public function login(string $username, string $password): bool {
         $user = $this->userRepo->findById($username);
         
-        if ($user && password_verify($password, $user->getPassword())) {
+        if ($user && password_verify($password, $user->getMotDePasse())) {
             $_SESSION['user'] = [
-                'id' => $user->getIdUser(),
-                'username' => $user->getUsername(),
+                'id' => $user->getIdUtilisateur(),
+                'name' => $user->getNom(),
                 'role' => $user->getRole()
             ];
             return true;

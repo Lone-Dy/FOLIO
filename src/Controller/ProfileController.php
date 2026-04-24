@@ -6,7 +6,6 @@ use App\Service\Renderer;
 use App\Service\ProfileService;
 use App\Service\FlashService;
 use App\Service\AuthService;
-use App\Exception\ServiceException;
 
 class ProfileController {
 
@@ -60,6 +59,15 @@ class ProfileController {
             $this->flashService->addError("Méthode non autorisée.");
             header('Location: /profile');
             exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Vérification de l'existence et de la validité du token
+        if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        // Erreur 403 : Accès interdit ou tentative de fraude
+            header('HTTP/1.1 403 Forbidden');
+            exit("Erreur de sécurité : Jeton CSRF invalide.");
+        }
         }
 
         $user = $this->authService->getCurrentUser();

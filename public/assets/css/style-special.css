@@ -1,3 +1,4 @@
+
 /* --- 1. RECHERCHE PRINCIPALE (Landing) --- */
 /* Barre de recherche des folios */
 
@@ -624,7 +625,23 @@ input[type="text"], input[type="email"], select, textarea {
     margin-top: 10px;
 }
 
-dialog.success_dialog,
+dialog.success_dialog {
+    position: fixed;
+    top: 120px; /* Positionné juste sous ton header fixe qui est à 100px */
+    right: 25px;
+    left: auto;
+    transform: none;
+    width: 350px;
+    max-width: 90vw;
+    margin: 0; /* Annule les marges auto par défaut du dialog */
+    background-color: #c2fcc7;
+    border: 2px solid #3ac53a;;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    padding: 16px 45px 16px 20px;
+    z-index: 10000;
+}
+
 dialog.error_dialog {
     position: fixed;
     top: 120px; /* Positionné juste sous ton header fixe qui est à 100px */
@@ -638,8 +655,7 @@ dialog.error_dialog {
     border: 2px solid #c53a3a;;
     border-radius: var(--border-radius);
     box-shadow: var(--card-shadow);
-    
-    padding: 16px 45px 16px 20px; /* Large padding à droite pour laisser la place au X */
+    padding: 16px 45px 16px 20px;
     z-index: 10000;
 }
 

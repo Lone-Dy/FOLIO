@@ -104,7 +104,6 @@ class UserRepository
 
     }
     
-
     // CRUD - UPDATE
 
     // Met à jour l'ensemble des informations de profil d'un utilisateur

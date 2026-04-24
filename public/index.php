@@ -54,6 +54,8 @@ if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
+ // mettre setcookie // régler session_start// 
+
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $request = trim($uri, '/');
 $params = explode('/', $request);

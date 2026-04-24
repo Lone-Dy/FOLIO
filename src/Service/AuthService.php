@@ -24,16 +24,7 @@ Class AuthService {
     public function register(array $userData): bool
     {
         // 1. Validation des données
-        $errors = [];
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Vérification de l'existence et de la validité du token
-        if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-        // Erreur 403 : Accès interdit ou tentative de fraude
-            header('HTTP/1.1 403 Forbidden');
-            exit("Erreur de sécurité : Jeton CSRF invalide.");
-        }
-        }  
+        $errors = []; 
 
         // Validation du nom et prénom
         if (!isset($userData['nom']) || !ctype_alpha(str_replace(['-', ' '], '', $userData['nom']))) {
@@ -45,7 +36,7 @@ Class AuthService {
         }
 
         // Validation de l'email
-        if (!isset($userData['email']) || !filter_var($userData['email'], FILTER_VALIDATE_EMAIL)) { //filter_var = vérifie la présence de chaînes de caractères telles que des adresses e-mail
+        if (!isset($userData['email']) || !filter_var($userData['email'], FILTER_VALIDATE_EMAIL)) {  //filter_var = vérifie la présence de chaînes de caractères telles que des adresses e-mail
             $errors[] = "L'adresse email n'est pas valide.";
         } elseif ($this->userRepo->emailExists($userData['email'])) {
             $errors[] = "Cet email est déjà utilisé.";
@@ -57,18 +48,20 @@ Class AuthService {
         }
 
         // Validation du mot de passe
-        if (!isset($userData['password']) || strlen($userData['password']) < 12) {
-            $errors[] = "Le mot de passe doit contenir au moins 12 caractères.";
+        $passwordRegex = '/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]).{12,}$/';
+
+        if (!isset($userData['password']) || !preg_match($passwordRegex, $userData['password'])) {
+            $errors[] = "Le mot de passe doit contenir au moins 12 caractères, incluant une majuscule, une minuscule, un chiffre et un caractère spécial.";
         } elseif ($userData['password'] !== ($userData['password_confirmation'] ?? '')) {
             $errors[] = "Les mots de passe ne correspondent pas.";
         }
 
-        // Si des erreurs existent, les enregistrer en session
         if (!empty($errors)) {
-            $_SESSION['flash_error'] = implode('<br>', $errors);
+            foreach ($errors as $error){
+                $this->flashService->addError($error);
+            }
             return false;
         }
-
         // 2. Création de l'utilisateur
         try {
             $user = new User();
@@ -83,38 +76,15 @@ Class AuthService {
             // 3. Sauvegarde en base
             return $this->userRepo->create($user);
         } catch (\Exception $e) {
-            $_SESSION['flash_error'] = "Une erreur est survenue lors de la création du compte.";
-            error_log("Erreur lors de l'inscription: " . $e->getMessage());
+            $this->flashService->addError("Une erreur est survenue lors de la création du compte.");
             return false;
         }
-    }
-
-    // Vérification des mots de passe
-    public function getPasswordRequirements(): array
-    {
-        return [
-            'min_length' => 12,
-            'require_uppercase' => true,
-            'require_lowercase' => true,
-            'require_number' => true,
-            'require_special' => true,
-            'special_chars' => '!@#$%^&*()_+-=[]{}|;:,.<>?'
-        ];
     }
 
     // Gére la connexion
     public function login(string $email, string $password): ?User
     {
         $user = $this->userRepo->findByEmail($email);
-
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Vérification de l'existence et de la validité du token
-            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-                // Erreur 403 : Accès interdit ou tentative de fraude
-                header('HTTP/1.1 403 Forbidden');
-                exit("Erreur de sécurité : Jeton CSRF invalide.");
-            }
-            }
 
             // Vérification si l'utilisateur existe
             if (!$user) {

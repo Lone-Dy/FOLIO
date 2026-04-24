@@ -25,6 +25,7 @@ class ProjetController {
     // Affiche la page profile
     public function index(): void
     {
+        // Si non connecté, ça bloque et redirige
         if (!isset($_SESSION['user'])) {
             $this->flashService->addError("Vous devez être connecté pour créer un portfolio.");
             header('Location: /login');
@@ -40,11 +41,6 @@ class ProjetController {
         ];
 
         $this->renderer->render('portfolio', $data);
-
-        if (isset($_SESSION['user'])) {
-            header('Location: /profile');
-            exit;
-        }
 
     }
 

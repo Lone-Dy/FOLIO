@@ -70,6 +70,15 @@ class LoginController {
             exit;
         }
 
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Vérification de l'existence et de la validité du token
+        if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        // Erreur 403 : Accès interdit ou tentative de fraude
+            header('HTTP/1.1 403 Forbidden');
+            exit("Erreur de sécurité : Jeton CSRF invalide.");
+        }
+        }
+
         $email = $_POST['email'] ?? '';
         $password = $_POST['password'] ?? '';
 
@@ -96,6 +105,15 @@ class LoginController {
             $this->flashService->addError("Méthode non autorisée.");
             header('Location: /login');
             exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Vérification de l'existence et de la validité du token
+        if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        // Erreur 403 : Accès interdit ou tentative de fraude
+            header('HTTP/1.1 403 Forbidden');
+            exit("Erreur de sécurité : Jeton CSRF invalide.");
+        }
         }
 
         // Récupération des données du formulaire
@@ -140,7 +158,8 @@ class LoginController {
         // Appel du service d'authentification
         if ($this->authService->register($userData, $_FILES)) {
             $this->flashService->addSuccess("Inscription réussie ! Bienvenue sur Folio.");
-            header('Location: /profile?new=1');
+            header('Location: /profile');
+            exit;
         } else {
             $this->flashService->addError("Une erreur est survenue lors de l'inscription.");
             header('Location: /login');

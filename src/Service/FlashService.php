@@ -2,9 +2,6 @@
 
 namespace App\Service;
 
-use PDO;
-use Exception;
-
 class FlashService {
     
     private const FLASH_KEY = 'flash_messages';
