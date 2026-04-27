@@ -11,8 +11,8 @@ LoginController,
 ConditionController, 
 ProfileController, 
 ProjetController, 
-GalerieController,
-SecurityController};
+GalerieController
+};
 
 use App\Exception\{
 ServiceException, 
@@ -156,11 +156,6 @@ HomeController::class => function ($pdo) use ($renderer)
         return new ProjetController($renderer, $folioService, $flashService);
     },
 
-    SecurityController::class => function($pdo) 
-    {
-        $userRepo = new UserRepository($pdo);
-        return new SecurityController($userRepo);
-    },
 ];
 
 // Est-ce que le contrôleur existe dans mon container ?
